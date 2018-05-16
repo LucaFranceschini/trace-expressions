@@ -1,0 +1,205 @@
+\section{Monitoring examples}
+\label{sec:examples}
+\subsection{File System}
+The \lstinline{fs} standard module for Node.js deals with the file system, and its typical uses are good examples of code that would benefit from runtime verification techniques.
+
+Consider the snippet in \Cref{lst:fs}, writing to a file all numbers from \lstinline{0} to the constant \lstinline{LIMIT} in any order (the \lstinline{**} operator stands for exponentiation).
+As it is customary in Node.js, all I/O operations are asynchronous, starting from the \lstinline{open} function which, upon completion, will execute the callback \lstinline!(err, fd) => { ... }!.
+The convention in Node.js is to pass errors (if any) to callbacks as first argument.
+\lstinline{fd} is the file descriptor of the opened file.
+
+\begin{figure}[h]
+	\begin{lstlisting}
+		const fs = require('fs');
+		
+		const LIMIT = 2**8;
+		
+		fs.open('tmp.txt', 'w', (err, fd) => {
+			if (!err)
+			for (let i=0; i<LIMIT; i++)
+				fs.write(fd, i+'\n', () => {});
+			
+			fs.close(fd, console.log('bye'));
+		});
+	\end{lstlisting}
+	\caption{An example of \emph{incorrect} usage of the Node.js \lstinline{fs} module.}
+	\label{lst:fs}
+\end{figure}
+
+The core of the program is a simple loop making a write request (with an empty callback, \lstinline!() => {}!) for each number.
+After that, the file is closed, and a callback printing \lstinline{'bye'} is provided.
+
+While the code may look fine to someone not familiar with asynchronous I/O and Node.js, it is actually flawed, but it will work up to considerable values of \lstinline{LIMIT}.
+Depending on the Node.js implementation and the hardware resources, the code will fatally crash with some memory error if the number gets too high, though the amount of used memory is expected to be constant.
+
+From the documentation, it turns out that a second write to the same file should only be called \emph{after} the callback of the previous one has been executed.
+This constraint however is not checked by the library for performance reasons.
+
+Recalling the event-loop mechanism previously presented, first \emph{all} the asynchronous \lstinline{write} requests will be queued, and only \emph{after} this they will be fulfilled.
+This explains the documented requirement and gives a possible cause for the error: the asynchronous I/O queue will grow linearly with \lstinline{LIMIT}.
+
+Trace expressions can be used to formally specify (and later verify) the requirement.
+Consider for instance the following domain (in this simple case, events and event types coincides):
+\[ \eventSet = \{ \opent, \writet, \cbt, \closet \} \]
+
+A trace expression specifying the correct order of operations would then be:
+\begin{align*}
+\tau &= \emptyseq \orop (\opent \prefixop \cbt \prefixop \tau')\\
+\tau' &= (\writet \prefixop \cbt \prefixop \tau') \orop (\closet \prefixop \cbt \prefixop \emptyseq)
+\end{align*}
+Note that the recursive occurrence of \(\tau'\) is guarded by a \(\writet\) and a \(\cbt\), thus forcing them to be alternating.
+
+The code snippet we discussed would not satisfy the trace expression \emph{as soon as the second write is called}, thus it will not be necessary to reach some system-dependent high number of requests for the bug to be detected.
+
+Assuming the monitor can match asynchronous requests and their callbacks (for instance by generating a unique identifier for each request), a more precise specification would also be able to check that the correct callbacks are called.
+Then events will include this new information:
+\[ \eventSet = \bigcup_{\id \in \mathbb{N}} \{\opent(\id), \writet(\id), \closet(\id), \cbt(\id) \} \]
+
+This time, however, parametric runtime verification is needed, and variables and event types are required.
+We define event types to be event terms over a set of variables \(\vars\) used as placeholders for request identifiers (the \(\mtch\) will simply compute the appropriate substitution):
+\begin{align*}
+\vars &= \{ \avar{id_1}, \avar{id_2}, \dotsc \}\\
+\mathcal{ET} &= \bigcup_{\xv \in \vars} \{\opent(\xv), \writet(\xv), \closet(\xv), \cbt(\xv) \}
+\end{align*}
+
+Finally, the parametric trace expression is given (\(\tau\), \(\tau_w\) and \(\tau_c\) deal with opening, writing to and closing the file, respectively):
+\begin{align*}
+\tau &= \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop \cbt(\avar{id_1}) \prefixop \tau_w}\\
+\tau_w &= \var{id_2}{\writet(\avar{id_2}) \prefixop \cbt(\avar{id_2}) \prefixop \tau'} \orop \tau_c\\
+\tau_c &= \var{id_3}{\closet(\avar{id_3}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
+\end{align*}
+Note that different variable names are only used for the sake of clarity, even if using the same variable in every binder would work since trace expression semantics correctly handles the shadowing of variables in nested scopes.
+
+Identifiers are crucial to match asynchronous operations with their callbacks: after event \(\opent(\avar{id}_i)\) occurs, meaning an asynchronous call to \lstinline|open| has been made and a callback for it has been registered, event \(\cbt(\avar{id}_i)\) will occur when \emph{that} callback will be executed.
+
+The trace expressions above are limited to a single file.
+If monitoring a collection of concurrently modified files is required, more parameters are necessary, since the monitor needs to track functions arguments\footnote{For the sake of brevity, from now on we will omit the explicit definition of the employed event domains.} in order to retrieve file descriptors:
+%(from this point, event and event types will not be explicitly written anymore):
+\begin{align*}
+\tau &= \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop (\tau' \shuffleop \tau)}\\
+\tau' &= \var{fd}{\cbt(\avar{id_1}, \avar{fd}) \prefixop \tau_w}\\
+\tau_w &= \var{id_2}{\writet(\avar{id_2}, \avar{fd}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c\\
+\tau_c &= \var{id_3}{\closet(\avar{id_3}, \avar{fd}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
+\end{align*}
+The shuffle operator allows to concurrently monitor the use of the opened file as well as other files.
+
+\subsection{Web Requests}\label{sec:web-req}
+Node.js is typically used as a server-side JavaScript environment in web development.
+Because of this, its library offers many features that greatly simplify the task of setting up a web server.
+For instance, it only takes a few lines of code to obtain a (very simple) HTTP server, as shown in \Cref{lst:http}.
+
+\begin{figure}[h]
+\begin{lstlisting}
+const http = require('http');
+
+const server = http.createServer((request, response) => {
+	request.on('data', chunk => console.log('some data received');
+	request.on('end', () => response.end('ok'));
+});
+
+server.listen(80);
+\end{lstlisting}
+\caption{A basic web server in Node.js based on the \lstinline{http} module.}
+\label{lst:http}
+\end{figure}
+
+The web server is created by passing a callback that will be invoked on every incoming request.
+Such a function will receive both the request and the response object through which it can reply.
+
+For each request, first a callback logging a message for every received chunk of data is registered, then a response is sent back to the client when
+the whole request has been received. %%there is no more data.
+Finally, the server start listening at the standard HTTP port \texttt{80}.
+
+Now consider the (buggy) web client in \Cref{lst:client}, where seven bytes of data are sent (\lstinline{'hey!'}, \lstinline{'bye'}) but ten are declared in the \lstinline{'content-length'} field.
+
+\begin{figure}[h]
+\begin{lstlisting}
+const http = require('http');
+
+const options = {
+	method: 'POST',
+	headers: {
+		'content-length': 10  // BUG! size too high
+	}
+};
+
+const req = http.request(options, res => {
+	res.on('data', console.log);
+});
+
+req.write('hey!');
+req.end('bye');
+\end{lstlisting}
+\caption{An \emph{incorrect} web client sending a request with the wrong \texttt{content-length} value.}
+\label{lst:client}
+\end{figure}
+
+The logging callback (\lstinline{console.log}) is scheduled for execution after receiving the response from the server.
+However, it will not be called since the server will be waiting for more data, and no reply will be sent.
+
+The \lstinline{'content-length'} is \emph{not} checked by the Node.js runtime against the actual length of the content, as it is clearly stated in the documentation.
+Trace expressions can be used again to specify the correct behavior.
+
+The monitor needs to observe the creation of the \lstinline{ClientRequest} object returned by function \lstinline{http.request} as well as the use of its methods \lstinline{write} and \lstinline{end}.
+This time the focus is not on the order but rather on the arguments of functions.
+
+The event domain will include all relevant information:
+\[ \eventSet = \bigcup_{\begin{array}{rcl}\data&\in&\mathbb{B}^*\\\cl,\id &\in& \mathbb{N}\end{array}} \{ \req(\id,\cl), \writet(\id, \data), \myend(\id, \data) \} \]
+All operations are associated with a unique request identifier (at the Node.js level, this corresponds to the \lstinline{ClientRequest} object), furthermore the request is associated with the declared \lstinline{'content-length'} \(\cl\), while \(\writet\) (and \(\myend\)) are associated with \(\data\),
+the sequence of bytes being sent.
+
+% lasciamo perdere, esplicitare event type qui e' un casino...
+
+%Additionally, the language of event types will take into account the actual and expected lengths (a set of variables \(\vars\) is assumed):
+%\[
+%\mathcal{ET} =
+%\bigcup_{\avar{id}, \avar{cl}, \avar{l}, \avar{l'} \in \vars}
+%\{
+%\req(\avar{id}, \avar{cl}),
+%\writet(\avar{id}, \avar{l}, \avar{l'}),
+%\myend(\avar{id, \avar{l}})
+%\}
+%\]
+
+%The meaning of \(\writet(\avar{id}, \avar{l}, \avar{l'})\) is that before the write there were \(\avar{l}\) bytes left to be sent, and after that \(\avar{l'}\) (thus \(\avar{l'}\leq\avar{l}\)).
+%The event type \(\myend(\avar{id}, \avar{l})\) corresponds to occurrences of event \(\myend(\id)\) with \(\avar{l}\) still to be sent.
+%This will be encoded in the semantics of the \(\mtch\) function:
+%\begin{align*}
+%\mtch(\req(\id,\cl), \req(\avar{id}, \avar{cl})) &=
+%\{ \avar{id} \mapsto \id, \avar{cl} \mapsto \cl \}\\
+%\mtch(\writet(\id, \data), \writet(\avar{id}, \avar{l}, \avar{l'})) &=
+%\\
+%\mtch(\myend(\id), \myend(\avar{id, \avar{l}}))
+%\end{align*}
+
+The following is a possible trace expression specification of the correct behavior:
+\begin{align*}
+\tau &= \emptyseq \orop \var{id}{\var{cl}{ \req(\avar{id}, \avar{cl}) \prefixop (\tau_w\shuffleop\tau)}}\\
+\tau_w &= \var{cl'}{\writet(\avar{id}, \avar{cl}, \avar{cl'})\prefixop\tau_w'} \orop \tau_e\\
+\tau_w' &= \var{cl}{\writet(\avar{id}, \avar{cl'}, \avar{cl})\prefixop \tau_w} \orop \tau_e'\\
+\tau_e &= \myend(\avar{id}, \avar{cl})\prefixop \emptyseq\\
+\tau_e' &= \myend(\avar{id}, \avar{cl'})\prefixop\emptyseq
+\end{align*}
+The event types above have the following semantics:
+\begin{itemize}
+\item  \(\req(\avar{id}, \avar{cl})\): a request object identified by \(\avar{id}\) has been created, with a declared \lstinline{'content-length'} \(\avar{cl}\);
+\item \(\writet(\avar{id}, \avar{cl}, \avar{cl'})\): \lstinline{write} method has been invoked on request \(\avar{id}\), with \(\avar{cl}\) bytes still to send, and after the invocation the amount of missing data is \(\avar{cl'}\);
+\item \(\myend(\avar{id}, \avar{cl})\): \lstinline{end} has been invoked on request \(\avar{id}\), and the last \(\avar{cl}\) bytes are sent (besides finishing the request, \lstinline{end} can also send a final chunk of data).
+\end{itemize}
+
+The shuffle operator, together with the unique identifier of each request, allows monitoring of multiple concurrent requests.
+This is similar to the previous example on files.
+
+Variables \(\avar{cl}\) and \(\avar{cl'}\) are swapped between \(\tau_w\) and \(\tau_w'\), as two variables are needed to keep track of the number of bytes left before and after each write.
+
+Here the \(\mtch\) function plays a crucial role and it is worth showing, since in this case event types $\writet$ and $\myend$ are not a trivial abstraction over events:
+\begin{align*}
+\mtch(\req(\id, \cl), \req(\avar{id}, \avar{cl})) &= \{ \avar{id} \mapsto \id, \avar{cl} \mapsto \cl \}\\
+\mtch(\writet(\id, \data), \writet(\id', \cl, \avar{cl'})) &= \{ \avar{cl'} \mapsto \cl-\size(\data) \} \mbox{ iff $\begin{array}[t]{l}\id=\id',\\ \size(\data)\leq\cl\end{array}$} \\
+\mtch(\myend(\id, \data), \myend(\id', \cl)) &= \emptyset \mbox{ iff $\id=\id',\, \size(\data)=\cl$}
+\end{align*}
+
+At the beginning, both variables \(\avar{id}\) and \(\avar{cl}\) are free and their values are discovered when event \(\req\) occurs.
+On the other end, upon writing, the current amount of data that still has to be sent is known, but the updated one has to be computed based on the
+size of $\data$.
+Finally, \(\myend\) event is expected to send the exact amount of data left, and no further substitution is needed.

@@ -1,0 +1,152 @@
+\documentclass[english,submission]{programming}
+%% First parameter: the language is 'english'.
+%% Second parameter: use 'submission' for initial submission, remove it for camera-ready (see 5.1)
+
+
+\usepackage[backend=biber]{biblatex}
+
+\usepackage{macros}
+
+\addbibresource{main.bib}
+
+\usepackage{hyperref}
+
+% this needs to be loaded AFTER hyperref
+\usepackage{cleveref}
+\usepackage{js}
+
+\begin{document}
+
+\title{Parametric runtime verification of Node.js applications with trace expressions}
+\subtitle{}% optional
+\titlerunning{Parametric runtime verification of Node.js applications with trace expressions} %optional, in case that the title is too long; the running title should fit into the top page column
+
+\author{Davide Ancona}
+\authorinfo{\email{davide.ancona@unige.it}.}
+\author{Luca Franceschini}
+\authorinfo{\email{luca.franceschini@dibris.unige.it}.}
+\author{Giorgio Delzanno}
+\authorinfo{\email{giorgio.delzanno@unige.it}.}
+\author{Maurizio Leotta}
+\authorinfo{\email{maurizio.leotta@unige.it}.}
+\author{Marina Ribaudo}
+\authorinfo{\email{marina.ribaudo@unige.it}.}
+\author{Filippo Ricca}
+\authorinfo{\email{filippo.ricca@unige.it}.}
+\affiliation{DIBRIS, University of Genova, Italy}
+
+\authorrunning{D. Ancona, L. Franceschini, G. Delzanno, M. Leotta, M. Ribaudo, F. Ricca} % Optional, for long author lists
+
+\keywords{parametric runtime verification, trace expressions, Jalangi2, Node.js, SWI-Prolog} % please provide 1--5 keywords
+
+
+%%%%%%%%%%%%%%%%%%
+%% These data MUST be filled for your submission. (see 5.3)
+\paperdetails{
+  %% perspective options are: art, sciencetheoretical, scienceempirical, engineering.
+  %% Choose exactly the one that best describes this work. (see 2.1)
+  perspective=scienceempirical,
+  %% State one or more areas, separated by a comma. (see 2.2)
+  %% Please see list of areas in http://programming-journal.org/cfp/
+  %% The list is open-ended, so use other areas if yours is/are not listed.
+  area={Program verification, testing and debugging},
+  %% You may choose the license for your paper (see 3.)
+  %% License options include: cc-by (default), cc-by-nc
+  % license=cc-by,
+}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+%% These data are provided by the editors. May be left out on submission.
+%\paperdetails{
+%  submitted=2016-08-10,
+%  published=2016-10-11,
+%  year=2016,
+%  volume=1,
+%  issue=1,
+%  articlenumber=1,
+%}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Please go to https://dl.acm.org/ccs/ccs.cfm and generate your Classification
+% System [view CCS TeX Code] stanz and copy _all of it_ to this place.
+%% From HERE
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002944.10011122.10003459</concept_id>
+<concept_desc>General and reference~Computing standards, RFCs and guidelines</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10010405.10010476.10010477</concept_id>
+<concept_desc>Applied computing~Publishing</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[300]{General and reference~Computing standards, RFCs and guidelines}
+\ccsdesc[500]{Applied computing~Publishing}
+
+% To HERE
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\maketitle
+
+% Please always include the abstract.
+% The abstract MUST be written according to the directives stated in 
+% http://programming-journal.org/submission/
+% Failure to adhere to the abstract directives may result in the paper
+% being returned to the authors.
+\begin{abstract}
+Node.js is a runtime framework that gained popularity in the last years as it allows
+rapid development of lightweight servers in JavaScript; more recently,
+it has been successfully employed to support programming for the Internet of Things.
+While the asynchronous, single-thread execution model on which Node.js is based turns out to be an effective way to
+efficiently handle big volumes of data and requests, it also makes quite challenging to ensure the correct behavior
+of code heavily based on nested callbacks which are executed asynchronously. 
+To this aim, runtime verification can be a valuable support to tackle such a complex task, and
+to complement other software verification techniques based on static analysis or testing.
+Furthermore, runtime verification of Node.js can be fruitfully exploited for ensuring the correctness of Internet of Things systems, a challenge 
+which has been barely explored so far. 
+
+Trace expressions have been initially devised as a formalism for runtime verification of protocol-compliance
+adopted in widespread multiagent system platforms.
+Key features of trace expressions are their support for parametricity, which allows definition of specifications
+depending on values that can be known only at runtime when events are traced,
+and their independence from a particular language and system, obtained through the notion of event domain and type.
+
+In this work we show how trace expressions can be employed in the context of runtime verification for Node.js applications to specify the expected behavior,
+and we present the implementation of a corresponding prototype tool allowing automatic monitoring of the correct use
+of the features offered by widespread Node.js libraries, as \lstinline{http}.
+The implementation is based on the Jalangi2 framework for JavaScript code instrumentation, required to
+dynamically trace events, and on SWI-Prolog for supporting trace expressions and the inference engine for their verification.
+The tool offers a simple HTTP interface based on JSON to allow runtime verification of distributed and heterogeneous components.
+
+Preliminary experiments with the popular framework Express 
+show that the tool is able to support runtime verification of real Node.js code.
+\end{abstract}
+
+\input{intro}
+
+\input{node}
+
+\input{trace-exp}
+
+\input{rv}
+
+\input{example}
+
+\input{impl}
+
+\input{exper}
+
+\input{conclu}
+
+\printbibliography
+%%\bibliography{main}
+
+\end{document}
+

@@ -1,0 +1,93 @@
+\section{Conclusion}
+\label{sec:conclu}
+
+We have presented the implementation of a prototype tool able to support
+parametric runtime verification of Node.js applications in a distributed environment.
+
+The tool is based on parametric trace expressions, and exploits Jalangi2 for tracing events via code instrumentation, and SWI-Prolog for
+manipulating trace expressions and implementing the inference engine for verifying them.
+
+Preliminary experiments have been conducted on \lstinline{http}, one of the most popular standard Node.js modules,
+by mining from its documentation several specifications later expressed with trace expressions.
+
+The mined specifications have been dynamically verified with the tool on several simple examples of HTTP servers and clients,
+and with a couple of more significant examples of servers built on top of Express; these last tests required code instrumentation of the Express components
+built on top \lstinline{http} for a total of almost 1K of SLOC, and have shown that the prototype tool is able to support
+runtime verification of real Node.js code.
+To our knowledge, no other currently available tool allows parametric runtime verification of Node.js applications in a distributed environment.
+
+Although the reported experiments are promising, a considerable amount of work is still required for making our reaserach prototype a
+tool usable in practice.
+
+\subsection{Experiments}
+Runtime verification of code based on Express is an interesting result for the tool, nevertheless
+at the moment we are not able to determine to which degree our examples are able to
+cover uses of \lstinline{http} features in the relevant components of Express.
+
+To this aim, it would be useful to experiment the tool with real Node.js applications
+based on Express, and try to apply to our case techniques for code coverage \cite{artho2005combining} used in software testing.
+
+On the side of specification mining, there are still other interesting properties that can be expressed an dynamically
+verified with parametric trace expressions which we are considering to mine both from the documentation of Node.js
+\lstinline{http} module, and from the specification of HTTP. Furthermore, there is a number of other widely used Node.js
+modules and frameworks as \lstinline{async} and \lstinline{jquery} for which specification mining and runtime
+verification would be quite useful.
+
+\subsection{Performance}
+At the moment we have not focused on performance issues, because our first target was to have a proof of concept
+that it is possible to implement a tool for parametric runtime verification for Node.js applications in a distributed environment.
+As long as monitoring is used for software verification before deployment, problems with performance degradation are less 
+stringent; however, the current implementation of our prototype still requires several optimizations to support runtime verification
+in practice.
+
+A first practical way to obtain a speed up of the monitored application is to
+allow asynchronous communication between the instrumented code and the monitor;
+indeed, the current implementation is based on synchronous communication, because this is
+a simple way to guarantee that the monitor always receives events in the correct order.
+Asynchronous communication is more complex to implement and can be achieved in different ways;
+anyway, the speed up obtained by this solution depends on the responsiveness of the monitoring server,
+which cannot be easily estimated without experimental data, because it depends on the specifically employed trace expression
+for runtime verification.
+
+Another useful optimization consists in reducing the network traffic 
+between the monitored application and the monitor.
+This can be effectively achieved in the following ways.
+
+The current instrumentation implemented with Jalangi2 sends to the monitor
+all events of the domain; in our case, all calls and returns from functions/callbacks.
+However, the instrumentation can be configured so that it sends only those events 
+of the domain which are relevant for the verification.
+
+We have discussed in \Cref{sec:impl} that problems with getters and circular objects
+prevented us to use \lstinline{JSON.stringify} to serialize values of the events to be sent to the
+monitor. The customized version of \lstinline{stringify} we have implemented for the tool
+can be optimized in several ways at the cost of a more complex code; for instance,
+objects are always serialized at arbitrary depth (up to circularity, of course), but for
+all kinds of verifications we have tested with our experiments, it is sufficient to serialize objects
+at fixed depth not larger than 4 levels.
+
+Finally, to optimize connection time, it would be worth sending sequence of events rather than one
+event at time as happens in the current implementation.
+
+\subsection{Error reporting and IDE}
+So far error reporting has been neglected, and in case of failure the only available information
+regards the unexpected event that has been traced; clearly, more informative error messages
+are required to allow the user to understand and locate more easily the detected problem.
+
+Jalangi2 already supports information about the location of the original code that has been
+instrumented, hence it should not be difficult to display the line of code and name of the file where
+the faulty event has originated.
+
+For error messaging, the SWI-Prolog implementation already supports identification of
+all trace expressions that constitute a certain specification, hence associating specific error messages with them
+would be a simple extension.
+
+Finally, at the moment, trace expressions must be written directly in Prolog and, although the used syntax
+is similar to that defined in the paper, the interpreter adopts non standard rules to manage operator precedences,
+and does not statically detect ill-formed trace expressions.
+
+To this aim, we are developing in \textit{Xtext}\footnote{\url{https://eclipse.org/Xtext/}} an IDE
+to write specifications with trace expressions at a higher level, and to automatically generate
+the corresponding Prolog code. \textit{Xtext} allows such an IDE to be integrated as an Eclipse plugin
+with support for syntax-highlighting, auto-completion,
+and a number of static checks useful for early error detection of the written specification.

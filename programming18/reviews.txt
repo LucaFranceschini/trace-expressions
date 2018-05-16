@@ -1,0 +1,515 @@
+----------------------- REVIEW 1 ---------------------
+PAPER: 27
+TITLE: Parametric runtime verification of Node.js applications with trace expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall recommendation: -1 (weak reject)
+
+----------- Review -----------
+The work described here can be interesting, but the text has so many
+small problems that it is difficult to concentrate on the big picture.
+One thing missing is how this paper differs from reference [9].
+
+The small problems:
+
+Page 2:
+
+* "JavaScript code always run" -> "runs"
+
+* The claim that "single-thread execution model turned out to
+be an effective way to handle big volumes of data and huge amounts of
+(simultaneous) requests" should be backed by some evidence (e.g., a
+reference).
+
+* "Runtime verification is a software analysis approach [...]" Is
+the paper creating this concept or does it come from somewhere? (reference?)
+
+* "As preliminary results show". Preliminary results usually do not
+show anything; at most they "suggest", "indicate", etc. (Otherwise
+they are not preliminary anymore.)
+
+* "The suggested approach to implement [...]" Suggested by whom?
+
+* "Trace expressions are proposed as a formalism [...]" Again, by
+whom? Where? The use of passive voice makes these sentences quite confusing.
+
+* the expressive power [...] have been partially investigated." Again,
+by whom? Where? (First I got the impression that it was in this paper,
+but I was wrong.)
+
+
+Page 3:
+
+* "how trace expressions can be suitably exploited" - I don't think
+"exploited" is a good word here.
+
+* "to formally specify correct use" -> "to formally specify the correct use"
+
+* "pertaining certain kinds of properties" - something wrong here.
+
+* "from functions and their corresponding callbacks" - Usually, functions
+do not have corresponding callbacks. Moreover, callbacks are functions, too;
+the sentence is confusing.
+
+
+Page 4:
+
+* "JavaScript is currently the most popular programming language" - Is
+there any agreed meaning for "popular"? (We may not need an exact meaning
+to say that a language is popular, but we need it to say that it is the
+most popular.) Moreover, given that JavaScript is popular
+(by whatever measure), the paper does not need to assert its popularity.
+Also, the paper does not need to describe it ("JavaScript is a
+high-level, dynamic scripting language [...]"). Everybody knows that.
+
+* Again, "the single most popular framework" has no meaning. (The short
+description, in this case, is welcome.)
+
+* "a repository of hundreds of thousands modules" -> "hundreds of
+thousands of modules" or "hundreds of thousand modules"
+
+
+Page 5:
+
+*  "The execution model of Node.js is quite different from
+most of other environments."  That kind of asynchronous computation
+(and its associated "callback hell") has been around long before
+Node.js. Just remove this sentence.
+
+* "Node.js heavily exploits the left pattern" -> It is the right one.
+(Again, "exploits" is not a good word...)
+
+* In the explanation about the event loop, nothing is said about when
+it runs.
+
+* "Even if it may seem counterintuitive at first, [...]" - Because it
+is counterintuitive, this claim should be backed by some evidence.
+
+
+Page 6:
+
+* "Examples includes" -> "Examples include"
+
+* "formal languages notation" -> "formal language notation"
+
+* The paper uses the same letter (caligraphic E?) for both the set
+of events and the language of event types. (Well, at least they
+appear to be the same.)
+
+* "[The event type] language is not fixed in order to make trace
+expressions more flexible [...]" I can understand that in a general
+definition, but I guess the language is fixed for this paper. (Otherwise,
+how to formalize it?)
+
+* The paper writes 'match' as a function, but defines it as a relation.
+(Functions do not "hold"...)
+
+
+Page 7:
+
+* "were further operations on x will be checked" -> "where further
+operations on x will be checked"
+
+* "the following trace expression τ specifies the correct use of the
+file descriptor 42" : This trace ignores the possibility of that file
+descriptor being reused after being closed. (See next.)
+
+* "we assume that every open operation always gives a fresh file
+descriptor, which can be reasonably assumed to be ensured by the
+operating system." : Operating systems typically reuse file descriptors
+after they are closed. POSIX even demands such reuse.
+
+
+Page 8:
+
+* Figure 4 uses an union operation for substitutions ('and' rule). Does
+this have an obvious meaning?
+
+* An explanation of rules 'var-t' and 'var-f', and their interaction
+with rule 'main', would be helpful. (In particular, what is the precise
+meaning of \sigma\tau' ?)
+
+* "well suited for inference systems implementation" -> "well suited
+for the implementation of inference systems" ?
+
+
+Page 9: 
+
+* "software testing [...] by running (part of) the system on ad-hoc input."
+Many (most?) techniques for software testing do not use ad-hoc input.
+(The paper itself mentions the use of runtime verification for generation
+of test cases.)
+
+* "Runtime Verification [...] consists in verifying a real run [...]" -
+The paper already (tried to) define Runtime Verification in its
+introduction (p.2).
+
+* I am not sure what the paragraph "Word Problem" tries to elucidate.
+In particular, to say that "the problem of checking whether those
+properties hold can turn out to be much easier" is misleading, because
+each approach talks about different properties: "it holds for all inputs"
+versus "it holds for this particular input".
+
+* "more expressive than LTL 3 [7], which is very relevant for runtime
+verification purposes."  Why is LTL 3 very relevant for runtime
+verification purposes? (reference?)
+
+
+Page 10:
+
+* "since they should be automatically generated from the high-
+level formal specification." : Why?
+
+* "prove that a program always satisfy some property." : A program
+is a static entity. Either it satisfies a property or not. "always"
+does not make sense here.
+
+
+Page 11:
+
+* In Figure 5, the second argument to 'fs.close' should be a callback,
+not a direct call to 'console.log'.
+
+* "After that, the file is closed" : The file is not closed; only a
+request to close the file is generated (to be executed later).
+
+* "a second write to the same file should only be called after the callback
+of the previous one has been executed" : "has been executed" implies that it
+ran until its end; so, we could not do a write request in the callback of
+the previous one.
+
+
+Page 12:
+
+* The definition of \tau_w is using \tau' in the recursion. 
+
+
+Page 13:
+
+* Figure 6: a closing parenthesis is missing, probably to close
+the first call to 'request.on'.
+
+
+Page 15:
+
+* "Thanks to this features"
+
+
+Page 16:
+
+* "Objects containing circular reference" ->
+  "Objects containing circular references"
+
+* "JavaScript support getters" -> "JavaScript supports getters"
+
+
+Page 17:
+
+* "everal" -> "Several"
+
+* "Six interesting constraints have been identified" : What
+does "interesting" mean here? (Or, what would be an uninteresting
+constrain?)
+
+
+Page 19:
+
+* "to do that, we have considered Express" : the paper already
+said this, on the last paragraph before Section 7.1.
+
+
+Page 20:
+
+* "the tool was able to monitor all relevant http events [...]" :
+Is that all? How can we know it was monitoring correctly? Did it
+find any errors? What was the goal of this test?
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 27
+TITLE: Parametric runtime verification of Node.js applications with trace expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall recommendation: 1 (weak accept)
+
+----------- Review -----------
+This paper applies the authors' "trace expression" formalism to the
+problem of monitoring JavaScript programs for correct use of an API.
+Trace expressions can be implemented directly in SWI-Prolog, and the
+implementation can then be applied to event sequences generated from a
+running, instrumented application to detect violations of the model.
+The authors have demonstrated this approach by writing trace
+expressions for 6 constraints of the Node.js HTTP module and running
+the Express framework while checking constraints.
+
+As the paper notes, the idea of comparing an instrumented application
+against a specification is not new; the novelty here is the
+specification language of trace expressions. The paper makes a good
+case that trace expressions are easy to implement and useful for
+checking protocols. The benefit of trace expressions compared to other
+approaches (such as LTL, session types, or temporal contracts) is less
+clear from the current presentation. For example, the authors have
+previously compared the expressiveness of trace expressions and LTL_3,
+but it's not clear whether that difference matters for this paper's
+examples.
+
+Arguing the benefit of a new language relative to existing languages
+is often tricky, and perhaps it belongs to other papers to argue for
+trace expressions generally. Still, more motivation for the language
+of trace expression seems like the most direct way to improve the
+paper. (There are hints in the discussion of IoT, but the hints are
+vague.) The paper's application of runtime verification to Node.js
+libraries is perhaps new, but that seems less interesting on its own
+and more a matter of engineering, while the current
+3-requests-per-second results suggest that considerable engineering
+effort remains. More information on the implementation of trace
+expressions and matchers in Prolog might be interesting, too ---
+especially if a benefit of trace expressions is their relatively
+straightforward implementation in Prolog.
+
+Editing suggestions:
+
+Abstract and introduction: "in the last year" => "in recent years"
+
+Page 6, "Event types": should "... a language E of event types ..."
+really have a capital script "E", which was previously defined as
+being a set of events? I think it maybe should be a different letter,
+and lowercase script "v"s are elements of that set.
+
+Page 9: "formal methods has been proposed" => "have"?
+
+Page 10: "avoid to interfere with" => "avoid interfering with"
+
+The "Node.js" section on page 10 mentions that the examples show the
+importance of parametric verification, in contrast to the capabilities
+of LTL. This point is not clear to readers with limited expertise in
+LTL, and it's not clear whether session types or temporal contracts
+address the same issues.
+
+Page 11: Should `console.log('bye')` be `() => { console.log('bye') }`?
+Also, since both writes and close use callbacks, couldn't the file
+be closed before any of the writes happen? It may be better to introduce
+this example by just saying "write all number from 0 to LIMIT" and
+only afterward point out that the writes can happen in any order.
+Then again, it's not clear that Node.js will actually reorder the
+writes and/or close.
+
+Page 18: Does the "six" for checked properties count each sub-bullet
+on the middle of the page as a separate property? Otherwise, I only
+count four reported properties.
+
+Reference 17: The paper title seems to accidentally include a funding
+acknowledgment.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 27
+TITLE: Parametric runtime verification of Node.js applications with trace expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall recommendation: -1 (weak reject)
+
+----------- Review -----------
+Summary:
+
+The paper presents parametric trace expressions and shows how they can be used for runtime verification of Node.js applications. It also describes the implementation of a tool embodying parametric trace expressions and reports on experiments conducted using that tool for verifying some monitoring examples.
+
+
+Review:
+
+The paper tackles an interesting and timely problem, verification of JavaScript programs since the language is increasingly being used for both web clients and server-side code. It also shows the embodiment of a formalism into a prototype tool capable of verifying simple Node.js programs.However, the paper does not properly describe where the novelty of the work lies in. I do acknowledge the effort of building such a runtime verification tool for Node.js, but in its current stage, the paper does not convey a contribution on its own. It is unclear whether 1) there is a technical novelty on the formalism, 2) there are engineering challenges tackled on the implementation or 3) there are improvements on scalability or applicability of trace expressions. A contribution on at least one of these aspects would support the paper’s publication.  
+
+Regarding the technical novelty, it is not clear that trace expressions described in section 3 are an improvement on prior and related semantics. It would have made the paper stronger if it explicitly incorporated a discussion on how the semantics extend prior work e.g. [8] if that is the case. There is related work in session types literature that has investigated global session types for languages with similar concurrency models, e.g. [A] for Erlang. There is also work on using temporal logic for analyzing distributed asynchronous applications [B]. In the context of JavaScript, much work has focused on defining dynamic analysis to verify JavaScript code, specially in the context of security [eg. C].  It would be useful to describe how the formalism is better suited or provides some advantages with respect to those works.
+
+It is fine that the paper does not innovate on the formalism, if, on the other hand, it overcomes engineering challenges in the context of JavaScript.  However, the implementation section is described in a way that it looks as if most of the technical challenges are tackled by the underlying implementation tools. For example, in terms of monitoring, the technical challenges are taken care by Jalangi 2.  Alternatively,  the monitoring can be built using JavaScript proxies, or on top of similar tools like Linvail[D], or the Virtual Values library for JavaScript [E].  It would make the paper stronger to review those alternatives as well as to discuss how the choice of Jalangi 2 affects the type of code that can be verified. I was also wondering if trace expressions specification can be directly encoded on top of web API specification languages like OpenAPI and JSON Schema.
+ 
+With respect to the scalability or applicability of trace expressions, there are no big case studies conducted that demonstrates how complete or correct the tool is, or how it is applied to realistic applications. I believe that was not the focus of the paper, so the small examples would be fine if the paper provided a convincing case for novelty on the verification approach or its implementation.
+
+Below you can find some detailed suggestions on how to improve the structure and writing of the paper. 
+
+1) Section 2 would better include all background information required to follow this paper at once. The Node.js subsection can be drastically reduced (if not completely cut) as the interesting bits are on the execution model described in the Asynchronous Computation subsection. That subsection can better show a more useful example. It would be better to move the text for Figure 5  and Figure 6 to this point and like this centralize all background examples in this section. The Event loop subsection can be improved by introducing the well-known terminology on events, turns, and event handlers described in [F]. 
+
+2) Section 4 on Runtime Verification mixes information on runtime verification techniques, and implementation methods for runtime verification. The part on monitoring techniques talks about how to implement a verification tool, but that is orthogonal to designing a verification model for asynchronous distributed applications. So, it seems misplaced (unless the implementation of the tool is also a contribution). At this point it should be already clear the target applications that the paper aims to verify and the challenges that need to be solved, and what efforts have already happened. If the goal is to verify distributed applications, it would make the paper stronger if recent efforts after the cited 2009 survey would be discussed, e.g. [G]. 
+
+On the other hand, the text on Node.js is rather narrow since there is many research efforts focused on verifying JavaScript applications, especially in the context of security with access control models, information flow analysis, etc. The paper seems to imply there is no work on verification of JavaScript applications in a distributed environment, but the solution does not verify distributed interactions in the sense of multiparty session types but rather local interactions on the server-side JavaScript event loop. It is unclear if related works on JavaScript verification (not per se used in Node.js code) could be then used. 
+
+3) Section 6 lists some issues to be solved to implement a runtime verification tool, but it does not provide much insights on whether they were solved and how. For example issue 3 on the tracking the flow is relevant but it seems tackled by Jalangi2. However, can Jalangi2 track values returned from library calls? is it assumed that all library code can be instrumented? if not, how does the tool deal with partial information (if not all interactions can be monitored)? As far as I am aware issue 4 explained with HTTP requests is tackled by Jalangi2 as it combines code instrumentation with proxies. It would also make the paper stronger if the paper motivates that list of issues are not just a consequence of employing Jalangi 2, but they are challenges to face when building a runtime verification tool for JavaScript without requiring VM modifications. 
+
+[A] Dimitris Mostrous and Vasco T. Vasconcelos. 2011. Session typing for a featherweight Erlang. In Proceedings of the 13th international conference on Coordination models and languages (COORDINATION'11), Wolfgang De Meuter and Gruia-Catalin Roman (Eds.). Springer-Verlag, Berlin, Heidelberg, 95-109.
+
+[B] T. Scheffel and M. Schmitz, "Three-valued asynchronous distributed runtime verification," 2014 Twelfth ACM/IEEE Conference on Formal Methods and Models for Codesign (MEMOCODE).
+
+[C] Thomas H. Austin, Tommy Schmitz, and Cormac Flanagan. 2017. Multiple Facets for Dynamic Information Flow with Exceptions. ACM Trans. Program. Lang. Syst. 39, 3, Article 10 (May 2017), 56 pages. DOI: https://doi.org/10.1145/3024086 
+
+[D] L. Christophe, E. Gonzalez Boix, W. De Meuter, and C. De Roover. Linvail: A general-purpose platform for shadow execution of javascript. In International Conference on Software Analysis, Evolution, and Reengineering (SANER), pages 260–270. IEEE Computer Society, 2016.
+
+[E] Prakasam Kannan, Thomas H. Austin, Mark Stamp, Tim Disney, and Cormac Flanagan. 2016. Virtual Values for Taint and Information Flow Analysis. In Workshop on Meta-Programming Techniques and Reflection, META 2017. ACM.
+
+[F] Miller, M., Tribble E.D., Shapiro, J. Concurrency among strangers: Programming in E as plan coordination. In Symposium on Trustworthy Global Computing, pp. 195–229, LNCS Vol. 3705. Springer. April 2005.
+
+[G] David A. Basin, Felix Klaedtke, Eugen Zalinescu: Failure-aware Runtime Verification of Distributed Systems. 35th IARCS Annual Conference on Foundation of Software Technology and Theoretical Computer Science (FSTTCS 2015): 590-603. 2015.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 27
+TITLE: Parametric runtime verification of Node.js applications with trace expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall recommendation: -1 (weak reject)
+
+----------- Review -----------
+# Summary
+
+This paper presents a runtime verification system for temporal
+properties over node.js programs. The approach works in three steps:
+1. The program is annotated to emit events (such as calls to library
+functions and to programmer-supplied callbacks).
+2. These events are recorded in a trace (this is sent over the network
+to a remote machine, but this is inessential).
+3. This trace is checked against a specification written as a "trace
+expression", a formalism similar to LTL, using a checker that's a part
+of SWI-Prolog.
+
+
+The specification language is expressive, supporting binding and
+parameterization of events, which can then be correlated with each
+other (such as distinct file descriptors).
+
+The paper describes a case study, where several specifications are
+added to the node.js `http` library, and then at least one small web
+application using the Express framework is monitored. No specific
+results from the monitoring are reported, other than it works.
+
+# Review
+
+This paper nicely shows that the trace expression formalism is
+potentially effective for verifying properties of callback-driven
+concurrent applications, as seen in node.js. However, there are a
+couple major issues with the current state of the paper:
+
+### Evaluation
+
+The evaluation of the system is very preliminary. Only tiny toy
+programs are executed, and nothing is reported about the
+results. Nothing is said about performance of the system, which is
+especially important for runtime verification. Nothing is reported
+about what errors are found, and where in the system they are.
+
+A more effective evaluation should consider at least some of the
+following:
+
+* What the overhead of instrumentation is, especially on real
+  benchmarks of web servers.
+
+* Whether real Express applications can be run without violating the
+  policies.
+
+* Whether there are any actual failures in applications that use
+  Express.
+
+### Novelty
+
+It appears that almost all of the specifications in this system can be
+expressed using the Temporal Contracts of [Disney, Flanagan, McCarthy;
+ICFP 2011], see also http://docs.racket-lang.org/temp-c/ for the
+implememtation. That system uses a very different verification
+approach, using regular expression matching against an event trace,
+but otherwise the applications and overall approach are quite
+similar. Is this system more expressive, or otherwise able to handle
+new aspects of node.js in ways that are new?
+
+### Other issues
+
+Several of the specifications for `http` don't seem to need temporal
+specifications. For example, checking that the response can't have a
+body if the status code is 204 is just a contract check on the
+response constructor.
+
+In several places (such as the Introduction), the paper says that
+node.js avoids dealing with concurrency, but this is false. The async
+callbacks are explicitly a concurrency mechanism.
+
+The term "parametric" and especially "parametericity" for the property
+that the system is parameterized is by concrete values is
+confusing. The word "parameterized" would be much better.
+
+The discussion of the Internet of Things seems to just be the addition
+of a buzzword -- no actual relation to the internet of things is
+discussed, except that the verifier is made into a distributed system.
+
+Footnotes 2,3, and 4 are on the wrong page.
+
+The "event loop" concept is much older than node.js. Prior to
+JavaScript, the approach was popularized in E by Miller and
+collaborators.
+
+The notation for scoping is extremely unclear in the presence of
+multiple equations defining a term.
+
+Where does the substitution in the "Parametric Trace Expressions"
+paragraph come from? (This later is somewhat explained, but was very
+surprising when introduced.)
+
+What's the relation between the two forms of arrow: -> and >->?
+
+What operation is performed for the union of two substitutions (in the
+`and` rule)?
+
+It would be clearer to specify in the prose that the `cat-r` rule is
+the one that needs \epsilon.
+
+The code in figure 5 has a more serious bug --- there's no requirement
+that the numbers be written in order (for the same reason as the bug
+you note).
+
+The `match` function at the end of section 5 is unclear. Who defined
+this function? It seems to be part of the specification of the
+property being checked, but where does that part of the specification
+live? Does each specification need its own match function?
+
+Does Express give rise to any interesting properties, for the `get`
+method for example?
+
+What happened when you ran your toy Express example?
+
+Why is it useful to put the monitor on a different machine? Is this
+actually more efficient than online monitoring?
+
+Citation [27] should not be to SIGPLAN Notices.
+
+
+----------------------- REVIEW 5 ---------------------
+PAPER: 27
+TITLE: Parametric runtime verification of Node.js applications with trace expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall recommendation: -1 (weak reject)
+
+----------- Review -----------
+The authors describe the implementation of a parametric runtime verification techniques proposed in their previous work for checking Node.js programs. The paper reviews the foundation of the property specification language, its semantics, and how trace properties checks can be implemented on top of SWIProlog. The authors describe their implementation and discuss several examples of errors that can be automatically detected with the proposed tool and adequate specifications.
+
+
+The related reference [9] should be made available to assess the novelty of the proposed work. A brief summary of such novelty may also be provided by the authors.
+
+The evaluation on Express is not clear. Have real applications based on Express been evaluated? What bugs have been found and confirmed by the developers? How many bugs have been found that were not identified by previous/comparable techniques? In particular, a set of properties that revealed bugs and could not be expressed in LTL(3) or other formalisms would be useful to assess the practical impact of choosing event trace specifications over them.
+
+While performance optimization is not a primary goal for this stage of the research, reporting the execution time on the proposed experiments, together with relevant dimensions of the problem (e.g., number of rules in SWIprolog, number of events,...) may be useful to make a preliminary assessment of the applicability of the proposed technique. The overhead introduced by the monitoring strategy should be reported as well.
+
+Description of Figure 2: is the left or the right pattern heavily exploited by Node.js applications?
+
+pg6, Event types: \Epsilon has been used to describe a set of events; here used again to specify a language.
+
+pg 7, Trace Expressions: the symbol \tau has not been defined before being used.
+
+pg7, Parametric Trace Expressions: the semantics of the shuffle operator is not clear at this stage because the local scoping of variables have not been defined yet. In turn, the example in equations 3 and 4 is confusing: why fd would be bound for \tau^\prime, but not for a derivation of \tau? Intuitively, the closest binding operator applies first; but in this case the effect <x, \tau> if \tau does not contain free variables is not specified. On this same page, <x, \tau> assumes that x is a binding for all the free variables in \tau (in order of occurrence?) or can it bind only part of them? If so, is it possible to specify which variable is actually bound (e.g., x=3 and y=5)?
+
+The notion of coinduction is mentioned several times in the paper but never defined. A (rough) definition of this method may be useful to keep the paper self-contained. Especially because SWIProlog has been portrayed in the paper as able to deal with recursive trace expressions, but it seems these are not needed to specify regular terms, which would, in turn, be checked with coinduction. These points and concepts may be clarified in the paper.
+
+Pg 9: Expressiveness: an example of relevant properties that require the additional expressiveness of trace expressions can be added. While intuitively they allow for parametric specifications, for all the applications where the domain is finite, parametric expressions seem to provide a (valuable) more compact representation of the trace properties to be checked, but not an actual increase of expressiveness (as the predicates can be instantiated on all the elements of the finite domain). Is this the case?
+
+End of Section 5: the example regarding the length of an http response seems to imply the support for (at least) linear integer arithmetics. Is this theory supported by the implementation? What other theories are supported?
+
+Pg 16: the claim that Node.js is becoming popular for IoT applications needs some references.
+
+pg 9: methods has been -> methods have been
+pg 17: everal -> several

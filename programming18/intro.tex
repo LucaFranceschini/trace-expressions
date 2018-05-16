@@ -1,0 +1,69 @@
+\section{Introduction}
+\emph{Node.js} is a runtime environment that allows JavaScript programs to be executed outside a browser.
+The framework gained popularity in the last years as it allows developers to successfully employ JavaScript for server-side programming.
+
+At its core, Node.js is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, scheduling the request for later execution.
+Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always run on a single thread.
+This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge amounts of (simultaneous) requests, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with concurrency and parallelism.
+
+%Besides, the huge package ecosystem promotes code reuse and fast development.
+%Finally, Node.js recently gained popularity in the Internet of Things community as well.
+%
+%From a software engineering point of view however, Node.js has its downsides and pitfalls and poses serious challenges.
+
+On the other hand, asynchronous programming heavily relies on the notion of callback, which can lead to many levels of nested blocks and obfuscate the actual execution flow, making the code hard both to read and to debug.
+When an asynchronous request is made a callback (i.e., a function) is expected, and it will be executed when the result of the request will be available.
+This, together with the non-deterministic environments in which Node.js is employed, and the dynamic nature of JavaScript itself, makes it challenging to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
+
+\emph{Runtime verification} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given (formal) specification of the expected behavior.
+When efficiently implemented, the verification process can even run after deployment in order to monitor real scenarios.
+
+As preliminary results show \cite{TowardsIoT17}, runtime verification can be fruitfully used to monitor Node.js systems as a complement to formal verification and testing.
+The suggested approach to implement a monitoring system for JavaScript and Node.js is based on code instrumentation, to allow suitable (and automatic) modification of the original code for appropriate reaction upon occurrences of interesting events.
+
+\emph{Trace expressions} are proposed as a formalism to write down formal specifications.
+They are more expressive than other formalisms commonly adopted for runtime verification, as
+attributed context-free grammars \cite{de2014combining} and LTL$_3$ \cite{AnconaFM16}.
+Though they were initially devised to verify protocol-compliance in multi-agent systems, existing work and preliminary results show that trace expressions can be used as general specification formalism for parametric runtime verification \cite{ParametricJava17, TowardsIoT17};
+the expressive power and the algebraic properties of the underlying operators have been partially investigated.
+A key feature of trace expressions is parametricity: correctness of execution may depend on the actual values associated with events at runtime.
+This makes the formalism very expressive and allows runtime verification of complex properties.
+Another interesting characteristic is their independence from the monitored system and underlying programming language,
+obtained through the abstraction of event type.
+
+In this work we show how trace expressions can be suitably exploited in the context of runtime verification for
+Node.js applications, to formally specify correct use of the features exported by a Node.js module as
+can be derived from its documentation, and to dynamically verify such a specification.
+This is the core idea of this work and the main novelty, since (runtime) verification of Node.js has not been studied before.
+
+A corresponding prototype tool\footnote{The implementation and a script for running all tests reported in this paper are available at \url{http://www.disi.unige.it/person/AnconaD/\toolName}.} has been developed based on the Jalangi2\footnote{\url{https://github.com/Samsung/jalangi2}.}
+framework and SWI-Prolog\footnote{\url{http://www.swi-prolog.org}.}.
+The former is employed for performing instrumentation of JavaScript code, to be able
+to dynamically trace all those events that constitute what we call an \emph{event domain}, that is, the set
+of all events pertaining certain kinds of properties;
+all examples shown in this paper refer to a unique event domain consisting of calls and returns
+from functions and their corresponding callbacks. Hence, a unique instrumentation
+was required to automatically monitor and verify different properties, each specified by a particular trace expression.
+SWI-Prolog is the underlying language for supporting parametric
+trace expressions and implementing the inference engine for their verification; it provides
+a natural support to cyclic terms, needed for recursive trace expressions, and coinductive
+programming with the \lstinline{coinduction}\footnote{\url{http://www.swi-prolog.org/pldoc/doc/_SWI_/library/coinduction.pl}.}
+module. 
+
+The tool offers a simple HTTP interface based on JSON to allow runtime verification of
+distributed and heterogeneous components; in this way, the tool is ready to
+support runtime verification in the context of the Internet of Things.
+
+To experiment with the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used 
+in Node.js, to mine specifications expressible with parametric trace expressions, with the aim of dynamically verifying
+the correct use of \lstinline{http} in Node.js code.
+Promising preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
+that our prototype tool is able to support runtime verification of real Node.js code.
+
+\paragraph{Outline}
+\Cref{sec:node} motivates the choice of Node.js, and together with \Cref{sec:trace} they give the necessary background about Node.js and trace expressions.
+\Cref{sec:rv} is a study of the state of the art for runtime verification techniques, while \Cref{sec:examples} shows how it can help to detect bugs in Node.js programs with motivating examples.
+\Cref{sec:impl} presents the implementation of our framework for runtime verification of Node.js based on trace expressions.
+\Cref{sec:exps} reports on some preliminary experiments conducted with Node.js programs based on the standard module
+\lstinline{http} and the widely adopted framework Express.
+Finally, \Cref{sec:conclu} draws conclusions and discusses future research directions.
