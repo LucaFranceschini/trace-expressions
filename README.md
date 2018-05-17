@@ -30,3 +30,7 @@ To install Node.js npm dependencies (Jalangi2, Express, ...) run
 To execute a script with Node.js, instrumenting on-the-fly with our function invocation analysis, run
 
     $ node <repo path>/node_modules/jalangi2/src/js/commands/jalangi.js --inlineIID --inlineSource --analysis <repo path>/jalangi/functionInvocationAnalysis.js <javascript file to run>
+
+## Examples
+Different examples can be found in `examples`.
+Every folder usually contains a "good" and a "bad" example, that are accepted or considered errors by the monitor, respectively.
