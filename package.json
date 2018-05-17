@@ -1,0 +1,20 @@
+{
+  "name": "trace-expressions",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucaFranceschini/trace-expressions.git"
+  },
+  "author": "Davide Ancona, Luca Franceschini",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucaFranceschini/trace-expressions/issues"
+  },
+  "homepage": "https://github.com/LucaFranceschini/trace-expressions#readme",
+  "dependencies": {
+    "jalangi2": "^0.2.5"
+  }
+}
