@@ -34,3 +34,4 @@ To execute a script with Node.js, instrumenting on-the-fly with our function inv
 ## Examples
 Different examples can be found in `examples`.
 Every folder usually contains a "good" and a "bad" example, that are accepted or considered errors by the monitor, respectively.
+Also, a Prolog file containing the specification is included.
