@@ -1,0 +1,5 @@
+Il client invia una richiesta HTTP GET e stampa il corpo della risposta, se presente.
+
+Il server corretto risponde con una 304 senza corpo.
+
+Il server buggato risponde con una 304 con un corpo, che viene inviato ma non ricevuto dal client.

@@ -1,0 +1,7 @@
+il client invia una richiesta HTTP, riceve la risposta e la stampa.
+
+il server corretto scrive una sola volta l'header nella risposta.
+
+il server buggato scrive due volte l'header per lo stesso messaggio, e la seconda sovrascrive la prima.
+
+PER LA SPECIFICA: questo viene troppo complicato senza il supporto all'identificazione degli oggetti passati come argomento secondo me, considerando anche che l'esempio non è super interessante.

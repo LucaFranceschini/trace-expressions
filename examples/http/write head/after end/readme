@@ -1,0 +1,5 @@
+il client invia una richiesta HTTP, riceve la risposta e la stampa.
+
+il server corretto scrive l'header prima di chiamare la end.
+
+il server buggato scrive l'header dopo aver chiamato la head, e viene perso (ne viene usato uno di default).

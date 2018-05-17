@@ -1,0 +1,7 @@
+il client invia una semplice richiesta HTTP e stampa 'done' quando riceve la risposta.
+
+il server corretto risponde ed invoca la end, quindi il client stampa e termina.
+
+il server buggato invia il corpo della risposta ma non chiama end, quindi il client riceve il corpo ma non termina.
+
+DOMANDA: è monitorabile?

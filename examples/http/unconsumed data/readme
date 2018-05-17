@@ -1,0 +1,7 @@
+il server http risponde con ~10mb di dati
+
+il client fa 1000 richieste.
+quello corretto consuma i dati (senza farci nulla) così che possano essere deallocati.
+quello sbagliato non li consuma e la memoria si riempie piuttosto in fretta.
+
+N.B.: blocca il computer, meglio tenere top aperto e killare alla 300-esima richiesta...
