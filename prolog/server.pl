@@ -17,12 +17,12 @@
 %% example:
 %% swipl -p node=prolog prolog/server.pl -- http/omitted\ body/204\ response/spec.pl prolog_server_log.txt
 %% -p node=prolog
-%%          required option to indicate the path to func_match.pl (event domain implementation)		
+%%          required option to indicate the path to func_match.pl (event domain implementation)
 %%  http/omitted\ body/204\ response/spec.pl
 %%          the trace expression (required argument)
-%%  ~/TechRep/programming18/express-examples/prolog_server_log.txt
-%%          logging enabled to file ~/TechRep/programming18/express-examples/prolog_server_log.txt (optional argument)
- 
+%%  prolog_server_log.txt
+%%          logging enabled to file prolog_server_log.txt (optional argument)
+
 % load specification
 :- current_prolog_flag(argv, [Spec|_]), use_module(Spec).
 
@@ -33,9 +33,9 @@ server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]).
 
 %TODO better way than using globals with exceptions?
 
-log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, '');true. 
-    
-manage_request(Request) :-		
+log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, '');true.
+
+manage_request(Request) :-
     http_read_json(Request, E),
     nb_getval(state,TE1),
     nb_getval(traceid,ID),
