@@ -10,7 +10,7 @@ $ lualatex main
 
 ## Prolog Server
 SWI-Prolog needs to be installed.
-`cd` into `prolog` directory and then:
+Then:
 
     $ swipl -p node=<prolog dir path> -- <spec path>
 
