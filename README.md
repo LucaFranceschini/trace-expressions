@@ -12,9 +12,9 @@ $ lualatex main
 SWI-Prolog needs to be installed.
 `cd` into `prolog` directory and then:
 
-    $ swipl -p node=. -- <spec path>
+    $ swipl -p node=<prolog dir path> -- <spec path>
 
-Where `<spec path>` points to the Prolog trace expression specification.
+Where `<prolog dir path>` points to the folder containing the module `func_match.pl` (folder `prolog` of this repo), and `<spec path>` points to the Prolog trace expression specification.
 
 The server will listen on the port `8081`.
 To exit the interactive Prolog interpreter type `halt.`.
