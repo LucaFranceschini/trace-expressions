@@ -9,7 +9,7 @@ Note: Node.js does not check whether Content-Length and the length of the body w
 const max_requests=Number(process.argv[2]) || 10
 const http = require('http');
 
-const data = "hello, world";
+const data = "hello, world!";
 
 const options = {
 	headers: {
