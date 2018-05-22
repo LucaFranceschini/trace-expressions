@@ -8,4 +8,4 @@ viceversa, buggyClientTooLow usa un content-length minore della reale lunghezza,
 
 lazyClient non specifica il content-length, che viene calcolato ed automaticamente aggiunto all'header.
 
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+`client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
