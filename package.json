@@ -15,6 +15,7 @@
   },
   "homepage": "https://github.com/LucaFranceschini/trace-expressions#readme",
   "dependencies": {
+    "express": "^4.16.3",
     "jalangi2": "^0.2.5"
   }
 }
