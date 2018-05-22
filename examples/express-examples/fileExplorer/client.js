@@ -16,7 +16,7 @@ let requests=0
 function random(min, max) {
     min = Math.ceil(min)
     max = Math.floor(max)
-    return Math.floor(Math.random() * (max - min)) + min //The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min)) + min // the maximum is exclusive and the minimum is inclusive
 }
 
 function run(err,files){
@@ -36,7 +36,7 @@ function request(){
 	if(requests<max_requests)
 	    setTimeout(request,0)
 	else {
-	    time=(Date.now()-time0)/1000
+	    let time=(Date.now()-time0)/1000
 	    console.log(`Requests: ${requests} Time (sec):${time} RPS: ${max_requests/time}`)
 	    process.exit()
 	}
@@ -44,7 +44,7 @@ function request(){
     req.on('error', e => console.error(e.message))
 }
 
-/* wait for server response */
+/* processes server response */
 
 // function request(){
 //     let i=random(-1,dir_files.length)
