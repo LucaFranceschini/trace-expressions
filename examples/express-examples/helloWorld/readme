@@ -1,0 +1,3 @@
+il server riceve richieste HTTP e risponde 'Hello world'.
+
+`client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
