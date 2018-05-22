@@ -17,7 +17,7 @@ function request(){
 	if(requests<max_requests)
 	    setTimeout(request,0)
 	else {
-	    time=(Date.now()-time0)/1000
+	    let time=(Date.now()-time0)/1000
 	    console.log(`Requests: ${requests} Time (sec):${time} RPS: ${max_requests/time}`)
 	    process.exit()
 	}
