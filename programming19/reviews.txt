@@ -10,6 +10,10 @@ The work described here can be interesting, but the text has so many
 small problems that it is difficult to concentrate on the big picture.
 One thing missing is how this paper differs from reference [9].
 
+>>> Nelle conclusioni:
+>>> With respect to out previous work [9], here we (a) presented a more complete set of examples, including HTTP interactions and the Express framework;	(b) enhanced our implementation in order to keep track of target objects in method invocations (necessary for monitoring HTTP interactions) and to deal with cyclic objects; (c) optimized our monitoring system by making it asynchronous, so that it fits in the Node.js execution model without stopping the execution of the program everytime an event is observed; (d) measure our performance with benchmarks. More details can be found in the following subsections.
+>>> Inoltre, aggiunte sottosezioni nelle conclusioni riguardo questi aspetti.
+
 The small problems:
 
 Page 2:

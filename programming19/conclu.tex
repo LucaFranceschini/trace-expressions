@@ -16,6 +16,15 @@ built on top \lstinline{http} for a total of almost 1K of SLOC, and have shown t
 runtime verification of real Node.js code.
 To our knowledge, no other currently available tool allows parametric runtime verification of Node.js applications in a distributed environment.
 
+With respect to out previous work \cite{TowardsIoT17}, here we
+\begin{enumerate*}[label=(\alph*)]
+	\item presented a more complete set of examples, including HTTP interactions and the Express framework;
+	\item enhanced our implementation in order to keep track of target objects in method invocations (necessary for monitoring HTTP interactions) and to deal with cyclic objects;
+	\item optimized our monitoring system by making it asynchronous, so that it fits in the Node.js execution model without stopping the execution of the program everytime an event is observed;
+	\item measure our performance with benchmarks.
+\end{enumerate*}
+More details can be found in the following subsections.
+
 Although the reported experiments are promising, a considerable amount of work is still required for making our reaserach prototype a
 tool usable in practice.
 
