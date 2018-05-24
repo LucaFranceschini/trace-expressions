@@ -3,3 +3,5 @@ Il server riceve una richiesta HTTP e stampa il corpo, se presente.
 Il client corretto invia una richiesta HTTP HEAD senza corpo, come specificato dalla documentazione.
 
 Il client buggato invia una richiesta HTTP HEAD con un corpo, che non viene però ricevuto dal server.
+
+`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
