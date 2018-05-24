@@ -5,3 +5,5 @@ quello corretto consuma i dati (senza farci nulla) così che possano essere deal
 quello sbagliato non li consuma e la memoria si riempie piuttosto in fretta.
 
 N.B.: blocca il computer, meglio tenere top aperto e killare alla 300-esima richiesta...
+
+`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
