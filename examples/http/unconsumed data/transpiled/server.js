@@ -1,11 +1,11 @@
 'use strict';
 
-const http = require('http');
+var http = require('http');
 
 // prepare (a lot of) data to send in replies
-const data = String(new Array(10000));
+var data = String(new Array(10000));
 
-const server = http.createServer((req, res) => {
+var server = http.createServer(function (req, res) {
 	// just send data
 	res.end(data);
 });
