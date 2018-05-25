@@ -9,10 +9,10 @@ Later on, with the introduction of the notion of event type, trace expressions h
 \paragraph{Events}
 Trace expressions can be used to specify the possible correct behavior of a system, w.r.t.\ some property that needs to be verified.
 To this aim, \emph{events} are defined as all the relevant observations that can be made on the system.
-Examples includes the execution of I/O operations, the triggering of a Node.js callback, invocation of functions\textellipsis{} A fixed set \(\eventSet\) of events is assumed.
+Examples include the execution of I/O operations, the triggering of a Node.js callback, invocation of functions\textellipsis{} A fixed set \(\eventSet\) of events is assumed.
 
 An \emph{event trace} \(\ev_1\dots \ev_n\dots\) is a (possibly infinite) sequence of events.
-Using formal languages notation, the set of traces can be denoted as \(\eventSet^\infty = \eventSet^* \cup \eventSet^\omega\) (the union of all finite and infinite traces, respectively).
+Using formal language notation, the set of traces can be denoted as \(\eventSet^\infty = \eventSet^* \cup \eventSet^\omega\) (the union of all finite and infinite traces, respectively).
 Intuitively a trace encodes a run of the system under test, or at least the relevant parts of its execution.
 
 As an example, consider the monitoring of a program writing on files.
@@ -30,11 +30,15 @@ An example of event trace over the set \(\eventSet\) would be the following:
 \end{equation}
 
 \paragraph{Event Types}
-On the top of events, a language \(\eventSet\) of \emph{event types} is defined.
+On the top of events, a language \(\eventTySet\) of \emph{event types} is defined.
 Event types are generally terms allowed to contain variables, and their language is not fixed in order to make trace expressions more flexible and easily adaptable to different domains.
 
 Together with event types a function \(\mtch\) is assumed to be given, with the following semantics.
-Given an event \(\ev\) and an event type \(\eventTy\), \(\mtch(\ev, \eventTy) = \subs\) holds if and only if \(\ev\) matches \(\eventTy\) with the computed substitution \(\subs\); substitutions on terms have the usual meaning.
+Given an event \(\ev\) and an event type \(\eventTy\), \(\mtch(\ev, \eventTy) = \subs\) if and only if \(\ev\) matches \(\eventTy\) with the computed substitution \(\subs\); substitutions on terms have the usual meaning.
+
+In the rest of the paper, we consider different examples of event domains and, thus, event type languages.
+We do not expect considerable expressivity is needed in this step, and as long as matching and substitution functions are defined, all properties still hold.
+Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply.
 
 Considering again the previous files event domain (\ref{eq:filedomain}), a sensible event type matching all write operations would be \(\writet(\xv)\), where \(\xv\) is a variable.
 A sensible definition of matching would lead to the following:
@@ -78,7 +82,12 @@ The trace expression above can only verify the correct use of a single file desc
 \tau' &= (\writet(\avar{fd}) \prefixop \tau') \orop (\closet(\avar{fd}) \prefixop \emptyseq)
 \end{align}
 When the first event \(\opent(x)\) will occur, it will match the prefix computing the substitution \(\{\avar{fd}\mapsto x\}\).
-At this point the shuffle operator is crucial\footnote{In order for the shuffle to work, we assume that every \(\opent\) operation always gives a fresh file descriptor, which can be reasonably assumed to be ensured by the operating system.}: following events are allowed to belong either to \(\tau\) (operations on new files, in the correct order) or to \(\tau'\{\avar{fd}\mapsto x\}\) (note the substitution!) were further operations on \(x\) will be checked.
+At this point the shuffle operator is crucial:
+%\footnote{In order for the shuffle to work, we assume that every \(\opent\) operation always gives a fresh file descriptor, which can be reasonably assumed to be ensured by the operating system.}
+following events are allowed to belong either to \(\tau\) (operations on new files, in the correct order) or to \(\tau'\{\avar{fd}\mapsto x\}\) (note the substitution!) where further operations on \(x\) will be checked.
+
+Note that we are not monitoring the correct behavior of the underlying operating system, namely, that the same file descriptor is not assigned to many opened files simultaneously.
+Rather, the specification ensures that the API offered by such system is correctly used.
 
 \paragraph{Operational Semantics}
 \begin{figure}[t]
@@ -98,7 +107,15 @@ For instance, considering again trace expressions in \Cref{eq:files1,eq:files2},
 Transition rules depend on predicate \(\isEmpty(-)\) which checks for termination, i.e., \(\isEmpty(\tau)\) holds only if \(\tau\) accepts the empty trace \(\emptyseq\).
 More generally, a trace expression \(\tau\) accepts a (possibly infinite) event trace \(\ev_1\ev_2\dots\) iff there exists a (possibly infinite) reduction \(\tau \trans{\ev_1} \tau' \trans{\ev_2} \dotsb\).
 
+The operational semantics rule for the intersection operator depends on the side condition \(\subs=\subs_1\subsMerge\subs_2\).
+Such equality holds when \(\subs_1\) and \(\subs_2\) coincide on \(\dom(\subs_1) \cap \dom(\subs_2)\).
+
+The top-level rule (main) expects the computed substitution to be empty.
+This corresponds to the fact that valid trace expressions, when considered as a whole, are supposed not to have free variables.
+However, when a variable is introduced by a binder, it will be substituted in the trace expression (rule (var-t)), and removed from the computed substitution.
+Finally, (var-f) handles the case in which a parametric trace expression accepts an event but the matching does not instantiate a variable (for instance, because its value will only be discovered observing further events).
+
 Trace expressions semantics has been implemented in SWI-Prolog.
-The logic programming paradigm is well suited for inference systems implementation, since inference rules can be translated almost directly to logic clauses.
+The logic programming paradigm is well suited for the implementation of inference system, since inference rules can be translated almost directly to logic clauses.
 Furthermore SWI-Prolog offers native support to cyclic terms, therefore recursive trace expressions can be easily encoded.
 Support for programming with cyclic terms is based on coinductive logic programming \cite{CoLP06}, which is supported by the SWI-Prolog library \texttt{coinduction}.

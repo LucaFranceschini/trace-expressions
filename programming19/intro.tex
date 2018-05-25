@@ -3,8 +3,9 @@
 The framework gained popularity in the last years as it allows developers to successfully employ JavaScript for server-side programming.
 
 At its core, Node.js is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, scheduling the request for later execution.
-Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always run on a single thread.
-This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge amounts of (simultaneous) requests, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with concurrency and parallelism.
+Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always runs on a single thread.
+This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge amounts of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with concurrency and parallelism.
+
 
 %Besides, the huge package ecosystem promotes code reuse and fast development.
 %Finally, Node.js recently gained popularity in the Internet of Things community as well.
@@ -15,24 +16,24 @@ On the other hand, asynchronous programming heavily relies on the notion of call
 When an asynchronous request is made a callback (i.e., a function) is expected, and it will be executed when the result of the request will be available.
 This, together with the non-deterministic environments in which Node.js is employed, and the dynamic nature of JavaScript itself, makes it challenging to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
 
-\emph{Runtime verification} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given (formal) specification of the expected behavior.
+\emph{Runtime verification} \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given (formal) specification of the expected behavior.
 When efficiently implemented, the verification process can even run after deployment in order to monitor real scenarios.
 
-As preliminary results show \cite{TowardsIoT17}, runtime verification can be fruitfully used to monitor Node.js systems as a complement to formal verification and testing.
-The suggested approach to implement a monitoring system for JavaScript and Node.js is based on code instrumentation, to allow suitable (and automatic) modification of the original code for appropriate reaction upon occurrences of interesting events.
+As preliminary results suggest \cite{TowardsIoT17}, runtime verification can be fruitfully used to monitor Node.js systems as a complement to formal verification and testing.
+The approach suggested in \cite{TowardsIoT17} to implement a monitoring system for JavaScript and Node.js is based on code instrumentation, to allow suitable (and automatic) modification of the original code for appropriate reaction upon occurrences of interesting events.
 
-\emph{Trace expressions} are proposed as a formalism to write down formal specifications.
+We propose \emph{trace expressions} \cite{ancona2016comparing} as a formalism to write down formal specifications.
 They are more expressive than other formalisms commonly adopted for runtime verification, as
 attributed context-free grammars \cite{de2014combining} and LTL$_3$ \cite{AnconaFM16}.
 Though they were initially devised to verify protocol-compliance in multi-agent systems, existing work and preliminary results show that trace expressions can be used as general specification formalism for parametric runtime verification \cite{ParametricJava17, TowardsIoT17};
-the expressive power and the algebraic properties of the underlying operators have been partially investigated.
+the expressive power and the algebraic properties of the underlying operators have been partially investigated \cite{ParametricJava17,ancona2016comparing}.
 A key feature of trace expressions is parametricity: correctness of execution may depend on the actual values associated with events at runtime.
 This makes the formalism very expressive and allows runtime verification of complex properties.
 Another interesting characteristic is their independence from the monitored system and underlying programming language,
 obtained through the abstraction of event type.
 
-In this work we show how trace expressions can be suitably exploited in the context of runtime verification for
-Node.js applications, to formally specify correct use of the features exported by a Node.js module as
+In this work we show how trace expressions can be successfully used in the context of runtime verification for
+Node.js applications, to formally specify the correct use of the features exported by a Node.js module as
 can be derived from its documentation, and to dynamically verify such a specification.
 This is the core idea of this work and the main novelty, since (runtime) verification of Node.js has not been studied before.
 
@@ -40,9 +41,9 @@ A corresponding prototype tool\footnote{The implementation and a script for runn
 framework and SWI-Prolog\footnote{\url{http://www.swi-prolog.org}.}.
 The former is employed for performing instrumentation of JavaScript code, to be able
 to dynamically trace all those events that constitute what we call an \emph{event domain}, that is, the set
-of all events pertaining certain kinds of properties;
+of all events relevant to certain kinds of properties;
 all examples shown in this paper refer to a unique event domain consisting of calls and returns
-from functions and their corresponding callbacks. Hence, a unique instrumentation
+from asynchronous functions and their corresponding callbacks. Hence, a unique instrumentation
 was required to automatically monitor and verify different properties, each specified by a particular trace expression.
 SWI-Prolog is the underlying language for supporting parametric
 trace expressions and implementing the inference engine for their verification; it provides

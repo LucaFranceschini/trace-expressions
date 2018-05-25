@@ -7,11 +7,11 @@ On one hand \emph{formal methods} has been proposed, including theorem proving \
 These techniques have been extensively studied in the literature and are quite mature.
 However, they require either a deep theoretical knowledge or a simplified model of the system, and this may not be the case for many real-world scenarios.
 
-On the other hand, software \emph{testing} \cite{testing} has been successfully employed in industry, to find bugs by running (part of) the system on ad-hoc input.
+On the other hand, software \emph{testing} \cite{testing} has been successfully employed in industry, to find bugs by running (part of) the system on input whose correct output is known.
 Testing proved itself useful by working on many different levels of abstraction, from unit-test of small code snippets to black-box testing of complex systems as a whole.
 
-More recently another approach to the problem has been proposed.
-\emph{Runtime Verification} \cite{rv}, as suggested by the name, consists in verifying a real run of the system against a given specification.
+More recently another approach to the problem has been proposed, that is, \emph{Runtime Verification} \cite{rv}.
+%as suggested by the name, consists in verifying a real run of the system against a given specification.
 First, a \emph{monitor} is attached to the system under test in order to observe all relevant events.
 The result of this is said to be a \emph{trace}, and it encodes the observed run.
 Then, the trace is verified against correctness properties expressed in a suitable formalism.
