@@ -1,0 +1,28 @@
+Express, hello world
+=============
+    
+No monitoring
+-------------------
+
+Requests: 100000 Time (sec):129.423 RPS: 772.6601917742596
+
+Requests: 100000 Time (sec):129.082 RPS: 774.7013526285617
+
+Requests: 100000 Time (sec):130.955 RPS: 763.6210912145393
+
+With monitoring
+---------------------
+
+Requests: 100000 Time (sec):131.799 RPS: 758.7310981115182
+
+queue length:853000
+
+Requests: 100000 Time (sec):131.134 RPS: 762.5787362545184
+
+queue length:853000
+
+Requests: 100000 Time (sec):131.078 RPS: 762.9045301270999
+
+queue length:853000
+
+

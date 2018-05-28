@@ -1,0 +1,27 @@
+
+Express, file explorer
+=============
+    
+No monitoring
+-------------------
+
+Requests: 100000 Time (sec):158.883 RPS: 629.3939565592291
+
+Requests: 100000 Time (sec):162.634 RPS: 614.8775778742453
+
+Requests: 100000 Time (sec):160.67 RPS: 622.3937262712392
+
+With monitoring
+---------------------
+
+Requests: 100000 Time (sec):324.67 RPS: 308.005051282841
+
+queue length:1615000
+
+Requests: 100000 Time (sec):325.585 RPS: 307.1394566703012
+
+queue length:1616000
+
+Requests: 100000 Time (sec):326.992 RPS: 305.8178793364975
+
+queue length:1616000
