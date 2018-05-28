@@ -43,8 +43,10 @@ step 1: run Prolog server from dir trace-expressions
 swipl -p node=prolog prolog/server.pl -- examples/http/omitted\ body/204\ response/spec.pl
 
 step 2: run Node.js server with instrumented Express library
+
 **important: the available Express libraries for the launched server must be instrumented**
-**the instrumented library not yet available on GitHub**
+
+**the instrumented library is not yet available on GitHub**
 
 node ~/node_modules/jalangi2/src/js/commands/direct.js --analysis ~/TechRep/programming18/svn_impl/jalangi-async-test-omitted-body/functionInvocationAnalysis.js ~/TechRep/programming18/express-examples/simple_server-ecma5.js
 
