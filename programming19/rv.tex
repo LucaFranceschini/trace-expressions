@@ -18,8 +18,8 @@ Then, the trace is verified against correctness properties expressed in a suitab
 
 \paragraph{Word Problem}
 Runtime verification is often considered a \emph{lightweight} verification technique, since it aims at analyzing only a \emph{single run} of the system, and not all the possible execution paths (as it is customary, for instance, in model checking).
-If we think of correctness properties as some set \(S\) of traces satisfying them, with runtime verification the problem of checking whether those properties hold can turn out to be much easier.
-Essentially it becomes a \emph{word problem} (check whether a given trace belongs to \(S\)) rather than an \emph{inclusion} problem (check whether the set of all possible traces is included in \(S\)).
+If we think of correctness properties as some set \(S\) of traces satisfying them, the problem tackled by runtime verification is clearly easier than the one solved by static techniques.
+Essentially it is a \emph{word problem} (check whether a given trace belongs to \(S\)) rather than an \emph{inclusion} problem (check whether the set of all possible traces is included in \(S\)).
 
 %TODO: c'\`e un esempio nel survey di Leucker sugli NDFA volendo: l'inclusione fra NDFA \`e PSPACE-completa ma l'appartenenza \`e NL-completa (non deterministico logaritmica), e l'inclusione fra le due classi \`e stretta. Forse per\`o \`e un po' ``hardcore''...
 
@@ -33,7 +33,7 @@ Nonetheless, it is useful to verify non-terminating systems: in such cases, only
 In order to deal with this, \emph{LTL\textsubscript{3}} has been proposed as a three-valued LTL \cite{ltl3}, with the additional truth value encoding an inconclusive verification result.
 
 %The formalism we plan (and already started) to use, i.e., \emph{trace expressions} \cite{AnconaDM12, AnconaBB0CDGGGH16}, compares well to linear temporal logics.
-Though they are not comparable to LTL (meaning none of them is more expressive than the other), trace expressions \emph{are} more expressive than LTL\textsubscript{3} \cite{ancona2016comparing}, which is very relevant for runtime verification purposes.
+Though they are not comparable to LTL (meaning none of them is more expressive than the other), trace expressions \emph{are} more expressive than LTL\textsubscript{3} \cite{ancona2016comparing}, which is very relevant for runtime verification purposes since the formalism has explicitly been devised for that \cite{ltl3}.
 
 \paragraph{Monitoring Techniques}
 Besides specification, a crucial point of runtime verification is the monitoring part, which can either be \emph{offline} or \emph{online}.
@@ -46,7 +46,7 @@ monitoring is efficient enough to be performed even after deployment.
 Programs implementing such behaviors have to be aware of the monitor and to interact with it.
 Different patterns and paradigms have been proposed for this, see \emph{Monitor-Oriented Programming (MOP)} \cite{mop}, a framework for runtime verification of Java programs, or \emph{Runtime Reflection} \cite{rr}, an architectural pattern designed for monitor-aware systems able to diagnose problems and mitigate issues.
 
-Another critical aspect of runtime verification systems is the generation of the monitor itself, especially since they should be automatically generated from the high-level formal specification.
+Another critical aspect of runtime verification systems is the generation of the monitor itself, especially since it is desirable to automatically generate them from the high-level formal specification, thus making their adoption and application easier.
 Such a monitor should avoid to interfere with the program behavior as much as possible, in order for the verification to be effective.
 This is very important when the system under test has to operate in real-time, and/or when the property to be checked contains time constraints itself.
 
@@ -54,7 +54,7 @@ This is very important when the system under test has to operate in real-time, a
 Runtime verification can also be seen as a complement to more traditional approaches, like formal methods and testing, either for inherently dynamic properties that otherwise would be hard to verify, or for (safety-)critical systems that needs to be constantly checked, even \emph{after deployment} and not only during the development cycle.
 Runtime verification can be used in conjunction with testing in order to generate test cases, as shown in \cite{artho2005combining}.
 As a note, however, neither testing nor runtime verification are \emph{complete}.
-In other words, they cannot prove that a program \emph{always} satisfy some property.
+In other words, they cannot prove that a program satisfy some property for every input.
 
 Runtime verification has been successfully applied to many other contexts, including \emph{web services and applications} \cite{webservices, webapps}, \emph{multi-agent systems} \cite{AnconaDM12}, \emph{object-oriented languages} \cite{pql, javadynamic, de2014combining, BoerEtAl14} and the \emph{Internet of Things} \cite{rviot1, rviot2}.
 

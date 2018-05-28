@@ -19,7 +19,7 @@ The convention in Node.js is to pass errors (if any) to callbacks as first argum
 			for (let i=0; i<LIMIT; i++)
 				fs.write(fd, i+'\n', () => {});
 			
-			fs.close(fd, console.log('bye'));
+			fs.close(fd, () => console.log('bye'));
 		});
 	\end{lstlisting}
 	\caption{An example of \emph{incorrect} usage of the Node.js \lstinline{fs} module.}
@@ -27,12 +27,12 @@ The convention in Node.js is to pass errors (if any) to callbacks as first argum
 \end{figure}
 
 The core of the program is a simple loop making a write request (with an empty callback, \lstinline!() => {}!) for each number.
-After that, the file is closed, and a callback printing \lstinline{'bye'} is provided.
+After that, a request to close the file is generated, and a callback printing \lstinline{'bye'} is provided.
 
 While the code may look fine to someone not familiar with asynchronous I/O and Node.js, it is actually flawed, but it will work up to considerable values of \lstinline{LIMIT}.
 Depending on the Node.js implementation and the hardware resources, the code will fatally crash with some memory error if the number gets too high, though the amount of used memory is expected to be constant.
 
-From the documentation, it turns out that a second write to the same file should only be called \emph{after} the callback of the previous one has been executed.
+From the documentation, it turns out that a second write to the same file should only be called \emph{after} the callback of the previous one has been called.
 This constraint however is not checked by the library for performance reasons.
 
 Recalling the event-loop mechanism previously presented, first \emph{all} the asynchronous \lstinline{write} requests will be queued, and only \emph{after} this they will be fulfilled.
@@ -65,7 +65,7 @@ We define event types to be event terms over a set of variables \(\vars\) used a
 Finally, the parametric trace expression is given (\(\tau\), \(\tau_w\) and \(\tau_c\) deal with opening, writing to and closing the file, respectively):
 \begin{align*}
 \tau &= \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop \cbt(\avar{id_1}) \prefixop \tau_w}\\
-\tau_w &= \var{id_2}{\writet(\avar{id_2}) \prefixop \cbt(\avar{id_2}) \prefixop \tau'} \orop \tau_c\\
+\tau_w &= \var{id_2}{\writet(\avar{id_2}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c\\
 \tau_c &= \var{id_3}{\closet(\avar{id_3}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
 \end{align*}
 Note that different variable names are only used for the sake of clarity, even if using the same variable in every binder would work since trace expression semantics correctly handles the shadowing of variables in nested scopes.
@@ -93,7 +93,7 @@ For instance, it only takes a few lines of code to obtain a (very simple) HTTP s
 const http = require('http');
 
 const server = http.createServer((request, response) => {
-	request.on('data', chunk => console.log('some data received');
+	request.on('data', chunk => console.log('some data received'));
 	request.on('end', () => response.end('ok'));
 });
 
