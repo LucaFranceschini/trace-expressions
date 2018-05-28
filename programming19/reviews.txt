@@ -228,9 +228,15 @@ properties hold can turn out to be much easier" is misleading, because
 each approach talks about different properties: "it holds for all inputs"
 versus "it holds for this particular input".
 
+>>> Made it clear that they are different problems:
+>>> the problem tackled by runtime verification is clearly easier than the one solved by static techniques
+
 * "more expressive than LTL 3 [7], which is very relevant for runtime
 verification purposes."  Why is LTL 3 very relevant for runtime
 verification purposes? (reference?)
+
+>>> Reason and citation added:
+>>> very relevant for runtime verification purposes since the formalism has explicitly been devised for that (citation)
 
 
 Page 10:
@@ -238,9 +244,14 @@ Page 10:
 * "since they should be automatically generated from the high-
 level formal specification." : Why?
 
+>>> Comment added:
+>>> it is desirable to automatically generate them from the high-level formal specification, thus making their adoption and application easier
+
 * "prove that a program always satisfy some property." : A program
 is a static entity. Either it satisfies a property or not. "always"
 does not make sense here.
+
+>>> Changed to "satisfy some property for every input".
 
 
 Page 11:
@@ -248,18 +259,26 @@ Page 11:
 * In Figure 5, the second argument to 'fs.close' should be a callback,
 not a direct call to 'console.log'.
 
+>>> fixed
+
 * "After that, the file is closed" : The file is not closed; only a
 request to close the file is generated (to be executed later).
+
+>>> Changed to "a request to close the file is generated".
 
 * "a second write to the same file should only be called after the callback
 of the previous one has been executed" : "has been executed" implies that it
 ran until its end; so, we could not do a write request in the callback of
 the previous one.
 
+>>> Changed to "has been called".
+
 
 Page 12:
 
-* The definition of \tau_w is using \tau' in the recursion. 
+* The definition of \tau_w is using \tau' in the recursion.
+
+>>> Changed to \tau_w.
 
 
 Page 13:
@@ -267,10 +286,14 @@ Page 13:
 * Figure 6: a closing parenthesis is missing, probably to close
 the first call to 'request.on'.
 
+>>> fixed
+
 
 Page 15:
 
 * "Thanks to this features"
+
+>>> fixed
 
 
 Page 16:
@@ -278,16 +301,24 @@ Page 16:
 * "Objects containing circular reference" ->
   "Objects containing circular references"
 
+>>> fixed
+
 * "JavaScript support getters" -> "JavaScript supports getters"
+
+>>> fixed
 
 
 Page 17:
 
 * "everal" -> "Several"
 
+>>> fixed
+
 * "Six interesting constraints have been identified" : What
 does "interesting" mean here? (Or, what would be an uninteresting
 constrain?)
+
+>>> Changed "interesting constraints" to "constraints that are not enforced by the library".
 
 
 Page 19:
@@ -295,12 +326,18 @@ Page 19:
 * "to do that, we have considered Express" : the paper already
 said this, on the last paragraph before Section 7.1.
 
+>>> Description removed.
+
 
 Page 20:
 
 * "the tool was able to monitor all relevant http events [...]" :
 Is that all? How can we know it was monitoring correctly? Did it
 find any errors? What was the goal of this test?
+
+>>> Addition:
+>>> [...] showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
+As expected, though, Express it is correct w.r.t. the previously described constraints on the use of the http module.
 
 
 ----------------------- REVIEW 2 ---------------------

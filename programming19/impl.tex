@@ -9,7 +9,7 @@ The tool we have employed is \emph{Jalangi2}.
 %\footnote{\url{https://github.com/Samsung/jalangi2}} \cite{jalangi}
 It allows addition of arbitrary code before and after basically every JavaScript operation: access to fields, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a field access.
 
-Thanks to this features it is possible to determine when asynchronous calls and their callbacks are executed, as well as matching them.
+Thanks to these features it is possible to determine when asynchronous calls and their callbacks are executed, as well as matching them.
 However, implementing a prototype for Node.js runtime verification is not trivial, and requires to address some issues, as explained below:
 \begin{itemize}
 \item Anonymous functions are extremely common in JavaScript, thus function names are not a reliable way to identify them.
@@ -31,8 +31,8 @@ The architecture is represented in \Cref{fig:arch}.
 Further details on the approach and the implementation with Jalangi2 can be found in the related paper \cite{TowardsIoT17}.
 
 Though JSON is a natural fit for JavaScript objects serialization, some important aspects need to be handled.
-Objects containing circular reference, for instance, are quite common in Node.js modules, but they cannot be encoded in JSON, and the JavaScript standard library serialization (\lstinline|JSON.stringify|) throws an error on such objects.
-Furthermore, JavaScript support getters, which are special functions invoked when a property is accessed.
+Objects containing circular references, for instance, are quite common in Node.js modules, but they cannot be encoded in JSON, and the JavaScript standard library serialization (\lstinline|JSON.stringify|) throws an error on such objects.
+Furthermore, JavaScript supports getters, which are special functions invoked when a property is accessed.
 During experiments, we found that some modules set getter functions before their code can actually be correctly executed, and this again breaks standard serialization since getters are invoked in the process.
 For these reasons, we had to modify the JSON serialization process for it to work in real Node.js scenarios, detecting and handling circular references and getters as special cases.
 

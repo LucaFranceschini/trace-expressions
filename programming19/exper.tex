@@ -10,11 +10,11 @@ we have focused on runtime verification of code based on the \lstinline{http} mo
 
 First, the documentation of the module\footnote{Available at \url{https://nodejs.org/api/http.html}.} has been inspected  
 with the purpose of mining specifications of the features provided by \lstinline{http}.
-everal of them can be easily translated in corresponding trace expressions
+Several of them can be easily translated in corresponding trace expressions
 that have been employed in our tool to automatically monitor correct use of the \lstinline{http}
 module by client code.
 
-Six interesting constraints have been identified on the use of the functions exported by \lstinline{http};
+Six constraints that are not enforced by the library have been identified on the use of the functions exported by \lstinline{http};
 correspondingly, six trace expressions have been derived to
 dynamically check such constraints and detect the related bugs.
 In each trace expression we use the filter operator to restrict the event domain to functions that are relevant for the specification.
@@ -135,8 +135,8 @@ Similar examples have been used to test our tool with the other specifications.
 
 After the simple experiments conducted in the first phase as described in the previous section,
 a natural next step towards the assessment of our tool consisted in testing popular real Node.js code
-based on \lstinline{http}; to do that, we have considered Express\footnote{See \url{https://expressjs.com/}.},
-a very (if not the most) popular framework based on \lstinline{http} to develop Node.js web applications.
+based on \lstinline{http}.
+% to do that, we have considered Express\footnote{See \url{https://expressjs.com/}.}, a very (if not the most) popular framework based on \lstinline{http} to develop Node.js web applications.
 
 To this aim, the three components of Express depending on \lstinline{http} (\lstinline{application.js}, \lstinline{request.js} and
 \lstinline{response.js}) have been instrumented with Jalangi2, for a total of almost 1K SLOC.
@@ -179,6 +179,6 @@ of the directory of the server based off the URL value of the request. In practi
 from which it has been launched, included all its subdirectories, and downloading of all files rooted at it. 
 
 Finally, the last call \lstinline{app.get} deals with the case when no directory or file could be found.
-The tool has been tested with the server above, and a Node.js client sending requests with random  paths based on its
-root directory at the frequency of three requests per second; the tool was able to monitor all relevant \lstinline{http} events
-triggered in the above mentioned Express components used through the server.
+The tool has been tested with the server above, and a Node.js client sending requests with random  paths based on its root directory at the frequency of three requests per second.
+The tool was able to monitor all relevant \lstinline{http} events triggered in the above mentioned Express components used through the server, showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
+As expected, though, Express it is correct w.r.t.\ the previously described constraints on the use of the \lstinline{http} module.
