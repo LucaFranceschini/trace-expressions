@@ -11,33 +11,49 @@
     \hline
     \multicolumn{4}{|c|}{HTTP module}\\
     \hline
-    C\# & 
-    6.94 ms &
-    1.00x &
-    \\
+    Content length & 
+    RPS &
+    RPS &
+    \% \\
 
-    RPython &
-    7.25 ms &
-    1.04x &
-    \\
+    Omitted body (HEAD request)&
+    RPS &
+    RSP &
+    \% \\
 
-    IronPython &
-    1675.00 ms &
-    241.35x &
-    \\
+    Omitted body (204 response)&
+    RPS &
+    RSP &
+    \% \\
+
+    Omitted body (304 response)&
+    RPS &
+    RSP &
+    \% \\
+
+    Unconsumed data &
+    RPS &
+    RPS &
+    \% \\
+    \hline
+
+    Write head &
+    RPS &
+    RPS &
+    \% \\
     \hline
 
     \multicolumn{4}{|c|}{Express}\\
     \hline
     Hello world & 
-    1.77 ms &
-    1.00x &
-    \\
+    770 RPS &
+    760 RPS &
+    1 \% \\
 
     File explorer &
-    2.10 ms &
-    1.18x &
-    \\
+    622 RPS &
+    307 RPS &
+    103 \%\\
 
     \hline
   \end{tabular}
