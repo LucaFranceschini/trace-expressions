@@ -1,0 +1,12 @@
+Requests: 10 Time (sec):0.026 RPS: 384.61538461538464
+Requests: 10 Time (sec):0.031 RPS: 322.5806451612903
+Requests: 10 Time (sec):0.027 RPS: 370.3703703703704
+Requests: 10 Time (sec):0.029 RPS: 344.8275862068965
+Requests: 10 Time (sec):0.026 RPS: 384.61538461538464
+Requests: 10 Time (sec):0.031 RPS: 322.5806451612903
+Requests: 10 Time (sec):0.028 RPS: 357.1428571428571
+Requests: 10 Time (sec):0.025 RPS: 400
+Requests: 10 Time (sec):0.028 RPS: 357.1428571428571
+Requests: 10 Time (sec):0.028 RPS: 357.1428571428571
+Requests: 100000 Time (sec):133.328 RPS: 750.030001200048
+Requests: 100000 Time (sec):130.155 RPS: 768.3147017018171
