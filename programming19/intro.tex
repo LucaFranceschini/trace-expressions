@@ -24,10 +24,11 @@ The approach suggested in \cite{TowardsIoT17} to implement a monitoring system f
 
 We propose \emph{trace expressions} \cite{ancona2016comparing} as a formalism to write down formal specifications.
 They are more expressive than other formalisms commonly adopted for runtime verification, as
-attributed context-free grammars \cite{de2014combining} and LTL$_3$ \cite{AnconaFM16}.
-Though they were initially devised to verify protocol-compliance in multi-agent systems, existing work and preliminary results show that trace expressions can be used as general specification formalism for parametric runtime verification \cite{ParametricJava17, TowardsIoT17};
+attributed context-free grammars \cite{de2014combining} and LTL\textsubscript{3} \cite{ltl3}; see \cite{AnconaFM16} for a comparison between trace expressions and linear temporal logics.
+
+Though trace expressions were initially devised to verify protocol-compliance in multi-agent systems, existing work and preliminary results show that trace expressions can be used as general specification formalism for parametric runtime verification \cite{ParametricJava17, TowardsIoT17};
 the expressive power and the algebraic properties of the underlying operators have been partially investigated \cite{ParametricJava17,ancona2016comparing}.
-A key feature of trace expressions is parametricity: correctness of execution may depend on the actual values associated with events at runtime.
+Parametricity is a key feature of trace expressions: correctness of execution may depend on the actual values associated with events at runtime.
 This makes the formalism very expressive and allows runtime verification of complex properties.
 Another interesting characteristic is their independence from the monitored system and underlying programming language,
 obtained through the abstraction of event type.

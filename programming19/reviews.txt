@@ -336,7 +336,7 @@ Is that all? How can we know it was monitoring correctly? Did it
 find any errors? What was the goal of this test?
 
 >>> Addition:
->>> [...] showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
+>>> [...] showing that our instruzmentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
 As expected, though, Express it is correct w.r.t. the previously described constraints on the use of the http module.
 
 
