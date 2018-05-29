@@ -10,7 +10,8 @@ Note that in the http module, the response body is omitted when the request is a
 const http = require('http');
 const max_requests=Number(process.argv[2]) || 10
 const options = {
-	port: 8080
+    port: 8080,
+    header:{'If-Unmodified-Since': Date()}
 };
 
 let time0

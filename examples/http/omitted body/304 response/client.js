@@ -10,7 +10,8 @@ Note that in the http module, the response body is omitted when the request is a
 const http = require('http');
 
 const options = {
-	port: 8080
+    port: 8080,
+    header:{'If-Unmodified-Since': Date()}
 };
 
 const req = http.get(options, res => {
