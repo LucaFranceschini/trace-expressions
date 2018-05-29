@@ -1,0 +1,1266 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist[entry]{nty/global/}
+    \entry{AnconaBB0CDGGGH16}{article}{}
+      \name{author}{19}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=b4ab527396794cf80c17d56d5cd4fefa}{%
+           family={Bono},
+           family_i={B\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+        {{hash=8430cd6d8ffc411e4c483a0c31d080fb}{%
+           family={Bravetti},
+           family_i={B\bibinitperiod},
+           given={Mario},
+           given_i={M\bibinitperiod}}}%
+        {{hash=d25fe7435f83f78012e91d6ddefd4ae6}{%
+           family={Campos},
+           family_i={C\bibinitperiod},
+           given={Joana},
+           given_i={J\bibinitperiod}}}%
+        {{hash=09525a633b0ac72424537eae41ec57e8}{%
+           family={Castagna},
+           family_i={C\bibinitperiod},
+           given={Giuseppe},
+           given_i={G\bibinitperiod}}}%
+        {{hash=73a68b12047d080b1c7eaddb5851e3f0}{%
+           family={Deniélou},
+           family_i={D\bibinitperiod},
+           given={Pierre{-}Malo},
+           given_i={P\bibinitperiod}}}%
+        {{hash=6431dffc3c820ed053dfa283c3066d52}{%
+           family={Gay},
+           family_i={G\bibinitperiod},
+           given={Simon\bibnamedelima J.},
+           given_i={S\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=d67b58b681b4f87a50ad2ea9ad506739}{%
+           family={Gesbert},
+           family_i={G\bibinitperiod},
+           given={Nils},
+           given_i={N\bibinitperiod}}}%
+        {{hash=a5639d903cbb85d9df304e484a42d69e}{%
+           family={Giachino},
+           family_i={G\bibinitperiod},
+           given={Elena},
+           given_i={E\bibinitperiod}}}%
+        {{hash=64873b14233d552152fb1d005e878173}{%
+           family={Hu},
+           family_i={H\bibinitperiod},
+           given={Raymond},
+           given_i={R\bibinitperiod}}}%
+        {{hash=d2a003c1313ab99aa94c9f2c11e7a634}{%
+           family={Johnsen},
+           family_i={J\bibinitperiod},
+           given={Einar\bibnamedelima Broch},
+           given_i={E\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=e31da65dc193a6f5da831e1c5f68f32c}{%
+           family={Martins},
+           family_i={M\bibinitperiod},
+           given={Francisco},
+           given_i={F\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+        {{hash=94aec34b0ab3aab8d0b52c5b042d902c}{%
+           family={Montesi},
+           family_i={M\bibinitperiod},
+           given={Fabrizio},
+           given_i={F\bibinitperiod}}}%
+        {{hash=58aa252319ee399a23e9bc8f71162e1a}{%
+           family={Neykova},
+           family_i={N\bibinitperiod},
+           given={Rumyana},
+           given_i={R\bibinitperiod}}}%
+        {{hash=389f392f6ce16217ecdeba3fc6f65739}{%
+           family={Ng},
+           family_i={N\bibinitperiod},
+           given={Nicholas},
+           given_i={N\bibinitperiod}}}%
+        {{hash=de7132b45a78d99a1ebf749db6e6395d}{%
+           family={Padovani},
+           family_i={P\bibinitperiod},
+           given={Luca},
+           given_i={L\bibinitperiod}}}%
+        {{hash=aa9e23f3bb930daa1c3d5dbf416400cc}{%
+           family={Vasconcelos},
+           family_i={V\bibinitperiod},
+           given={Vasco\bibnamedelima T.},
+           given_i={V\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=dd15efe878ded803fb2ab56512b2179e}{%
+           family={Yoshida},
+           family_i={Y\bibinitperiod},
+           given={Nobuko},
+           given_i={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{2ab49ac5bb18756ea6a84c5dd691441a}
+      \strng{fullhash}{2ab49ac5bb18756ea6a84c5dd691441a}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Foundations and Trends in Programming Languages}
+      \field{number}{2-3}
+      \field{title}{Behavioral Types in Programming Languages}
+      \field{volume}{3}
+      \field{year}{2016}
+      \field{pages}{95\bibrangedash 230}
+      \range{pages}{136}
+    \endentry
+    \entry{AnconaBFMT14}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=49310551849caf25cf50a1d647fae76e}{%
+           family={Briola},
+           family_i={B\bibinitperiod},
+           given={Daniela},
+           given_i={D\bibinitperiod}}}%
+        {{hash=46e6729ce6d06cf3d08191c2408c7f6e}{%
+           family={Fallah{-}Seghrouchni},
+           family_i={F\bibinitperiod},
+           given={Amal\bibnamedelima El},
+           given_i={A\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+        {{hash=481d4e0b48c8d29d35256c71d147a03b}{%
+           family={Taillibert},
+           family_i={T\bibinitperiod},
+           given={Patrick},
+           given_i={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{55eab248142fa75ca2cdd94f17fd4084}
+      \strng{fullhash}{55eab248142fa75ca2cdd94f17fd4084}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Engineering Multi-Agent Systems - Second International Workshop, {EMAS} 2014, Paris, France, May 5-6, 2014, Revised Selected Papers}
+      \field{title}{Efficient Verification of MASs with Projections}
+      \field{year}{2014}
+      \field{pages}{246\bibrangedash 270}
+      \range{pages}{25}
+    \endentry
+    \entry{ancona2015global}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=49310551849caf25cf50a1d647fae76e}{%
+           family={Briola},
+           family_i={B\bibinitperiod},
+           given={Daniela},
+           given_i={D\bibinitperiod}}}%
+        {{hash=8c37486437c235823fb05abe929c932e}{%
+           family={Ferrando},
+           family_i={F\bibinitperiod},
+           given={Angelo},
+           given_i={A\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+      }
+      \list{organization}{2}{%
+        {International Foundation for Autonomous Agents}%
+        {Multiagent Systems}%
+      }
+      \strng{namehash}{24fa28cdc85d1f8081b865526b13920f}
+      \strng{fullhash}{24fa28cdc85d1f8081b865526b13920f}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2015 International Conference on Autonomous Agents and Multiagent Systems}
+      \field{title}{Global protocols as first class entities for self-adaptive agents}
+      \field{year}{2015}
+      \field{pages}{1019\bibrangedash 1029}
+      \range{pages}{11}
+    \endentry
+    \entry{AnconaDM12}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=5b320475fc79eefbd802529eaa6d56a4}{%
+           family={Drossopoulou},
+           family_i={D\bibinitperiod},
+           given={Sophia},
+           given_i={S\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{ede83bc646b5b5490d0f59dd3c0ee5c8}
+      \strng{fullhash}{ede83bc646b5b5490d0f59dd3c0ee5c8}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Declarative Agent Languages and Technologies {X} - 10th International Workshop, {DALT} 2012, Valencia, Spain, June 4, 2012, Revised Selected Papers}
+      \field{title}{Automatic Generation of Self-monitoring MASs from Multiparty Global Session Types in Jason}
+      \field{year}{2012}
+      \field{pages}{76\bibrangedash 95}
+      \range{pages}{20}
+    \endentry
+    \entry{ParametricJava17}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=8c37486437c235823fb05abe929c932e}{%
+           family={Ferrando},
+           family_i={F\bibinitperiod},
+           given={Angelo},
+           given_i={A\bibinitperiod}}}%
+        {{hash=0ee07e31a39e8db2f7fa82a69c175453}{%
+           family={Franceschini},
+           family_i={F\bibinitperiod},
+           given={Luca},
+           given_i={L\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Barcelona, Spain}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{be9a6beb08113d3764feb15b3f32e2f6}
+      \strng{fullhash}{be9a6beb08113d3764feb15b3f32e2f6}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 19th Workshop on Formal Techniques for Java-like Programs}
+      \field{series}{FTFJP'17}
+      \field{title}{Parametric Trace Expressions for Runtime Verification of Java-Like Programs}
+      \field{year}{2017}
+      \field{pages}{10:1\bibrangedash 10:6}
+      \range{pages}{-1}
+      \keyw{labeled transition systems,object-oriented languages,runtime monitoring,trace expressions}
+    \endentry
+    \entry{AnconaFM16}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=8c37486437c235823fb05abe929c932e}{%
+           family={Ferrando},
+           family_i={F\bibinitperiod},
+           given={Angelo},
+           given_i={A\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{72aea52883d48720bd6845c275114baa}
+      \strng{fullhash}{72aea52883d48720bd6845c275114baa}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Theory and Practice of Formal Methods - Essays Dedicated to Frank de Boer on the Occasion of His 60th Birthday}
+      \field{title}{Comparing Trace Expressions and Linear Temporal Logic for Runtime Verification}
+      \field{year}{2016}
+      \field{pages}{47\bibrangedash 64}
+      \range{pages}{18}
+    \endentry
+    \entry{ancona2016comparing}{incollection}{}
+      \name{author}{3}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=8c37486437c235823fb05abe929c932e}{%
+           family={Ferrando},
+           family_i={F\bibinitperiod},
+           given={Angelo},
+           given_i={A\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{72aea52883d48720bd6845c275114baa}
+      \strng{fullhash}{72aea52883d48720bd6845c275114baa}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Theory and Practice of Formal Methods}
+      \field{title}{Comparing trace expressions and linear temporal logic for runtime verification}
+      \field{year}{2016}
+      \field{pages}{47\bibrangedash 64}
+      \range{pages}{18}
+    \endentry
+    \entry{AnconaFM17}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=8c37486437c235823fb05abe929c932e}{%
+           family={Ferrando},
+           family_i={F\bibinitperiod},
+           given={Angelo},
+           given_i={A\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{72aea52883d48720bd6845c275114baa}
+      \strng{fullhash}{72aea52883d48720bd6845c275114baa}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 16th Conference on Autonomous Agents and MultiAgent Systems, {AAMAS} 2017, São Paulo, Brazil, May 8-12, 2017}
+      \field{title}{Parametric Runtime Verification of Multiagent Systems}
+      \field{year}{2017}
+      \field{pages}{1457\bibrangedash 1459}
+      \range{pages}{3}
+    \endentry
+    \entry{TowardsIoT17}{inproceedings}{}
+      \name{author}{6}{}{%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+        {{hash=0ee07e31a39e8db2f7fa82a69c175453}{%
+           family={Franceschini},
+           family_i={F\bibinitperiod},
+           given={Luca},
+           given_i={L\bibinitperiod}}}%
+        {{hash=2e4809d840d1596ed662d30ec3f1ac25}{%
+           family={Delzanno},
+           family_i={D\bibinitperiod},
+           given={Giorgio},
+           given_i={G\bibinitperiod}}}%
+        {{hash=195bbef5226e67489c0979057feee037}{%
+           family={Leotta},
+           family_i={L\bibinitperiod},
+           given={Maurizio},
+           given_i={M\bibinitperiod}}}%
+        {{hash=6909d41ed27d37f59ccf48201708eb4f}{%
+           family={Ribaudo},
+           family_i={R\bibinitperiod},
+           given={Marina},
+           given_i={M\bibinitperiod}}}%
+        {{hash=4ee41f96d413672a97365aa556a0c8d8}{%
+           family={Ricca},
+           family_i={R\bibinitperiod},
+           given={Filippo},
+           given_i={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{8f2596def1f7174c9193404a30f3a269}
+      \strng{fullhash}{8f2596def1f7174c9193404a30f3a269}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 1st Workshop on Architectures, Languages and Paradigms for {IoT}}
+      \field{note}{To appear}
+      \field{title}{Towards Runtime Monitoring of {Node.js} and Its Application to the Internet of Things}
+      \field{year}{2017}
+    \endentry
+    \entry{artho2005combining}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{10}{}{%
+        {{hash=9b9bd5b7e97f3f1b9c902aeee369d6a2}{%
+           family={Artho},
+           family_i={A\bibinitperiod},
+           given={Cyrille},
+           given_i={C\bibinitperiod}}}%
+        {{hash=175157342391bea2537e9791a6ae2569}{%
+           family={Barringer},
+           family_i={B\bibinitperiod},
+           given={Howard},
+           given_i={H\bibinitperiod}}}%
+        {{hash=21443a49806efd35f679c7c7b1e59be0}{%
+           family={Goldberg},
+           family_i={G\bibinitperiod},
+           given={Allen},
+           given_i={A\bibinitperiod}}}%
+        {{hash=447759174db1a0695b8fbcfef2e61570}{%
+           family={Havelund},
+           family_i={H\bibinitperiod},
+           given={Klaus},
+           given_i={K\bibinitperiod}}}%
+        {{hash=cb73d882c62f9d84dc13288d908dfa86}{%
+           family={Khurshid},
+           family_i={K\bibinitperiod},
+           given={Sarfraz},
+           given_i={S\bibinitperiod}}}%
+        {{hash=3cf353819b8947b04857806746e4d2c7}{%
+           family={Lowry},
+           family_i={L\bibinitperiod},
+           given={Mike},
+           given_i={M\bibinitperiod}}}%
+        {{hash=ae2c2d7f9fdf9bff956f459c3734c418}{%
+           family={Pasareanu},
+           family_i={P\bibinitperiod},
+           given={Corina},
+           given_i={C\bibinitperiod}}}%
+        {{hash=9af91b822c411b516793e9a20512a651}{%
+           family={Roşu},
+           family_i={R\bibinitperiod},
+           given={Grigore},
+           given_i={G\bibinitperiod}}}%
+        {{hash=6dec3318a42d8d397a59554c48b43851}{%
+           family={Sen},
+           family_i={S\bibinitperiod},
+           given={Koushik},
+           given_i={K\bibinitperiod}}}%
+        {{hash=e321f08a06144b359de2bacca6cfe522}{%
+           family={Visser},
+           family_i={V\bibinitperiod},
+           given={Willem},
+           given_i={W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{60d96f60217e7b510c838ef8e9050c8e}
+      \strng{fullhash}{1a4272d0ce4496158dc77302d1c5c794}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Theoretical Computer Science}
+      \field{number}{2-3}
+      \field{title}{Combining test case generation and runtime verification}
+      \field{volume}{336}
+      \field{year}{2005}
+      \field{pages}{209\bibrangedash 234}
+      \range{pages}{26}
+    \endentry
+    \entry{rr}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=7cffa0000b9a3a8681a56b2bf1c9de36}{%
+           family={Bauer},
+           family_i={B\bibinitperiod},
+           given={Andreas},
+           given_i={A\bibinitperiod}}}%
+        {{hash=f12d8abcc6426b67ab27bb515704aec6}{%
+           family={Leucker},
+           family_i={L\bibinitperiod},
+           given={Martin},
+           given_i={M\bibinitperiod}}}%
+        {{hash=0bdeeec43787159d02e7574829c43c3d}{%
+           family={Schallhart},
+           family_i={S\bibinitperiod},
+           given={Christian},
+           given_i={C\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{3c6f31f4cc3e6dfe6e8c117aa90bc77b}
+      \strng{fullhash}{3c6f31f4cc3e6dfe6e8c117aa90bc77b}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Software Engineering Conference, 2006. Australian}
+      \field{title}{Model-based runtime analysis of distributed reactive systems}
+      \field{year}{2006}
+      \field{pages}{10\bibrangedash pp}
+      \range{pages}{-1}
+    \endentry
+    \entry{ltl3}{article}{}
+      \name{author}{3}{}{%
+        {{hash=7cffa0000b9a3a8681a56b2bf1c9de36}{%
+           family={Bauer},
+           family_i={B\bibinitperiod},
+           given={Andreas},
+           given_i={A\bibinitperiod}}}%
+        {{hash=f12d8abcc6426b67ab27bb515704aec6}{%
+           family={Leucker},
+           family_i={L\bibinitperiod},
+           given={Martin},
+           given_i={M\bibinitperiod}}}%
+        {{hash=0bdeeec43787159d02e7574829c43c3d}{%
+           family={Schallhart},
+           family_i={S\bibinitperiod},
+           given={Christian},
+           given_i={C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{3c6f31f4cc3e6dfe6e8c117aa90bc77b}
+      \strng{fullhash}{3c6f31f4cc3e6dfe6e8c117aa90bc77b}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Transactions on Software Engineering and Methodology (TOSEM)}
+      \field{number}{4}
+      \field{title}{Runtime verification for LTL and TLTL}
+      \field{volume}{20}
+      \field{year}{2011}
+      \field{pages}{14}
+      \range{pages}{1}
+    \endentry
+    \entry{itp}{book}{}
+      \name{author}{2}{}{%
+        {{hash=877cbf536bf77c23de7f6116228e348d}{%
+           family={Bertot},
+           family_i={B\bibinitperiod},
+           given={Yves},
+           given_i={Y\bibinitperiod}}}%
+        {{hash=1c95425453d3c022a6509fa0bd5cb7c4}{%
+           family={Castéran},
+           family_i={C\bibinitperiod},
+           given={Pierre},
+           given_i={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer Science \& Business Media}%
+      }
+      \strng{namehash}{d6e19ed99b2f19fc95c0c2f4d1428684}
+      \strng{fullhash}{d6e19ed99b2f19fc95c0c2f4d1428684}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Interactive theorem proving and program development: Coq'Art: the calculus of inductive constructions}
+      \field{year}{2013}
+    \endentry
+    \entry{de2014combining}{incollection}{}
+      \name{author}{2}{}{%
+        {{hash=7e90bfa3dae1e85b9924273eee444ccc}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Boer},
+           family_i={B\bibinitperiod},
+           given={Frank\bibnamedelima S},
+           given_i={F\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=ea515938f7292fadb9d7a6c76cb9b01e}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Gouw},
+           family_i={G\bibinitperiod},
+           given={Stijn},
+           given_i={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{138cb62bf5c2904dc7b0c46986eba25b}
+      \strng{fullhash}{138cb62bf5c2904dc7b0c46986eba25b}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Formal Methods for Executable Software Models}
+      \field{title}{Combining monitoring with run-time assertion checking}
+      \field{year}{2014}
+      \field{pages}{217\bibrangedash 262}
+      \range{pages}{46}
+    \endentry
+    \entry{BoerEtAl14}{article}{}
+      \name{author}{5}{}{%
+        {{hash=ac9c3fe63e4d9bb0ee2be77768dd2df9}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Boer},
+           family_i={B\bibinitperiod},
+           given={F.S.},
+           given_i={F\bibinitperiod}}}%
+        {{hash=cf84948eabcd60c2bd53f53861397ba0}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Gouw},
+           family_i={G\bibinitperiod},
+           given={S.},
+           given_i={S\bibinitperiod}}}%
+        {{hash=53eb461b03eeb751c8db98cefd5359b9}{%
+           family={Johnsen},
+           family_i={J\bibinitperiod},
+           given={E.B.},
+           given_i={E\bibinitperiod}}}%
+        {{hash=460ba4d451e053454a521d957fe4d7b9}{%
+           family={Kohn},
+           family_i={K\bibinitperiod},
+           given={A.},
+           given_i={A\bibinitperiod}}}%
+        {{hash=da3c33e52c97ce08ee9e7c4ff9499d9e}{%
+           family={Wong},
+           family_i={W\bibinitperiod},
+           given={P.\bibnamedelimi Y.\bibnamedelimi H.},
+           given_i={P\bibinitperiod\bibinitdelim Y\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{3a9879e50e781f44add706fcca742d8d}
+      \strng{fullhash}{3a9879e50e781f44add706fcca742d8d}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Trans. Aspect-Oriented Software Development}
+      \field{title}{Run-Time Assertion Checking of Data- and Protocol-Oriented Properties of Java Programs: An Industrial Case Study}
+      \field{volume}{11}
+      \field{year}{2014}
+      \field{pages}{1\bibrangedash 26}
+      \range{pages}{26}
+    \endentry
+    \entry{BriolaMA14}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=49310551849caf25cf50a1d647fae76e}{%
+           family={Briola},
+           family_i={B\bibinitperiod},
+           given={Daniela},
+           given_i={D\bibinitperiod}}}%
+        {{hash=f9cb26620afc949415b71a7f005ede5a}{%
+           family={Mascardi},
+           family_i={M\bibinitperiod},
+           given={Viviana},
+           given_i={V\bibinitperiod}}}%
+        {{hash=4d28113dc31dfe4c449904a19210a0a2}{%
+           family={Ancona},
+           family_i={A\bibinitperiod},
+           given={Davide},
+           given_i={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{949dee672c538e8f0869ac32106e99d5}
+      \strng{fullhash}{949dee672c538e8f0869ac32106e99d5}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Intelligent Distributed Computing {VIII} - Proceedings of the 8th International Symposium on Intelligent Distributed Computing, {IDC} 2014, Madrid, Spain, September 3-5, 2014}
+      \field{title}{Distributed Runtime Verification of {JADE} Multiagent Systems}
+      \field{year}{2014}
+      \field{pages}{81\bibrangedash 91}
+      \range{pages}{11}
+    \endentry
+    \entry{javadynamic}{article}{}
+      \name{author}{2}{}{%
+        {{hash=08a580f5ec665f5b8d9decd34d211e9d}{%
+           family={Brörkens},
+           family_i={B\bibinitperiod},
+           given={Mark},
+           given_i={M\bibinitperiod}}}%
+        {{hash=79ae5b59574b9a58d2b2c428bad3a562}{%
+           family={Möller},
+           family_i={M\bibinitperiod},
+           given={Michael},
+           given_i={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{7e3158dc4036638d776043bbef50bad5}
+      \strng{fullhash}{7e3158dc4036638d776043bbef50bad5}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Electronic Notes in Theoretical Computer Science}
+      \field{number}{4}
+      \field{title}{Dynamic Event Generation for Runtime Checking using the JDI11This work was partially funded by the German Research Council (DFG) under grant OL 98/3-1.}
+      \field{volume}{70}
+      \field{year}{2002}
+      \field{pages}{21\bibrangedash 35}
+      \range{pages}{15}
+    \endentry
+    \entry{mop}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=76d2a0c3861b383bfabec56e48139137}{%
+           family={Chen},
+           family_i={C\bibinitperiod},
+           given={Feng},
+           given_i={F\bibinitperiod}}}%
+        {{hash=7fd7dca72da93b22748f135e2191a0fa}{%
+           family={Rosu},
+           family_i={R\bibinitperiod},
+           given={Grigore},
+           given_i={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{d66c668d881cb3b59698cd456b45c5bf}
+      \strng{fullhash}{d66c668d881cb3b59698cd456b45c5bf}
+      \field{sortinit}{C}
+      \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{TACAS}
+      \field{title}{Java-MOP: A Monitoring Oriented Programming Environment for Java.}
+      \field{volume}{3440}
+      \field{year}{2005}
+      \field{pages}{546\bibrangedash 550}
+      \range{pages}{5}
+    \endentry
+    \entry{modelchecking}{book}{}
+      \name{author}{3}{}{%
+        {{hash=cba20692c66c86e300e2bbc787fa845f}{%
+           family={Clarke},
+           family_i={C\bibinitperiod},
+           given={Edmund\bibnamedelima M},
+           given_i={E\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=a6f254abb80deae659306d0e4b489566}{%
+           family={Grumberg},
+           family_i={G\bibinitperiod},
+           given={Orna},
+           given_i={O\bibinitperiod}}}%
+        {{hash=e733022c023bf0b871c95a0ecc9d0427}{%
+           family={Peled},
+           family_i={P\bibinitperiod},
+           given={Doron},
+           given_i={D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {MIT press}%
+      }
+      \strng{namehash}{4294349040be95f22184e215be73394d}
+      \strng{fullhash}{4294349040be95f22184e215be73394d}
+      \field{sortinit}{C}
+      \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Model checking}
+      \field{year}{1999}
+    \endentry
+    \entry{Courcelle83}{article}{}
+      \name{author}{1}{}{%
+        {{hash=5eb043c6d579ba54ec303811f38c6bfe}{%
+           family={Courcelle},
+           family_i={C\bibinitperiod},
+           given={Bruno},
+           given_i={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{5eb043c6d579ba54ec303811f38c6bfe}
+      \strng{fullhash}{5eb043c6d579ba54ec303811f38c6bfe}
+      \field{sortinit}{C}
+      \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Theor. Comput. Sci.}
+      \field{title}{Fundamental Properties of Infinite Trees}
+      \field{volume}{25}
+      \field{year}{1983}
+      \field{pages}{95\bibrangedash 169}
+      \range{pages}{75}
+    \endentry
+    \entry{rviot1}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=5c3ef3f16eaf49f8ee2cf192c60b3c11}{%
+           family={González},
+           family_i={G\bibinitperiod},
+           given={Laura},
+           given_i={L\bibinitperiod}}}%
+        {{hash=d2a11a366cba5f55bac711188f06a692}{%
+           family={Cubo},
+           family_i={C\bibinitperiod},
+           given={Javier},
+           given_i={J\bibinitperiod}}}%
+        {{hash=2964d7827a7d46baf7837b36d3562322}{%
+           family={Brogi},
+           family_i={B\bibinitperiod},
+           given={Antonio},
+           given_i={A\bibinitperiod}}}%
+        {{hash=23c7088f0eb3191eb775665636246c6a}{%
+           family={Pimentel},
+           family_i={P\bibinitperiod},
+           given={Ernesto},
+           given_i={E\bibinitperiod}}}%
+        {{hash=c830d3a90bdb149cbcc5c6f577c4da22}{%
+           family={Ruggia},
+           family_i={R\bibinitperiod},
+           given={Raúl},
+           given_i={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{304dbdcb7178897ce7d437d0ac85aa39}
+      \strng{fullhash}{304dbdcb7178897ce7d437d0ac85aa39}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{European Conference on Service-Oriented and Cloud Computing}
+      \field{title}{Run-time verification of behaviour-aware mashups in the internet of things}
+      \field{year}{2013}
+      \field{pages}{318\bibrangedash 330}
+      \range{pages}{13}
+    \endentry
+    \entry{dtrace}{book}{}
+      \name{author}{2}{}{%
+        {{hash=b45aef384111d7e9dd71b74ba427b5f1}{%
+           family={Gregg},
+           family_i={G\bibinitperiod},
+           given={Brendan},
+           given_i={B\bibinitperiod}}}%
+        {{hash=76737abbae3f48af43275233afe389c3}{%
+           family={Mauro},
+           family_i={M\bibinitperiod},
+           given={Jim},
+           given_i={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Prentice Hall Professional}%
+      }
+      \strng{namehash}{c0d954bc0065b64bbe1400d485447b6d}
+      \strng{fullhash}{c0d954bc0065b64bbe1400d485447b6d}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{DTrace: Dynamic Tracing in Oracle Solaris, Mac OS X, and FreeBSD}
+      \field{year}{2011}
+    \endentry
+    \entry{webservices}{article}{}
+      \name{author}{5}{}{%
+        {{hash=f0ba88701898eb16a5f64d46b68cadfb}{%
+           family={Hallé},
+           family_i={H\bibinitperiod},
+           given={Sylvain},
+           given_i={S\bibinitperiod}}}%
+        {{hash=6b563d90e20f7ddcd5e4e963f904ed9f}{%
+           family={Bultan},
+           family_i={B\bibinitperiod},
+           given={Tevfik},
+           given_i={T\bibinitperiod}}}%
+        {{hash=b440677743af3da19055ce0bd213878e}{%
+           family={Hughes},
+           family_i={H\bibinitperiod},
+           given={Graham},
+           given_i={G\bibinitperiod}}}%
+        {{hash=04d86ac032ebd8a3852cbc62838b7cf6}{%
+           family={Alkhalaf},
+           family_i={A\bibinitperiod},
+           given={Muath},
+           given_i={M\bibinitperiod}}}%
+        {{hash=06ebd5a5b0501c48a74a45c7edeacf8a}{%
+           family={Villemaire},
+           family_i={V\bibinitperiod},
+           given={Roger},
+           given_i={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{a10d6640c8bb06621e3342225df3a727}
+      \strng{fullhash}{a10d6640c8bb06621e3342225df3a727}
+      \field{sortinit}{H}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computer}
+      \field{number}{3}
+      \field{title}{Runtime verification of web service interface contracts}
+      \field{volume}{43}
+      \field{year}{2010}
+    \endentry
+    \entry{webapps}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=f0ba88701898eb16a5f64d46b68cadfb}{%
+           family={Hallé},
+           family_i={H\bibinitperiod},
+           given={Sylvain},
+           given_i={S\bibinitperiod}}}%
+        {{hash=06ebd5a5b0501c48a74a45c7edeacf8a}{%
+           family={Villemaire},
+           family_i={V\bibinitperiod},
+           given={Roger},
+           given_i={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{6ff9e8a8d15586b23f97567927e5270b}
+      \strng{fullhash}{6ff9e8a8d15586b23f97567927e5270b}
+      \field{sortinit}{H}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Runtime Verification}
+      \field{title}{Runtime Verification for the Web}
+      \field{year}{2010}
+      \field{pages}{106\bibrangedash 121}
+      \range{pages}{16}
+    \endentry
+    \entry{NodejsPerformance14}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=9464ab4ab20731f391d3db173bccac81}{%
+           family={Lei},
+           family_i={L\bibinitperiod},
+           given={K.},
+           given_i={K\bibinitperiod}}}%
+        {{hash=d43ea3defd7dcef88e165821ba7333b8}{%
+           family={Ma},
+           family_i={M\bibinitperiod},
+           given={Y.},
+           given_i={Y\bibinitperiod}}}%
+        {{hash=29400549d44963ef67553d62f9a84f49}{%
+           family={Tan},
+           family_i={T\bibinitperiod},
+           given={Z.},
+           given_i={Z\bibinitperiod}}}%
+      }
+      \strng{namehash}{b5d46c7dfc999937d20d3076ab5ca436}
+      \strng{fullhash}{b5d46c7dfc999937d20d3076ab5ca436}
+      \field{sortinit}{L}
+      \field{sortinithash}{872351f18d0f736066eda0bf18bfa4f7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2014 IEEE 17th International Conference on Computational Science and Engineering}
+      \field{month}{12}
+      \field{title}{Performance Comparison and Evaluation of Web Development Technologies in PHP, Python, and Node.js}
+      \field{year}{2014}
+      \field{pages}{661\bibrangedash 668}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/CSE.2014.142
+      \endverb
+      \keyw{Internet;object-oriented methods;Node.js;PHP;Python-Web;Web development technology;data-intensive Web application;Benchmark testing;Concurrent computing;Educational institutions;Java;Web servers;Benchmark Test;Node.js;Performance Evaluation;Scenario Test;Web Development}
+    \endentry
+    \entry{rv}{article}{}
+      \name{author}{2}{}{%
+        {{hash=f12d8abcc6426b67ab27bb515704aec6}{%
+           family={Leucker},
+           family_i={L\bibinitperiod},
+           given={Martin},
+           given_i={M\bibinitperiod}}}%
+        {{hash=0bdeeec43787159d02e7574829c43c3d}{%
+           family={Schallhart},
+           family_i={S\bibinitperiod},
+           given={Christian},
+           given_i={C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{01c967a210a716e948813145f3a0c832}
+      \strng{fullhash}{01c967a210a716e948813145f3a0c832}
+      \field{sortinit}{L}
+      \field{sortinithash}{872351f18d0f736066eda0bf18bfa4f7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Journal of Logic and Algebraic Programming}
+      \field{number}{5}
+      \field{title}{A brief account of runtime verification}
+      \field{volume}{78}
+      \field{year}{2009}
+      \field{pages}{293\bibrangedash 303}
+      \range{pages}{11}
+    \endentry
+    \entry{pql}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=464aecd13bd177b8fc0240da4398b50b}{%
+           family={Martin},
+           family_i={M\bibinitperiod},
+           given={Michael},
+           given_i={M\bibinitperiod}}}%
+        {{hash=1ee39a41b6cb1b0caca41c1712b99eee}{%
+           family={Livshits},
+           family_i={L\bibinitperiod},
+           given={Benjamin},
+           given_i={B\bibinitperiod}}}%
+        {{hash=1b3af6866e575fd09a2a333ff549e121}{%
+           family={Lam},
+           family_i={L\bibinitperiod},
+           given={Monica\bibnamedelima S},
+           given_i={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{8d4258d73bb13da8024e48c815bcdabc}
+      \strng{fullhash}{8d4258d73bb13da8024e48c815bcdabc}
+      \field{sortinit}{M}
+      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{ACM SIGPLAN Notices}
+      \field{number}{10}
+      \field{title}{Finding application errors and security flaws using PQL: a program query language}
+      \field{volume}{40}
+      \field{year}{2005}
+      \field{pages}{365\bibrangedash 383}
+      \range{pages}{19}
+    \endentry
+    \entry{testing}{book}{}
+      \name{author}{3}{}{%
+        {{hash=6847d53635cbbdd2362a09a07aee171e}{%
+           family={Myers},
+           family_i={M\bibinitperiod},
+           given={Glenford\bibnamedelima J},
+           given_i={G\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=6bedbc386e093a07f6c0696fa075b157}{%
+           family={Sandler},
+           family_i={S\bibinitperiod},
+           given={Corey},
+           given_i={C\bibinitperiod}}}%
+        {{hash=14b5444d5651db3fbde7bcd5553fd0ec}{%
+           family={Badgett},
+           family_i={B\bibinitperiod},
+           given={Tom},
+           given_i={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{06a893cb93e9e8dd8f766d0db3a8be52}
+      \strng{fullhash}{06a893cb93e9e8dd8f766d0db3a8be52}
+      \field{sortinit}{M}
+      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The art of software testing}
+      \field{year}{2011}
+    \endentry
+    \entry{ltl}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=48771ab1876a9bd3472621189d78fe6f}{%
+           family={Pnueli},
+           family_i={P\bibinitperiod},
+           given={Amir},
+           given_i={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{48771ab1876a9bd3472621189d78fe6f}
+      \strng{fullhash}{48771ab1876a9bd3472621189d78fe6f}
+      \field{sortinit}{P}
+      \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Foundations of Computer Science, 1977., 18th Annual Symposium on}
+      \field{title}{The temporal logic of programs}
+      \field{year}{1977}
+      \field{pages}{46\bibrangedash 57}
+      \range{pages}{12}
+    \endentry
+    \entry{Rosenberg2016}{inbook}{}
+      \name{author}{3}{}{%
+        {{hash=0408f79f8f754897c73452742fc15c1f}{%
+           family={Rosenberg},
+           family_i={R\bibinitperiod},
+           given={Carl\bibnamedelima Martin},
+           given_i={C\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=8d751fa3b6cbc37f2d5fed70c859c182}{%
+           family={Steffen},
+           family_i={S\bibinitperiod},
+           given={Martin},
+           given_i={M\bibinitperiod}}}%
+        {{hash=b6239ba0a50f3b234d1c2e2bcf552071}{%
+           family={Stolz},
+           family_i={S\bibinitperiod},
+           given={Volker},
+           given_i={V\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=21340baed277e5f47e7887fb87bf4e37}{%
+           family={Falcone},
+           family_i={F\bibinitperiod},
+           given={Yliès},
+           given_i={Y\bibinitperiod}}}%
+        {{hash=b96571c3d53269eeccb72ca4e722fb33}{%
+           family={Sánchez},
+           family_i={S\bibinitperiod},
+           given={César},
+           given_i={C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{45235b4f9a115ee9f2801be1e338249d}
+      \strng{fullhash}{45235b4f9a115ee9f2801be1e338249d}
+      \field{sortinit}{R}
+      \field{sortinithash}{c7387613477035a752d935acfc3e3ea2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Runtime Verification: 16th International Conference, RV 2016, Madrid, Spain, September 23--30, 2016, Proceedings}
+      \field{isbn}{978-3-319-46982-9}
+      \field{title}{Leveraging DTrace for Runtime Verification}
+      \field{year}{2016}
+      \field{pages}{318\bibrangedash 332}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1007/978-3-319-46982-9_20
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-319-46982-9_20
+      \endverb
+    \endentry
+    \entry{CoLP06}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=3d5ce41ea3e33bb30d222a838983be81}{%
+           family={Simon},
+           family_i={S\bibinitperiod},
+           given={Luke},
+           given_i={L\bibinitperiod}}}%
+        {{hash=ec3b3191cf75642dac2b18f155ced410}{%
+           family={Mallya},
+           family_i={M\bibinitperiod},
+           given={Ajay},
+           given_i={A\bibinitperiod}}}%
+        {{hash=5a36a1809572f6580a65fa79e9b02a03}{%
+           family={Bansal},
+           family_i={B\bibinitperiod},
+           given={Ajay},
+           given_i={A\bibinitperiod}}}%
+        {{hash=0b27589773c54ca1ab400781280b8458}{%
+           family={Gupta},
+           family_i={G\bibinitperiod},
+           given={Gopal},
+           given_i={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{8570d8c3f66fe8e423aab4ab4eafdc75}
+      \strng{fullhash}{8570d8c3f66fe8e423aab4ab4eafdc75}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Logic Programming, 22nd International Conference, {ICLP} 2006, Seattle, WA, USA, August 17-20, 2006, Proceedings}
+      \field{title}{Coinductive Logic Programming}
+      \field{year}{2006}
+      \field{pages}{330\bibrangedash 345}
+      \range{pages}{16}
+    \endentry
+    \entry{Nodejs10}{article}{}
+      \name{author}{2}{}{%
+        {{hash=d06e0b4b1d7838b22673596635ea5494}{%
+           family={Tilkov},
+           family_i={T\bibinitperiod},
+           given={S.},
+           given_i={S\bibinitperiod}}}%
+        {{hash=291b06ba40ab22d929bfd587523cd864}{%
+           family={Vinoski},
+           family_i={V\bibinitperiod},
+           given={S.},
+           given_i={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{9c14340bb597df4834051a19fdba08c9}
+      \strng{fullhash}{9c14340bb597df4834051a19fdba08c9}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1089-7801}
+      \field{journaltitle}{IEEE Internet Computing}
+      \field{month}{11}
+      \field{number}{6}
+      \field{title}{Node.js: Using JavaScript to Build High-Performance Network Programs}
+      \field{volume}{14}
+      \field{year}{2010}
+      \field{pages}{80\bibrangedash 83}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1109/MIC.2010.145
+      \endverb
+      \keyw{Java;Node.js;concurrent program;event-driven programming model;high performance network program;mainstream multithreading;server-side JavaScript space;Instruction sets;Libraries;Programming;Registers;Servers;Sockets;Writing;Internet;JavaScript;Node;Node.js;Web development;functional programming}
+    \endentry
+    \entry{rviot2}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=7d025b275213bc9f9805a01609a1037a}{%
+           family={Torjusen},
+           family_i={T\bibinitperiod},
+           given={Arild\bibnamedelima B},
+           given_i={A\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=ea9a5279f5c755292715cd48ecbd7fd3}{%
+           family={Abie},
+           family_i={A\bibinitperiod},
+           given={Habtamu},
+           given_i={H\bibinitperiod}}}%
+        {{hash=d9050695d94658ef49ea61c1b8d69491}{%
+           family={Paintsil},
+           family_i={P\bibinitperiod},
+           given={Ebenezer},
+           given_i={E\bibinitperiod}}}%
+        {{hash=e50148a3b27ac8f9c4fcf317b7a36904}{%
+           family={Trcek},
+           family_i={T\bibinitperiod},
+           given={Denis},
+           given_i={D\bibinitperiod}}}%
+        {{hash=8ab3ea7e7f8a661e1f39dcaf92d499e7}{%
+           family={Skomedal},
+           family_i={S\bibinitperiod},
+           given={Åsmund},
+           given_i={Å\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{dab9fd1b8699d343cc56e5aa26d41ad4}
+      \strng{fullhash}{dab9fd1b8699d343cc56e5aa26d41ad4}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2014 European Conference on Software Architecture Workshops}
+      \field{title}{Towards run-time verification of adaptive security for IoT in eHealth}
+      \field{year}{2014}
+      \field{pages}{4}
+      \range{pages}{1}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+

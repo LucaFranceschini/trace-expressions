@@ -1,0 +1,58 @@
+
+\subsection{Benchmarks}
+
+\begin{table}[ht]
+  \begin{tabular}{|l|r|r|}
+    \hline
+    \textbf{Language} & 
+    \textbf{Result} &
+    \textbf{Factor} \\
+    \hline
+    \multicolumn{3}{|c|}{Results on Microsoft CLR}\\
+    \hline
+    C\# & 
+    6.94 ms &
+    1.00x \\
+
+    RPython &
+    7.25 ms &
+    1.04x \\
+
+    IronPython &
+    1675.00 ms &
+    241.35x \\
+    \hline
+
+    \multicolumn{3}{|c|}{Results on Mono}\\
+    \hline
+    C\# & 
+    4.19 ms &
+    1.00x \\
+
+    RPython &
+    9.63 ms &
+    2.30x \\
+
+    IronPython &
+    1509.41 ms &
+    360.24x \\
+    \hline
+
+    \multicolumn{3}{|c|}{Results on JVM}\\
+    \hline
+    Java & 
+    1.77 ms &
+    1.00x \\
+
+    RPython &
+    2.10 ms &
+    1.18x \\
+
+    Jython &
+    2918.90 ms &
+    1641.80x \\
+    \hline
+  \end{tabular}
+  \caption{Benchmark results}
+  \label{table}
+\end{table}

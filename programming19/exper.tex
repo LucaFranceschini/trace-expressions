@@ -182,3 +182,5 @@ Finally, the last call \lstinline{app.get} deals with the case when no directory
 The tool has been tested with the server above, and a Node.js client sending requests with random  paths based on its root directory at the frequency of three requests per second.
 The tool was able to monitor all relevant \lstinline{http} events triggered in the above mentioned Express components used through the server, showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
 As expected, though, Express it is correct w.r.t.\ the previously described constraints on the use of the \lstinline{http} module.
+
+\input{benchmarks}
