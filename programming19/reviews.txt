@@ -396,20 +396,31 @@ Editing suggestions:
 
 Abstract and introduction: "in the last year" => "in recent years"
 
+>>> fixed
+
 Page 6, "Event types": should "... a language E of event types ..."
 really have a capital script "E", which was previously defined as
 being a set of events? I think it maybe should be a different letter,
 and lowercase script "v"s are elements of that set.
 
+>>> fixed
+
 Page 9: "formal methods has been proposed" => "have"?
 
+>>> fixed
+
 Page 10: "avoid to interfere with" => "avoid interfering with"
+
+>>> fixed
 
 The "Node.js" section on page 10 mentions that the examples show the
 importance of parametric verification, in contrast to the capabilities
 of LTL. This point is not clear to readers with limited expertise in
 LTL, and it's not clear whether session types or temporal contracts
 address the same issues.
+
+>>> Clarification added:
+>>> (i.e., we cannot use values that will be discovered at runtime in the formula)
 
 Page 11: Should `console.log('bye')` be `() => { console.log('bye') }`?
 Also, since both writes and close use callbacks, couldn't the file
@@ -419,12 +430,19 @@ only afterward point out that the writes can happen in any order.
 Then again, it's not clear that Node.js will actually reorder the
 writes and/or close.
 
+>>> Callback fixed. Clarification added:
+>>> There are two more problems with the code above: first, the numbers can be written in any order, since there is no guarantee about asynchronous operations execution; second, \lstinline{fs.close} should be called after all the write operations are completed and their callbacks are called.
+
 Page 18: Does the "six" for checked properties count each sub-bullet
 on the middle of the page as a separate property? Otherwise, I only
 count four reported properties.
 
+>>> Yes, it does include them: some of them are grouped for their commonalities, to avoid repetitions.
+
 Reference 17: The paper title seems to accidentally include a funding
 acknowledgment.
+
+>>> fixed
 
 
 ----------------------- REVIEW 3 ---------------------

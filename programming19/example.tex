@@ -3,7 +3,7 @@
 \subsection{File System}
 The \lstinline{fs} standard module for Node.js deals with the file system, and its typical uses are good examples of code that would benefit from runtime verification techniques.
 
-Consider the snippet in \Cref{lst:fs}, writing to a file all numbers from \lstinline{0} to the constant \lstinline{LIMIT} in any order (the \lstinline{**} operator stands for exponentiation).
+Consider the snippet in \Cref{lst:fs}, writing to a file all numbers from \lstinline{0} to the constant \lstinline{LIMIT} (the \lstinline{**} operator stands for exponentiation).
 As it is customary in Node.js, all I/O operations are asynchronous, starting from the \lstinline{open} function which, upon completion, will execute the callback \lstinline!(err, fd) => { ... }!.
 The convention in Node.js is to pass errors (if any) to callbacks as first argument.
 \lstinline{fd} is the file descriptor of the opened file.
@@ -37,6 +37,7 @@ This constraint however is not checked by the library for performance reasons.
 
 Recalling the event-loop mechanism previously presented, first \emph{all} the asynchronous \lstinline{write} requests will be queued, and only \emph{after} this they will be fulfilled.
 This explains the documented requirement and gives a possible cause for the error: the asynchronous I/O queue will grow linearly with \lstinline{LIMIT}.
+There are two more problems with the code above: first, the numbers can be written in any order, since there is no guarantee about asynchronous operations execution; second, \lstinline{fs.close} should be called after all the write operations are completed and their callbacks are called.
 
 Trace expressions can be used to formally specify (and later verify) the requirement.
 Consider for instance the following domain (in this simple case, events and event types coincides):
