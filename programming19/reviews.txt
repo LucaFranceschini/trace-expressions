@@ -368,6 +368,12 @@ previously compared the expressiveness of trace expressions and LTL_3,
 but it's not clear whether that difference matters for this paper's
 examples.
 
+>>> Considerations and references about LTL extended:
+>>> They are more expressive than other formalisms commonly adopted for runtime verification, as attributed context-free grammars [15] and LTL 3 [12]; see [6] for a comparison between trace expressions and linear temporal logics.
+
+>>> Considerations and references about (session) types and contracts added:
+>>> Furthermore, with runtime verification, the specification of the whole system is formalized, as opposed to less global approaches, such as type-based ones (see for instance session types [25], or more generally behavioral types [1]) or design by contract [29].
+
 Arguing the benefit of a new language relative to existing languages
 is often tricky, and perhaps it belongs to other papers to argue for
 trace expressions generally. Still, more motivation for the language
@@ -381,6 +387,10 @@ effort remains. More information on the implementation of trace
 expressions and matchers in Prolog might be interesting, too ---
 especially if a benefit of trace expressions is their relatively
 straightforward implementation in Prolog.
+
+>>> Paragraph added:
+>>> We chose trace expressions as a specification formalism for different reasons: they are quite expressive [7], they support parametricity [8] and they can be directly implemented in Prolog (see [9] for more information on the implementation of a
+monitoring system based on trace expressions). Furthermore they are syntactically regular terms [20], which makes it natural to express recursion and (possibly) non-terminating system, and easy to write them as cyclic terms in Prolog.
 
 Editing suggestions:
 

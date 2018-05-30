@@ -6,6 +6,9 @@ Global types, and thus trace expressions, derive from the notion of behavioral t
 
 Later on, with the introduction of the notion of event type, trace expressions have become system and language agnostic, so that they can be exploited for runtime verification in several different contexts.
 
+We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing}, they support parametricity \cite{AnconaFM17} and they can be directly implemented in Prolog (see \cite{TowardsIoT17} for more information on the implementation of a monitoring system based on trace expressions).
+Furthermore they are syntactically regular terms \cite{Courcelle83}, which makes it natural to express recursion and (possibly) non-terminating system, and easy to write them as cyclic terms in Prolog.
+
 \paragraph{Events}
 Trace expressions can be used to specify the possible correct behavior of a system, w.r.t.\ some property that needs to be verified.
 To this aim, \emph{events} are defined as all the relevant observations that can be made on the system.
