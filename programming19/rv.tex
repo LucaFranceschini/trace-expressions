@@ -3,9 +3,10 @@
 \paragraph{Context}
 Historically, different approaches has been proposed to solve the problem of verifying the behavior of software systems.
 
-On one hand \emph{formal methods} has been proposed, including theorem proving \cite{itp}, a semi-automated class of techniques inspired by mathematical proofs, and model checking \cite{modelchecking}, which aims to automatically verify a suitably small model of the system against expected properties.
+On one hand \emph{formal methods} have been proposed, including theorem proving \cite{itp}, a semi-automated class of techniques inspired by mathematical proofs, and model checking \cite{modelchecking}, which aims to automatically verify a suitably small model of the system against expected properties.
 These techniques have been extensively studied in the literature and are quite mature.
 However, they require either a deep theoretical knowledge or a simplified model of the system, and this may not be the case for many real-world scenarios.
+Furthermore, with runtime verification, the specification of the whole system is formalized, as opposed to less global approaches, such as type-based ones (see for instance session types \cite{sessiontypes}, or more generally behavioral types \cite{AnconaBB0CDGGGH16}) or design by contract \cite{contracts}, where specification of single parts of the system is given.
 
 On the other hand, software \emph{testing} \cite{testing} has been successfully employed in industry, to find bugs by running (part of) the system on input whose correct output is known.
 Testing proved itself useful by working on many different levels of abstraction, from unit-test of small code snippets to black-box testing of complex systems as a whole.
@@ -47,7 +48,7 @@ Programs implementing such behaviors have to be aware of the monitor and to inte
 Different patterns and paradigms have been proposed for this, see \emph{Monitor-Oriented Programming (MOP)} \cite{mop}, a framework for runtime verification of Java programs, or \emph{Runtime Reflection} \cite{rr}, an architectural pattern designed for monitor-aware systems able to diagnose problems and mitigate issues.
 
 Another critical aspect of runtime verification systems is the generation of the monitor itself, especially since it is desirable to automatically generate them from the high-level formal specification, thus making their adoption and application easier.
-Such a monitor should avoid to interfere with the program behavior as much as possible, in order for the verification to be effective.
+Such a monitor should avoid interfering with the program behavior as much as possible, in order for the verification to be effective.
 This is very important when the system under test has to operate in real-time, and/or when the property to be checked contains time constraints itself.
 
 \paragraph{Applications}
@@ -62,7 +63,7 @@ Runtime verification has been successfully applied to many other contexts, inclu
 In the context of runtime verification, we only found one work that has been applied to Node.js applications \cite{Rosenberg2016}.
 The approach is based on DTrace \cite{dtrace}, a low-level dynamic tracing framework that allows to extract a trace from a running system.
 However, there are important differences both in the implementation and in the goals.
-The monitors produces in the cited work exploit LTL \cite{ltl} as a specification formalism, thus parametric verification is not supported, but as we show in the examples this is an important feature that increases expressiveness.
+The monitors produces in the cited work exploit LTL \cite{ltl} as a specification formalism, thus parametric verification is not supported (i.e., we cannot use values that will be discovered at runtime in the formula), but as we show in the examples this is an important feature that increases expressiveness.
 Moreover, since one of our goals is to target the Internet of Things, we chose a distributed approach with a remote monitoring server.
 On the other hand, DTrace is not distributed and works at a lower level, thus being more efficient.
 

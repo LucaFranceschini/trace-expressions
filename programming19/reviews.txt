@@ -336,7 +336,7 @@ Is that all? How can we know it was monitoring correctly? Did it
 find any errors? What was the goal of this test?
 
 >>> Addition:
->>> [...] showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
+>>> [...] showing that our instruzmentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
 As expected, though, Express it is correct w.r.t. the previously described constraints on the use of the http module.
 
 
@@ -368,6 +368,12 @@ previously compared the expressiveness of trace expressions and LTL_3,
 but it's not clear whether that difference matters for this paper's
 examples.
 
+>>> Considerations and references about LTL extended:
+>>> They are more expressive than other formalisms commonly adopted for runtime verification, as attributed context-free grammars [15] and LTL 3 [12]; see [6] for a comparison between trace expressions and linear temporal logics.
+
+>>> Considerations and references about (session) types and contracts added:
+>>> Furthermore, with runtime verification, the specification of the whole system is formalized, as opposed to less global approaches, such as type-based ones (see for instance session types [25], or more generally behavioral types [1]) or design by contract [29].
+
 Arguing the benefit of a new language relative to existing languages
 is often tricky, and perhaps it belongs to other papers to argue for
 trace expressions generally. Still, more motivation for the language
@@ -382,24 +388,39 @@ expressions and matchers in Prolog might be interesting, too ---
 especially if a benefit of trace expressions is their relatively
 straightforward implementation in Prolog.
 
+>>> Paragraph added:
+>>> We chose trace expressions as a specification formalism for different reasons: they are quite expressive [7], they support parametricity [8] and they can be directly implemented in Prolog (see [9] for more information on the implementation of a
+monitoring system based on trace expressions). Furthermore they are syntactically regular terms [20], which makes it natural to express recursion and (possibly) non-terminating system, and easy to write them as cyclic terms in Prolog.
+
 Editing suggestions:
 
 Abstract and introduction: "in the last year" => "in recent years"
+
+>>> fixed
 
 Page 6, "Event types": should "... a language E of event types ..."
 really have a capital script "E", which was previously defined as
 being a set of events? I think it maybe should be a different letter,
 and lowercase script "v"s are elements of that set.
 
+>>> fixed
+
 Page 9: "formal methods has been proposed" => "have"?
 
+>>> fixed
+
 Page 10: "avoid to interfere with" => "avoid interfering with"
+
+>>> fixed
 
 The "Node.js" section on page 10 mentions that the examples show the
 importance of parametric verification, in contrast to the capabilities
 of LTL. This point is not clear to readers with limited expertise in
 LTL, and it's not clear whether session types or temporal contracts
 address the same issues.
+
+>>> Clarification added:
+>>> (i.e., we cannot use values that will be discovered at runtime in the formula)
 
 Page 11: Should `console.log('bye')` be `() => { console.log('bye') }`?
 Also, since both writes and close use callbacks, couldn't the file
@@ -409,12 +430,19 @@ only afterward point out that the writes can happen in any order.
 Then again, it's not clear that Node.js will actually reorder the
 writes and/or close.
 
+>>> Callback fixed. Clarification added:
+>>> There are two more problems with the code above: first, the numbers can be written in any order, since there is no guarantee about asynchronous operations execution; second, \lstinline{fs.close} should be called after all the write operations are completed and their callbacks are called.
+
 Page 18: Does the "six" for checked properties count each sub-bullet
 on the middle of the page as a separate property? Otherwise, I only
 count four reported properties.
 
+>>> Yes, it does include them: some of them are grouped for their commonalities, to avoid repetitions.
+
 Reference 17: The paper title seems to accidentally include a funding
 acknowledgment.
+
+>>> fixed
 
 
 ----------------------- REVIEW 3 ---------------------
