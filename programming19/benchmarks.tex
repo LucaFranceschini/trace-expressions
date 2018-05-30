@@ -1,10 +1,19 @@
-
 \subsection{Benchmarks}
 
+All tests presented in Section~\ref{sec:spec-minining} have been employed as benchmarks for performance evaluation
+of our prototype on an Intel(R) Core(TM) i7-6500U CPU at 2.50GHz with a 16GB RAM, running SWI-Prolog 7.2.3 on
+Linux kernel 4.14.40.
+In particular, we have measured how much the performances of all implemented servers are affected by runtime monitoring;
+only correct implementations have been considered, to be able to overload servers with arbitrary numbers of requests.
+The benchmarks have shown that the overhead of runtime verification is mainly due to code instrumentation, rather than the particular monitored
+specification, therefore all measurements have been conducted while verifying the same trace expression, namely, 
+the one corresponding to the specification \textbf{omitted body (204 response)}.
+
+Table~\ref{table} shows the results of our experiments. 
 \begin{table}[ht]
   \begin{tabular}{|l|l|l|l|}
     \hline
-    \textbf{Test} & 
+    \textbf{Benchmark} & 
     \textbf{Original} &
     \textbf{Monitored} &
     \textbf{Overhead} \\
@@ -12,51 +21,67 @@
     \multicolumn{4}{|c|}{HTTP module}\\
     \hline
     Content length & 
-    RPS &
-    RPS &
-    \% \\
+    591 RPS &
+    528 RPS &
+    12 \% \\
 
     Omitted body (HEAD request)&
-    RPS &
-    RSP &
-    \% \\
+    631 RPS &
+    588 RSP &
+    7 \% \\
 
     Omitted body (204 response)&
-    RPS &
-    RSP &
-    \% \\
+    638 RPS &
+    626 RSP &
+    2 \% \\
 
     Omitted body (304 response)&
-    RPS &
-    RSP &
-    \% \\
+    634 RPS &
+    626 RSP &
+    1 \% \\
 
     Unconsumed data &
-    RPS &
-    RPS &
-    \% \\
-    \hline
+    643 RPS &
+    739 RPS &
+    -13 \% \\
 
     Write head &
-    RPS &
-    RPS &
-    \% \\
+    627 RPS &
+    580 RPS &
+    8 \% \\
     \hline
 
     \multicolumn{4}{|c|}{Express}\\
     \hline
     Hello world & 
-    770 RPS &
-    760 RPS &
-    1 \% \\
+    766 RPS &
+    716 RPS &
+    7 \% \\
 
     File explorer &
-    622 RPS &
-    307 RPS &
-    103 \%\\
+    588 RPS &
+    312 RPS &
+    88 \%\\
 
     \hline
   \end{tabular}
   \caption{Benchmark results}
   \label{table}
 \end{table}
+For each benchmark we have measured the average number of served requests per second (RPS) 
+with a client running a loop to continuously send requests to the server without waiting to collect its response;
+all measurements have been obtained as the average over ten different runs, each consisting
+of 100K requests sent to the server.
+
+The second column (Original) displays the values concerning the original server, while the third one
+(Monitored) reports the measurements for the same server under monitoring.
+For all simple servers directly implemented with the \lstinline{http} module we registered modest overheads, as well
+as for the Express server sending the response \lstinline{'Hello world'} to all requests.
+Interestingly, the monitored version of \textbf{unconsumed data} outperforms the original version; we have
+not investigated yet the reasons of such a behavior.
+
+For the file explorer built with Express and presented in Section~\ref{sec:express}, the client keeps sending GET requests
+with randomly generated paths; in this case the overhead is more significant, but still the overall performance 
+is acceptable: the server could operate at the rate of more than 300 RPS, while the system had to monitor more than 1.5 million events.
+Such a result shows that the optimizations introduced in our prototype implementation allowed us
+to get a 100x speed boost, and that runtime monitoring can be effectively employed for testing servers implemented with Express.
