@@ -1,0 +1,9 @@
+#! /bin/bash
+CWD=~/TechRep/programming18/git/trace-expressions/examples/express-examples/fileExplorer
+for i in `seq 1 10`
+do node ~/node_modules/jalangi2/src/js/commands/direct.js --analysis ~/TechRep/programming18/svn_impl/jalangi-async-test-omitted-body/functionInvocationAnalysis.js ~/TechRep/programming18/express-examples/simple_server-ecma5.js &
+sleep .5
+node $CWD/benchmark-client.js $1 >> $CWD/results-monitored.txt
+pkill node   
+sleep .5
+done
