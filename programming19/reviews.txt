@@ -466,9 +466,24 @@ The paper tackles an interesting and timely problem, verification of JavaScript 
 
 Regarding the technical novelty, it is not clear that trace expressions described in section 3 are an improvement on prior and related semantics. It would have made the paper stronger if it explicitly incorporated a discussion on how the semantics extend prior work e.g. [8] if that is the case. There is related work in session types literature that has investigated global session types for languages with similar concurrency models, e.g. [A] for Erlang. There is also work on using temporal logic for analyzing distributed asynchronous applications [B]. In the context of JavaScript, much work has focused on defining dynamic analysis to verify JavaScript code, specially in the context of security [eg. C].  It would be useful to describe how the formalism is better suited or provides some advantages with respect to those works.
 
+>>> Added paragraph:
+>>> Trace expressions differs from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
+Just like trace expressions specify the behaviour of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
+A more thorough comparison between these two different approaches is left to future work.
+
 It is fine that the paper does not innovate on the formalism, if, on the other hand, it overcomes engineering challenges in the context of JavaScript.  However, the implementation section is described in a way that it looks as if most of the technical challenges are tackled by the underlying implementation tools. For example, in terms of monitoring, the technical challenges are taken care by Jalangi 2.  Alternatively,  the monitoring can be built using JavaScript proxies, or on top of similar tools like Linvail[D], or the Virtual Values library for JavaScript [E].  It would make the paper stronger to review those alternatives as well as to discuss how the choice of Jalangi 2 affects the type of code that can be verified. I was also wondering if trace expressions specification can be directly encoded on top of web API specification languages like OpenAPI and JSON Schema.
+
+>>> Clarifying paragraph:
+>>> Our prototype implementation enriches the capabilities of Jalangi by supporting these additional features that for Node.js monitoring.
+We are currently working on a proxy-based alternative approach based on reflection rather than instrumentation.
+Proxies are currently natively supported by JavaScript \cite{proxy}.
+>>> About performance and Linvail:
+>>> The tool allows for state-of-the-art performance in the context of code instrumentation for dynamic analysis.
+To the best of our knowledge, the most similar tool is Linvail \cite{linvail}, though its performance are reported to be worst by an order of magnitude (w.r.t.\ the overhead).
  
 With respect to the scalability or applicability of trace expressions, there are no big case studies conducted that demonstrates how complete or correct the tool is, or how it is applied to realistic applications. I believe that was not the focus of the paper, so the small examples would be fine if the paper provided a convincing case for novelty on the verification approach or its implementation.
+
+>>> We added our recent work to the "Implementation" section.
 
 Below you can find some detailed suggestions on how to improve the structure and writing of the paper. 
 
