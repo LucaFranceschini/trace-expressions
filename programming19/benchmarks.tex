@@ -41,9 +41,9 @@ Table~\ref{table} shows the results of our experiments.
     1 \% \\
 
     Unconsumed data &
-    643 RPS &
-    739 RPS &
-    -13 \% \\
+     771 RPS &
+     601 RPS &
+     28 \% \\
 
     Write head &
     627 RPS &
@@ -77,8 +77,6 @@ The second column (Original) displays the values concerning the original server,
 (Monitored) reports the measurements for the same server under monitoring.
 For all simple servers directly implemented with the \lstinline{http} module we registered modest overheads, as well
 as for the hello world Express server.
-Interestingly, the monitored version of \textbf{unconsumed data} outperforms the original version; we have
-not investigated yet the reasons of such a behavior.
 
 For the Express file explorer presented in Section~\ref{sec:express}, the client keeps sending GET requests
 with randomly generated paths; in this case the overhead is more significant, but still the overall performance 

@@ -2,8 +2,8 @@
 CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"write head/after end"
 for i in `seq 1 10`
 do node "$CWD"/transpiled/correctServer.js &
-sleep .5
+sleep 5
 node "$CWD"/benchmark-client.js $1 >> "$CWD"/results-original.txt
 pkill node   
-sleep .5
+sleep 5
 done
