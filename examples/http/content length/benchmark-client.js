@@ -25,7 +25,7 @@ let requests=0
 /* ignores server response */ 
 function request(){
     let req=http.request(options)
-    req.end(() => {
+    req.end(data,() => {
 	requests++
 	if(requests<max_requests)
 	    setTimeout(request,0)
