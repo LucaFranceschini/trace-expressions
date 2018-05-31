@@ -480,6 +480,8 @@ Proxies are currently natively supported by JavaScript \cite{proxy}.
 >>> About performance and Linvail:
 >>> The tool allows for state-of-the-art performance in the context of code instrumentation for dynamic analysis.
 To the best of our knowledge, the most similar tool is Linvail \cite{linvail}, though its performance are reported to be worst by an order of magnitude (w.r.t.\ the overhead).
+>>> OpenAPI seems to be designed with RESTful APIs in mind, though the interaction between monitored program and our remote Prolog server is stateful, in order to keep track of the trace expression.
+>>> JSON Schema added in the conclusion in the "error reporting" subsection: 
  
 With respect to the scalability or applicability of trace expressions, there are no big case studies conducted that demonstrates how complete or correct the tool is, or how it is applied to realistic applications. I believe that was not the focus of the paper, so the small examples would be fine if the paper provided a convincing case for novelty on the verification approach or its implementation.
 
@@ -487,7 +489,11 @@ With respect to the scalability or applicability of trace expressions, there are
 
 Below you can find some detailed suggestions on how to improve the structure and writing of the paper. 
 
-1) Section 2 would better include all background information required to follow this paper at once. The Node.js subsection can be drastically reduced (if not completely cut) as the interesting bits are on the execution model described in the Asynchronous Computation subsection. That subsection can better show a more useful example. It would be better to move the text for Figure 5  and Figure 6 to this point and like this centralize all background examples in this section. The Event loop subsection can be improved by introducing the well-known terminology on events, turns, and event handlers described in [F]. 
+1) Section 2 would better include all background information required to follow this paper at once. The Node.js subsection can be drastically reduced (if not completely cut) as the interesting bits are on the execution model described in the Asynchronous Computation subsection. That subsection can better show a more useful example. It would be better to move the text for Figure 5  and Figure 6 to this point and like this centralize all background examples in this section. The Event loop subsection can be improved by introducing the well-known terminology on events, turns, and event handlers described in [F].
+
+>>> TODO: considerare riduzione... mi sembra troppo mettere sezioni 2-3-4 in una unica.
+>>> More useful example added, using sync and async file read.
+>>> We moved the "correct" example of the HTTP interaction in the Node.js section as a more relevant example of asynchronous computation. However, we think it is better to leave the "buggy" example in the example section as it is only relevant to verification, and it includes a bad practice.
 
 2) Section 4 on Runtime Verification mixes information on runtime verification techniques, and implementation methods for runtime verification. The part on monitoring techniques talks about how to implement a verification tool, but that is orthogonal to designing a verification model for asynchronous distributed applications. So, it seems misplaced (unless the implementation of the tool is also a contribution). At this point it should be already clear the target applications that the paper aims to verify and the challenges that need to be solved, and what efforts have already happened. If the goal is to verify distributed applications, it would make the paper stronger if recent efforts after the cited 2009 survey would be discussed, e.g. [G]. 
 

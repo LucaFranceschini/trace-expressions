@@ -84,34 +84,9 @@ If monitoring a collection of concurrently modified files is required, more para
 \end{align*}
 The shuffle operator allows to concurrently monitor the use of the opened file as well as other files.
 
-\subsection{Web Requests}\label{sec:web-req}
-Node.js is typically used as a server-side JavaScript environment in web development.
-Because of this, its library offers many features that greatly simplify the task of setting up a web server.
-For instance, it only takes a few lines of code to obtain a (very simple) HTTP server, as shown in \Cref{lst:http}.
-
-\begin{figure}[h]
-\begin{lstlisting}
-const http = require('http');
-
-const server = http.createServer((request, response) => {
-	request.on('data', chunk => console.log('some data received'));
-	request.on('end', () => response.end('ok'));
-});
-
-server.listen(80);
-\end{lstlisting}
-\caption{A basic web server in Node.js based on the \lstinline{http} module.}
-\label{lst:http}
-\end{figure}
-
-The web server is created by passing a callback that will be invoked on every incoming request.
-Such a function will receive both the request and the response object through which it can reply.
-
-For each request, first a callback logging a message for every received chunk of data is registered, then a response is sent back to the client when
-the whole request has been received. %%there is no more data.
-Finally, the server start listening at the standard HTTP port \texttt{80}.
-
-Now consider the (buggy) web client in \Cref{lst:client}, where seven bytes of data are sent (\lstinline{'hey!'}, \lstinline{'bye'}) but ten are declared in the \lstinline{'content-length'} field.
+\subsection{Web Requests}
+\label{sec:web-req}
+Recalling the web server presented in \Cref{lst:http}, let us consider the (buggy) web client in \Cref{lst:client}, where seven bytes of data are sent (\lstinline{'hey!'}, \lstinline{'bye'}) but ten are declared in the \lstinline{'content-length'} field.
 
 \begin{figure}[h]
 \begin{lstlisting}

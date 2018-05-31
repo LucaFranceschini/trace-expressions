@@ -27,28 +27,57 @@ connect together devices at the edge of the network.
 In Node.js, connection to databases, HTTP requests, access to the file system and every other I/O intensive operation is by default \emph{asynchronous}, meaning the actual execution is postponed until a later time, and the program can go on without waiting for completion.
 Computations needing the results of I/O operations are modeled by \emph{callbacks}: when an asynchronous function is invoked, another function (the callback) is given as an additional argument, and it will be executed once the results will be available.
 
-\Cref{lst:async} shows the different programming patterns using synchronous and asynchronous calls.
-On the left, the program is blocked until the result of \lstinline{syncIO} is returned, and then it is passed to function \lstinline{use}.
-On the right, \lstinline{asyncIO} \emph{immediately returns} and the I/O operation is scheduled for execution together with the callback \lstinline{use}; when the result will be available, the callback will be executed receiving such result as an argument.
+\Cref{lst:async} shows the different programming patterns using synchronous and asynchronous calls in Node.js.
+On the left, the program is blocked until the result of \lstinline{readFileSync} is returned, and then it is stored in \lstinline{data}.
+On the right, \lstinline{fs.readFile} \emph{immediately returns} and the I/O operation is scheduled for execution together with the anonymous callback; when the result will be available, the callback will be executed receiving such result as an argument (together with an error, if any).
 Node.js heavily takes advantage of the right pattern (for the sake of brevity, error handling is ignored in the example).
 
 \begin{figure}[h]
 \begin{minipage}{.5\textwidth}
 \begin{lstlisting}
-	function use(data) { ... }
-	let res = syncIO(...);
-	use(res);
+const fs = require('fs');
+// the following blocks until file is read
+const data = fs.readFileSync('/file.md');
+// file content available
 \end{lstlisting}
 \end{minipage}
 \begin{minipage}{.5\textwidth}
-	\begin{lstlisting}
-	function use(data) { ... }
-	asyncIO(..., use);
-	\end{lstlisting}
+\begin{lstlisting}
+const fs = require('fs');
+fs.readFile('/file.md', (err, data) => {
+  if (err) throw err;
+  // file content available
+});
+\end{lstlisting}
 \end{minipage}
-\caption{Difference between synchronous and asynchronous I/O.}
+\caption{Difference between synchronous and asynchronous I/O. \url{https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/}}
 \label{lst:async}
 \end{figure}
+
+As a more significant example, let us consider web requests.
+Node.js is typically used as a server-side JavaScript environment in web development.
+Because of this, its library offers many features that greatly simplify the task of setting up a web server.
+For instance, it only takes a few lines of code to obtain a (very simple) HTTP server, as shown in \Cref{lst:http}.
+
+\begin{figure}[h]
+\begin{lstlisting}
+const http = require('http');
+
+const server = http.createServer((request, response) => {
+	request.on('data', chunk => console.log('some data received'));
+	request.on('end', () => response.end('ok'));
+});
+
+server.listen(80);
+\end{lstlisting}
+\caption{A basic web server in Node.js based on the \lstinline{http} module.}
+\label{lst:http}
+\end{figure}
+The web server is created by passing a callback that will be invoked on every incoming request.
+Such a function will receive both the request and the response object through which it can reply.
+For each request, first a callback logging a message for every received chunk of data is registered, then a response is sent back to the client when
+the whole request has been received. %%there is no more data.
+Finally, the server start listening at the standard HTTP port \texttt{80}.
 
 \paragraph{Event Loop}
 The core of Node.js is the \emph{event loop}, represented in \Cref{fig:eventloop}.
