@@ -6,7 +6,7 @@ Linux kernel 4.14.40.
 In particular, we have measured how much the performances of all implemented servers are affected by runtime monitoring;
 only correct implementations have been considered, to be able to overload servers with arbitrary numbers of requests.
 The benchmarks have shown that the overhead of runtime verification is mainly due to code instrumentation, rather than the particular monitored
-specification, therefore all measurements have been conducted while verifying the same trace expression, namely, 
+specification (picked among those considered in Section~\ref{sec:spec-minining}), therefore all measurements have been conducted while verifying the same trace expression, namely, 
 the one corresponding to the specification \textbf{omitted body (204 response)}.
 
 Table~\ref{table} shows the results of our experiments. 
