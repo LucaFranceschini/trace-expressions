@@ -88,6 +88,8 @@ the faulty event has originated.
 For error messaging, the SWI-Prolog implementation already supports identification of
 all trace expressions that constitute a certain specification, hence associating specific error messages with them
 would be a simple extension.
+Moreover, the trace expression specification could be serialized and sent to the program for reporting purposes.
+To this aim, JSON Schema \cite{jsonschema} can be useful.
 
 Finally, at the moment, trace expressions must be written directly in Prolog and, although the used syntax
 is similar to that defined in the paper, the interpreter adopts non standard rules to manage operator precedences,
