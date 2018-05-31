@@ -1,5 +1,5 @@
 #! /bin/bash
-CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"omitted body/204 response"
+CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"write head/after end"
 for i in `seq 1 10`
 do node "$CWD"/transpiled/correctServer.js &
 sleep 5

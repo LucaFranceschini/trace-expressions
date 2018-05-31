@@ -1,5 +1,5 @@
 #! /bin/bash
-CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"omitted body/head request"
+CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"unconsumed data"
 for i in `seq 1 10`
 do node ~/node_modules/jalangi2/src/js/commands/jalangi.js --inlineIID --inlineSource --analysis ~/TechRep/programming18/svn_impl/jalangi-async-test-omitted-body/functionInvocationAnalysis.js "$CWD"/transpiled/server.js &
 sleep 5

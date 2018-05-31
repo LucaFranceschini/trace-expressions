@@ -1,5 +1,5 @@
-1#! /bin/bash
-CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"omitted body/head request"
+#! /bin/bash
+CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"unconsumed data"
 for i in `seq 1 10`
 do node "$CWD"/transpiled/server.js &
 sleep 5

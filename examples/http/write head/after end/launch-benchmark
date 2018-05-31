@@ -1,5 +1,5 @@
 #! /bin/bash
-CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"omitted body/204 response"
+CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"write head/after end"
 for i in `seq 1 10`
 do node ~/node_modules/jalangi2/src/js/commands/jalangi.js --inlineIID --inlineSource --analysis ~/TechRep/programming18/svn_impl/jalangi-async-test-omitted-body/functionInvocationAnalysis.js "$CWD"/transpiled/correctServer.js &
 sleep 5

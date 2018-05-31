@@ -43,9 +43,9 @@ objects are internally created with this constructor and returned from \lstinlin
 \end{figure}
 The highlighted sentences reveal two possible issues:
 \begin{itemize}
-\item in case the client defines a handler for the server response, data from the response must be consumed,
+\item \textbf{unconsumed data}: in case the client defines a handler for the server response, data from the response must be consumed,
   otherwise a `process out of memory' error can occur;
-\item unchecked length of the body of a request/response can block the communication, or data can be lost, as already shown
+\item \textbf{content length}: unchecked length of the body of a request/response can block the communication, or data can be lost, as already shown
   in \Cref{sec:web-req}.
 \end{itemize}
 In the first case, the correct behavior can be captured by the following trace expression $\tau$ defined as follows:
@@ -63,17 +63,17 @@ In the second case, the trace expression which is used for checking the correct 
 Besides the two properties discussed above, the following four additional specifications have been mined from
 the documentation and expressed with corresponding trace expressions:
 \begin{itemize}
-\item depending on the request received by the client or the response sent by the server, there are cases when the response must not
+\item \textbf{omitted body}: depending on the request received by the client or the response sent by the server, there are cases when the response must not
   contain a body, hence
   a server which tries to include a body in such situations does not behave correctly. The different cases require
   different treatments and trace expressions, as follows:
   \begin{itemize}
-  \item when the method of the request sent by the client is HEAD;
-  \item when the response of the server has status code 204 (no content);
-  \item when the method of the request sent by the client is a conditional GET and access is allowed, and the response
+  \item \textbf{HEAD request}: when the method of the request sent by the client is HEAD;
+  \item \textbf{204 response}: when the response of the server has status code 204 (no content);
+  \item \textbf{304 response}: when the method of the request sent by the client is a conditional GET and access is allowed, and the response
     server has status code 304 (not modified) because the requested document has not been modified.
   \end{itemize}
-\item the method \lstinline{writeHead} to write the head of a server response must only be called once on a message and it must happen before
+\item \textbf{write head}: the method \lstinline{writeHead} to write the head of a server response must only be called once on a message and it must happen before
   the method \lstinline{end} is called to signal to the server that the response is complete. If this rule is not followed, then
   a default header, most likely different from the intended one, is written in the response.
 \end{itemize}
@@ -131,7 +131,7 @@ to a call to \lstinline{writeHead}:
 
 Similar examples have been used to test our tool with the other specifications.
 
-\subsection{Testing the tool with Express}
+\subsection{Testing the tool with Express}\label{sec:express}
 
 After the simple experiments conducted in the first phase as described in the previous section,
 a natural next step towards the assessment of our tool consisted in testing popular real Node.js code
@@ -182,3 +182,5 @@ Finally, the last call \lstinline{app.get} deals with the case when no directory
 The tool has been tested with the server above, and a Node.js client sending requests with random  paths based on its root directory at the frequency of three requests per second.
 The tool was able to monitor all relevant \lstinline{http} events triggered in the above mentioned Express components used through the server, showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language.
 As expected, though, Express it is correct w.r.t.\ the previously described constraints on the use of the \lstinline{http} module.
+
+\input{benchmarks}
