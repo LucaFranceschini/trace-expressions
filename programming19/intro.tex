@@ -38,9 +38,12 @@ Node.js applications, to formally specify the correct use of the features export
 can be derived from its documentation, and to dynamically verify such a specification.
 This is the core idea of this work and the main novelty, since (runtime) verification of Node.js has not been studied before.
 
-A corresponding prototype tool\footnote{The implementation and a script for running all tests reported in this paper are available at \url{https://github.com/LucaFranceschini/trace-expressions}.} has been developed based on the Jalangi2\footnote{\url{https://github.com/Samsung/jalangi2}.}
+A corresponding prototype
+%\footnote{The implementation and a script for running all tests reported in this paper are available at \url{https://github.com/LucaFranceschini/trace-expressions}.}
+\footnote{Implementations and test at \url{https://github.com/LucaFranceschini/trace-expressions}.}
+has been developed based on the Jalangi2\footnote{\url{https://github.com/Samsung/jalangi2}.}
 framework and SWI-Prolog\footnote{\url{http://www.swi-prolog.org}.}.
-The former is employed for performing instrumentation of JavaScript code, to be able
+The former is employed for instrumentation of JavaScript code, to be able
 to dynamically trace all those events that constitute what we call an \emph{event domain}, that is, the set
 of all events relevant to certain kinds of properties;
 all examples shown in this paper refer to a unique event domain consisting of calls and returns
@@ -55,11 +58,11 @@ module.
 The tool offers a simple HTTP interface based on JSON to allow runtime verification of
 distributed and heterogeneous components.
 %; in this way, the tool is ready to support runtime verification in the context of the Internet of Things.
-
-To experiment with the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used 
-in Node.js, to mine specifications expressible with parametric trace expressions, with the aim of dynamically verifying
+%
+To test the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used 
+in Node.js, to mine specifications expressible with trace expressions, with the aim of dynamically verifying
 the correct use of \lstinline{http} in Node.js code.
-Promising preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
+Preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
 that our prototype tool is able to support runtime verification of real Node.js code.
 
 The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summarized as follows:
@@ -72,9 +75,12 @@ The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summ
 \end{enumerate*}
 %More details can be found in the following subsections.
 
+%\vspace{-.3cm}
 \paragraph{Outline}
-\Cref{sec:node} motivates the choice of Node.js, and together with \Cref{sec:trace} they give the necessary background about Node.js and trace expressions.
-\Cref{sec:rv} is a study of the state of the art for runtime verification techniques, while \Cref{sec:examples} shows how it can help to detect bugs in Node.js programs with motivating examples.
+\Cref{sec:node,sec:rv,sec:trace} give the necessary background and state of the art on Node.js, runtime verification and trace expressions, respectively.
+%\Cref{sec:node} motivates the choice of Node.js, and together with \Cref{sec:trace} they give the necessary background about Node.js and trace expressions.
+%\Cref{sec:rv} is a study of the state of the art for runtime verification techniques, while
+\Cref{sec:examples} shows how the approach can help to detect bugs in Node.js programs with motivating examples.
 \Cref{sec:impl} presents the implementation of our framework for runtime verification of Node.js based on trace expressions.
 \Cref{sec:exps} reports on some preliminary experiments conducted with Node.js programs based on the standard module
 \lstinline{http} and the widely adopted framework Express.
