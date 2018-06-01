@@ -4,10 +4,12 @@ We have chosen to implement a monitoring system for Node.js based on \emph{code 
 The core idea is to modify the original source code of the program to be monitored in a way that allows observation of relevant events.
 Once an event is observed, the monitor can verify it against the specification, eventually acting in case of erroneous behavior.
 
-The tool we have employed is \emph{Jalangi2}.
+The tool we have employed is \emph{Jalangi2} \cite{jalangi}.
 % gia' linkato nelle prime pagine
 %\footnote{\url{https://github.com/Samsung/jalangi2}} \cite{jalangi}
 It allows addition of arbitrary code before and after basically every JavaScript operation: access to fields, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a field access.
+The tool allows for state-of-the-art performance in the context of code instrumentation for dynamic analysis.
+To the best of our knowledge, the most similar tool is Linvail \cite{linvail}, though its performance are reported to be worst by an order of magnitude (w.r.t.\ the overhead).
 
 Thanks to these features it is possible to determine when asynchronous calls and their callbacks are executed, as well as matching them.
 However, implementing a prototype for Node.js runtime verification is not trivial, and requires to address some issues, as explained below:
@@ -20,6 +22,9 @@ Since the execution goes back and forth between the event loop and the program, 
 \item Many different patterns arise in Node.js programming, and they need complex code instrumentation.
 For instance, the file system module functions expect a file descriptor as an argument, while HTTP requests are handled through methods invoked on objects encoding the requests.
 \end{itemize}
+Our prototype implementation enriches the capabilities of Jalangi by supporting these additional features that for Node.js monitoring.
+We are currently working on a proxy-based alternative approach based on reflection rather than instrumentation.
+Proxies \cite{proxy} are currently natively supported by JavaScript.
 
 The current implementation of trace expression semantics is coded in SWI-Prolog, since logic programming is a natural fit for inference rules and transition systems, and cyclic terms are supported by the \texttt{coinduction} library \cite{CoLP06}.
 
