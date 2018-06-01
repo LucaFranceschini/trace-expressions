@@ -6,11 +6,11 @@ Global types, and thus trace expressions, derive from the notion of behavioral t
 
 Later on, with the introduction of the notion of event type, trace expressions have become system and language agnostic, so that they can be exploited for runtime verification in several different contexts.
 
-We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing}, they support parametricity \cite{AnconaFM17} and they can be directly implemented in Prolog (see \cite{TowardsIoT17} for more information on the implementation of a monitoring system based on trace expressions).
-Furthermore they are syntactically regular terms \cite{Courcelle83}, which makes it natural to express recursion and (possibly) non-terminating system, and easy to write them as cyclic terms in Prolog.
-Trace expressions differs from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
-Just like trace expressions specify the behaviour of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
-A more thorough comparison between these two different approaches is left to future work.
+We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing} and have been expressly devised for easing specification of complex properties to be efficiently monitored at runtime; they support parametricity \cite{AnconaFM17} and an implementation in Prolog is available (see \cite{TowardsIoT17} for more details).
+Furthermore they are syntactically regular terms \cite{Courcelle83}, which naturally support recursion and specifications of (possibly) non-terminating systems, and which can be directly translated into cyclic terms in Prolog.
+Trace expressions differ from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
+Just like trace expressions specify the behavior of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
+A more thorough comparison between these two different approaches is left for future work.
 
 \paragraph{Events}
 Trace expressions can be used to specify the possible correct behavior of a system, w.r.t.\ some property that needs to be verified.
