@@ -558,6 +558,8 @@ added to the node.js `http` library, and then at least one small web
 application using the Express framework is monitored. No specific
 results from the monitoring are reported, other than it works.
 
+>>> Experiments section extended.
+
 # Review
 
 This paper nicely shows that the trace expression formalism is
@@ -585,6 +587,9 @@ following:
 * Whether there are any actual failures in applications that use
   Express.
 
+>>> We added our benchmarks (Subsection 7.4), which we think show how the approach is now actually usable, thanks to some optimizations we made. We added some considerations about correctness of Express and the importance of the experiment:
+>>> "The tool was able to monitor all relevant http events triggered in the above mentioned Express components used through the server, showing that our instrumentation and monitoring system can deal with code bases of considerable size using all the main features of the programming language. As expected, though, Express it is correct w.r.t. the previously described constraints on the use of the http module."
+
 ### Novelty
 
 It appears that almost all of the specifications in this system can be
@@ -596,6 +601,8 @@ but otherwise the applications and overall approach are quite
 similar. Is this system more expressive, or otherwise able to handle
 new aspects of node.js in ways that are new?
 
+>>> TODO: aggiungere la parte di Davide sulla differenza qui
+
 ### Other issues
 
 Several of the specifications for `http` don't seem to need temporal
@@ -603,57 +610,103 @@ specifications. For example, checking that the response can't have a
 body if the status code is 204 is just a contract check on the
 response constructor.
 
+>>> In Node.js, request and response objects are created by the library, and several methods are offered to manipulate their fields, like status code and body. Therefore we claim that the property is more easily expressed as a usage protocol for the object rather than using pre- and post-conditions on the method.
+
 In several places (such as the Introduction), the paper says that
 node.js avoids dealing with concurrency, but this is false. The async
 callbacks are explicitly a concurrency mechanism.
+
+>>> Changed "concurrency" to "multi-threading"/"parallelism", which is what is actually hidden by the Node.js runtime.
 
 The term "parametric" and especially "parametericity" for the property
 that the system is parameterized is by concrete values is
 confusing. The word "parameterized" would be much better.
 
+>>> In the context of runtime verification, "parametric" seems to be the most commonly used word for specifications depending on values, while "parameterized verification" is often used for the task of verifying a complex (or distributed) system regardless the number of components. However, we removed the term "parametricity".
+
 The discussion of the Internet of Things seems to just be the addition
 of a buzzword -- no actual relation to the internet of things is
 discussed, except that the verifier is made into a distributed system.
 
+>>> The wording is removed when talking about our tool.
+
 Footnotes 2,3, and 4 are on the wrong page.
+
+>>> They are now on the correct page.
 
 The "event loop" concept is much older than node.js. Prior to
 JavaScript, the approach was popularized in E by Miller and
 collaborators.
 
+>>> Added:
+>>> "The idea of an event loop was popularized a long time before Node.js came in the E programming language [cit.]."
+
 The notation for scoping is extremely unclear in the presence of
 multiple equations defining a term.
+
+>>> Paragraph added with explanation:
+>>> "The binder syntax specifies the scope of the introduced parameter, though this can be non-trivial in the context of equations defining recursive trace expressions. In Eq. 4, \tau' is an open term with an unbound parameter. Though this cannot happen at the top-level, it is fine when the term is used inside a binder, as it happens in Eq. 3: in this case, the occurrence of `fd` is bound to the binder in Eq. 3."
 
 Where does the substitution in the "Parametric Trace Expressions"
 paragraph come from? (This later is somewhat explained, but was very
 surprising when introduced.)
 
+>>> Short comment added at that point:
+>>> "(this comes from matching the event open(x) against the event type open(x) in the standard way)"
+
 What's the relation between the two forms of arrow: -> and >->?
+
+>>> Paragraph added:
+>>> "Note that two different relations are defined. -e-> holds iff a trace expression accepts event e. In order to implement this, the auxiliary relation >-e-> is defined, which computes the substitution for the parameters in the specification, if any."
 
 What operation is performed for the union of two substitutions (in the
 `and` rule)?
 
+>>> Paragraph added:
+>>> "The operational semantics rule for the intersection operator depends on the side condition σ = σ_1 U σ_2.
+Such equality holds when σ_1 and σ_2 coincide on dom(σ_1) ∩ dom(σ_2)."
+
 It would be clearer to specify in the prose that the `cat-r` rule is
 the one that needs \epsilon.
+
+>>> Paragraph added:
+>>> "This is crucial for concatenation, see rule (cat-r).
+When a concatenation τ1 * τ2 is given, τ2 can only be used if τ1 accepts the empty trace, meaning, it is not mandatory anymore for τ1 to match any event."
 
 The code in figure 5 has a more serious bug --- there's no requirement
 that the numbers be written in order (for the same reason as the bug
 you note).
+
+>>> Detail added:
+>>> "the numbers can be written in any order, since there is no guarantee about asynchronous operations execution"
 
 The `match` function at the end of section 5 is unclear. Who defined
 this function? It seems to be part of the specification of the
 property being checked, but where does that part of the specification
 live? Does each specification need its own match function?
 
+>>> Paragraph added:
+>>> "The match function needs to be defined in order to use an event domain. The same domain and match function, however, can be used for many trace expressions. Here, for instance, the function could be reused for any specification based on the event types above. When event types are simply open terms over the signature of events, as it happens for instance in the first example on file operations in this section, the
+match function is simply the standard term substitution computation."
+
 Does Express give rise to any interesting properties, for the `get`
 method for example?
 
+>>> Our intent is to monitor the use of the `http` monitor itself, rather than the protocol of usage of the Express framework.
+
 What happened when you ran your toy Express example?
+
+>>> We expanded our Experiments section.
 
 Why is it useful to put the monitor on a different machine? Is this
 actually more efficient than online monitoring?
 
+>>> Added to future work:
+>>> "Future work include exploiting our remote server to monitor distributed system, which is the main reason why we keep the Prolog server separated from the original program."
+
 Citation [27] should not be to SIGPLAN Notices.
+
+>>> fixed
 
 
 ----------------------- REVIEW 5 ---------------------
