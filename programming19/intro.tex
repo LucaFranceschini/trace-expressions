@@ -62,6 +62,16 @@ the correct use of \lstinline{http} in Node.js code.
 Promising preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
 that our prototype tool is able to support runtime verification of real Node.js code.
 
+The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summarized as follows:
+\begin{enumerate*}[label=(\alph*)]
+	\item we present a more complete set of examples, including HTTP interactions and the Express framework;
+	\item we enhance our implementation in order to keep track of target objects in method invocations (necessary for monitoring HTTP interactions) and to deal with cyclic objects;
+	\item we optimize our system by filtering events that are not relevant for the verified specification to avoid sending useless requests to the monitoring server, and by making the communication between the monitored program and the monitor asynchronous.
+          %% to fit the Node.js execution model without suspending the execution of the program every time an event is observed.
+	\item we measure our performance with benchmarks.
+\end{enumerate*}
+%More details can be found in the following subsections.
+
 \paragraph{Outline}
 \Cref{sec:node} motivates the choice of Node.js, and together with \Cref{sec:trace} they give the necessary background about Node.js and trace expressions.
 \Cref{sec:rv} is a study of the state of the art for runtime verification techniques, while \Cref{sec:examples} shows how it can help to detect bugs in Node.js programs with motivating examples.

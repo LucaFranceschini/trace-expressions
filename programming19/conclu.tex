@@ -17,15 +17,6 @@ runtime verification of real Node.js code; the benchmarks show that the implemen
 complex Express example.
 To our knowledge, no other currently available tool allows parametric runtime verification of Node.js applications in a distributed environment.
 
-With respect to out previous work \cite{TowardsIoT17}, here we
-\begin{enumerate*}[label=(\alph*)]
-	\item presented a more complete set of examples, including HTTP interactions and the Express framework;
-	\item enhanced our implementation in order to keep track of target objects in method invocations (necessary for monitoring HTTP interactions) and to deal with cyclic objects;
-	\item optimized our system by filtering out events that are not relevant for the verified specification to avoid sending useless requests to the monitoring server, and by making monitoring asynchronous, to fit the Node.js execution model without suspending the execution of the program every time an event is observed.
-	\item measure our performance with benchmarks.
-\end{enumerate*}
-More details can be found in the following subsections.
-
 Although the reported experiments are promising, a considerable amount of work is still required for making our research prototype a tool usable in practice.
 
 \subsection{Experiments}
