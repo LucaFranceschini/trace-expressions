@@ -722,25 +722,55 @@ The authors describe the implementation of a parametric runtime verification tec
 
 The related reference [9] should be made available to assess the novelty of the proposed work. A brief summary of such novelty may also be provided by the authors.
 
+>>> Paragraph added:
+>>> "The novel contributions w.r.t. our previous work [9] can be summarized as follows: (a) we present a more complete set of examples, including HTTP interactions and the Express framework; (b) we enhance our implementation in order to keep track of target objects in method invocations (necessary for monitoring HTTP interactions) and to deal with cyclic objects; (c) we optimize our system by filtering events that are not relevant for the verified specification to avoid sending useless requests to the monitoring server, and by making the communication between the monitored program and the monitor asynchronous. (d) we measure our performance with benchmarks."
+
 The evaluation on Express is not clear. Have real applications based on Express been evaluated? What bugs have been found and confirmed by the developers? How many bugs have been found that were not identified by previous/comparable techniques? In particular, a set of properties that revealed bugs and could not be expressed in LTL(3) or other formalisms would be useful to assess the practical impact of choosing event trace specifications over them.
+
+>>> No bugs in Express have been found. The goal of the experiment is to show that the prototype work on non-trivial pieces of code as the Express library, and that the overhead does not make the approach unfeasible.
 
 While performance optimization is not a primary goal for this stage of the research, reporting the execution time on the proposed experiments, together with relevant dimensions of the problem (e.g., number of rules in SWIprolog, number of events,...) may be useful to make a preliminary assessment of the applicability of the proposed technique. The overhead introduced by the monitoring strategy should be reported as well.
 
+>>> Benchmark subsection added.
+
 Description of Figure 2: is the left or the right pattern heavily exploited by Node.js applications?
+
+>>> The right one actually, fixed.
 
 pg6, Event types: \Epsilon has been used to describe a set of events; here used again to specify a language.
 
+>>> Changed to ET.
+
 pg 7, Trace Expressions: the symbol \tau has not been defined before being used.
+
+>>> Made it explicit that \tau refers to a trace expression.
 
 pg7, Parametric Trace Expressions: the semantics of the shuffle operator is not clear at this stage because the local scoping of variables have not been defined yet. In turn, the example in equations 3 and 4 is confusing: why fd would be bound for \tau^\prime, but not for a derivation of \tau? Intuitively, the closest binding operator applies first; but in this case the effect <x, \tau> if \tau does not contain free variables is not specified. On this same page, <x, \tau> assumes that x is a binding for all the free variables in \tau (in order of occurrence?) or can it bind only part of them? If so, is it possible to specify which variable is actually bound (e.g., x=3 and y=5)?
 
+>>> Standard shadowing mechanisms apply. An extended comment has been added to help the reader:
+>>> "The binder syntax specifies the scope of the introduced parameter, though this can be non-trivial in the context of equations defining recursive trace expressions. In Equation (4), τ' is an open term with an unbound parameter. Though this cannot happen at the top-level, it is fine when the term is used inside a binder, as it happens in Equation (3): in this case, the occurrence of fd is bound to the binder in Equation (3)."
+
 The notion of coinduction is mentioned several times in the paper but never defined. A (rough) definition of this method may be useful to keep the paper self-contained. Especially because SWIProlog has been portrayed in the paper as able to deal with recursive trace expressions, but it seems these are not needed to specify regular terms, which would, in turn, be checked with coinduction. These points and concepts may be clarified in the paper.
+
+>>> The following is added about coinductive logic programming:
+>>> "We recall that, in order to use (regular) coinduction in Prolog, the occurrence check is removed (so that terms can be circular) and a cycle detection mechanism is employed such that, when a previously encountered goal is found again\footnote{Actually, it is only required for the two goals to unify.} during a derivation, it is considered proved and no more steps are needed. This way, cyclic terms are handled without getting into infinite loops. For more information about coinductive logic programming, see \cite{colp}."
 
 Pg 9: Expressiveness: an example of relevant properties that require the additional expressiveness of trace expressions can be added. While intuitively they allow for parametric specifications, for all the applications where the domain is finite, parametric expressions seem to provide a (valuable) more compact representation of the trace properties to be checked, but not an actual increase of expressiveness (as the predicates can be instantiated on all the elements of the finite domain). Is this the case?
 
+>>> If the domain is finite, additional expressivity still can come from a non-trivial matching function, as the one in the HTTP request example.
+
 End of Section 5: the example regarding the length of an http response seems to imply the support for (at least) linear integer arithmetics. Is this theory supported by the implementation? What other theories are supported?
+
+>>> The underlying implementation is in SWI-Prolog, so theories supported by that can easily be used to define the matching function. This includes intere arithmetic.
 
 Pg 16: the claim that Node.js is becoming popular for IoT applications needs some references.
 
+>>> Changed "popular" to "relevant", with a link to a framework.
+
 pg 9: methods has been -> methods have been
+
+>>> fixed
+
 pg 17: everal -> several
+
+>>> fixed

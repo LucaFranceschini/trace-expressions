@@ -54,7 +54,7 @@ A sensible definition of matching would lead to the following:
 %%Trace expressions have been extended with variables in \cite{AnconaFM17}.
 
 \paragraph{Trace Expressions}
-Finally, a \emph{trace expression} identifies a set of traces corresponding to correct system behaviors. It is built on top of event types and the following operators:
+Finally, a \emph{trace expression} \(\tau\) identifies a set of traces corresponding to correct system behaviors. It is built on top of event types and the following operators:
 \begin{itemize}
 	\item $\emptyseq$ (\emph{empty trace}): the singleton set $\{\emptyseq\}$ containing  the empty event trace $\emptyseq$;
 	\item $\eventTy\prefixop\tau$ (\emph{prefix}): the set of all traces whose first event $\ev$ matches the event type $\eventTy$, and the remaining part is a trace of $\tau$;
@@ -136,3 +136,7 @@ Trace expressions semantics has been implemented in SWI-Prolog.
 The logic programming paradigm is well suited for the implementation of inference system, since inference rules can be translated almost directly to logic clauses.
 Furthermore SWI-Prolog offers native support to cyclic terms, therefore recursive trace expressions can be easily encoded.
 Support for programming with cyclic terms is based on coinductive logic programming \cite{CoLP06}, which is supported by the SWI-Prolog library \texttt{coinduction}.
+
+We recall that, in order to use (regular) coinduction in Prolog, the occurrence check is removed (so that terms can be circular) and a cycle detection mechanism is employed such that, when a previously encountered goal is found again\footnote{Actually, it is only required for the two goals to unify.} during a derivation, it is considered proved and no more steps are needed.
+This way, cyclic terms are handled without getting into infinite loops.
+For more information about coinductive logic programming, see \cite{colp}.
