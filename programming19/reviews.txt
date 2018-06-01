@@ -491,7 +491,8 @@ Below you can find some detailed suggestions on how to improve the structure and
 
 1) Section 2 would better include all background information required to follow this paper at once. The Node.js subsection can be drastically reduced (if not completely cut) as the interesting bits are on the execution model described in the Asynchronous Computation subsection. That subsection can better show a more useful example. It would be better to move the text for Figure 5  and Figure 6 to this point and like this centralize all background examples in this section. The Event loop subsection can be improved by introducing the well-known terminology on events, turns, and event handlers described in [F].
 
->>> TODO: considerare riduzione... mi sembra troppo mettere sezioni 2-3-4 in una unica.
+>>> We have reduced the background part on Node.js, but kept separated the three background sections to allow readers to skip material
+they are already familair with
 >>> More useful example added, using sync and async file read.
 >>> We moved the "correct" example of the HTTP interaction in the Node.js section as a more relevant example of asynchronous computation. However, we think it is better to leave the "buggy" example in the example section as it is only relevant to verification, and it includes a bad practice.
 
