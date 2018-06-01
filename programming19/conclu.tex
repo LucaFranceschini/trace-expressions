@@ -13,7 +13,7 @@ by mining from its documentation several specifications later expressed with tra
 The mined specifications have been dynamically verified with the tool on several simple examples of HTTP servers and clients,
 and with more interesting examples based on Express; these last tests required code instrumentation of the Express components
 built on top \lstinline{http} for a total of almost 1K of SLOC, and have shown that the prototype tool is able to support
-runtime verification of real Node.js code; the benchmarks show that the implemented optmizations allow a 100x speed boost for the more
+runtime verification of real Node.js code; the benchmarks show that the implemented optmizations allow a 120x speed boost for the more
 complex Express example.
 To our knowledge, no other currently available tool allows parametric runtime verification of Node.js applications in a distributed environment.
 
@@ -76,7 +76,7 @@ verification would be quite useful.
 %% Finally, to optimize connection time, it would be worth sending sequence of events rather than one
 %% event at time as happens in the current implementation.
 
-\subsection{Error reporting and IDE}
+\subsection{Error Reporting and IDE}
 So far error reporting has been neglected, and in case of failure the only available information
 regards the unexpected event that has been traced; clearly, more informative error messages
 are required to allow the user to understand and locate more easily the detected problem.

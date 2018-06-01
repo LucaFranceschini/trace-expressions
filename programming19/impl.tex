@@ -12,7 +12,8 @@ The tool allows for state-of-the-art performance in the context of code instrume
 To the best of our knowledge, the most similar tool is Linvail \cite{linvail}, though its performance are reported to be worst by an order of magnitude (w.r.t.\ the overhead).
 
 Thanks to these features it is possible to determine when asynchronous calls and their callbacks are executed, as well as matching them.
-However, implementing a prototype for Node.js runtime verification is not trivial, and requires to address some issues, as explained below:
+However, implementing a prototype for Node.js runtime verification is not trivial; the instrumentation we had to implement
+consists of more than 350 SLOC distributed over five files, and was required to address the following issues:
 \begin{itemize}
 \item Anonymous functions are extremely common in JavaScript, thus function names are not a reliable way to identify them.
 \item Matching asynchronous functions with their callback needs some bookkeeping: the same asynchronous function can be used multiple times with different arguments and callbacks, and vice versa.
@@ -38,12 +39,30 @@ Further details on the approach and the implementation with Jalangi2 can be foun
 Though JSON is a natural fit for JavaScript objects serialization, some important aspects need to be handled.
 Objects containing circular references, for instance, are quite common in Node.js modules, but they cannot be encoded in JSON, and the JavaScript standard library serialization (\lstinline|JSON.stringify|) throws an error on such objects.
 Furthermore, JavaScript supports getters, which are special functions invoked when a property is accessed.
-During experiments, we found that some modules set getter functions before their code can actually be correctly executed, and this again breaks standard serialization since getters are invoked in the process.
+During experiments, we found that some modules set getter functions before their code can actually be correctly executed, and this again breaks standard serialization since \lstinline|JSON.stringify| invokes getters during stringification.
 For these reasons, we had to modify the JSON serialization process for it to work in real Node.js scenarios, detecting and handling circular references and getters as special cases.
 
-This work is a preliminary step towards runtime verification of Internet of Things applications,
-both because Node.js is emerging as a standard framework for IoT development, and the implementation through an HTTP
-server offers a natural support to verification of distributed systems, where (instrumented) devices can send events to a monitoring server.
+Another challenge consisted in avoiding the performance penalties we detected with the first version of the
+instrumenting code: the file explorer server employed in our benchmarks (see Section~\ref{sec:exps}) could serve no more than
+three requests per second when monitored; that was an unacceptable result even when limiting
+the use of runtime verification to the development stage for debugging and testing purposes.
+
+A first practical way to obtain a speed up of the monitored application consisted in
+avoiding the monitored application to directly synchronize with the monitoring Prolog server;
+synchronous communication guarantees that the monitor always receives events in the correct order,
+but has a negative effect on performances. To avoid this problem, we let the instrumented code
+to asynchronously interact with a child process by sending to it all relevant events. Synchronous
+communication with the Prolog  monitor is managed by the child process.
+
+Another useful optimization consisted in reducing the network traffic 
+between the monitored application and the monitor; while
+the first version of the instrumentation was designed to send
+all detected events, the optimization version sends only those events 
+which are relevant for the verification.
+
+%% This work is a preliminary step towards runtime verification of Internet of Things applications,
+%% both because Node.js is emerging as a standard framework for IoT development, and the implementation through an HTTP
+%% server offers a natural support to verification of distributed systems, where (instrumented) devices can send events to a monitoring server.
 
 \begin{figure}
 \centering\includegraphics[width=.7\textwidth]{fig/diagram}

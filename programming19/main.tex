@@ -18,9 +18,9 @@
 
 \begin{document}
 
-\title{Parametric runtime verification of Node.js applications with trace expressions}
+\title{Parametric Runtime Verification of Node.js Applications with Trace Expressions}
 \subtitle{}% optional
-\titlerunning{Parametric runtime verification of Node.js applications with trace expressions} %optional, in case that the title is too long; the running title should fit into the top page column
+\titlerunning{Parametric Runtime Verification of Node.js Applications with Trace Expressions} %optional, in case that the title is too long; the running title should fit into the top page column
 
 \author{Davide Ancona}
 \authorinfo{\email{davide.ancona@unige.it}.}
@@ -126,17 +126,16 @@ The implementation is based on the Jalangi2 framework for JavaScript code instru
 dynamically trace events, and on SWI-Prolog for supporting trace expressions and the inference engine for their verification.
 The tool offers a simple HTTP interface based on JSON to allow runtime verification of distributed and heterogeneous components.
 
-Preliminary experiments with the popular framework Express 
-show that the tool is able to support runtime verification of real Node.js code.
+Preliminary benchmarks with the popular the Node.js http module and the Express framework show that the tool is able to support runtime verification of real Node.js code. 
 \end{abstract}
 
 \input{intro}
 
 \input{node}
 
-\input{trace-exp}
-
 \input{rv}
+
+\input{trace-exp}
 
 \input{example}
 
