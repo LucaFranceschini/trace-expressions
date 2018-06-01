@@ -92,7 +92,7 @@ At this point the shuffle operator is crucial:
 %\footnote{In order for the shuffle to work, we assume that every \(\opent\) operation always gives a fresh file descriptor, which can be reasonably assumed to be ensured by the operating system.}
 following events are allowed to belong either to \(\tau\) (operations on new files, in the correct order) or to \(\tau'\{\avar{fd}\mapsto x\}\) (note the substitution!) where further operations on \(x\) will be checked.
 
-Note that we are not monitoring the correct behavior of the underlying operating system, namely, that the same file descriptor is not assigned to many opened files simultaneously.
+Note that we are not monitoring the correct behavior of the underlying operating system, namely, that the same file descriptor is not assigned to more opened files simultaneously.
 Rather, the specification ensures that the API offered by such system is correctly used.
 
 \paragraph{Operational Semantics}
