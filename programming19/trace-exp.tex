@@ -6,11 +6,12 @@ Global types, and thus trace expressions, derive from the notion of behavioral t
 
 Later on, with the introduction of the notion of event type, trace expressions have become system and language agnostic, so that they can be exploited for runtime verification in several different contexts.
 
-We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing}, they support parameters \cite{AnconaFM17} and they can be directly implemented in Prolog (see \cite{TowardsIoT17} for more information on the implementation of a monitoring system based on trace expressions).
-Furthermore they are syntactically regular terms \cite{Courcelle83}, which makes it natural to express recursion and (possibly) non-terminating system, and easy to write them as cyclic terms in Prolog.
-Trace expressions differs from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
-Just like trace expressions specify the behaviour of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
-A more thorough comparison between these two different approaches is left to future work.
+
+We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing} and have been expressly devised for easing specification of complex properties to be efficiently monitored at runtime; they support parametric verification \cite{AnconaFM17} and an implementation in Prolog is available (see \cite{TowardsIoT17} for more details).
+Furthermore they are syntactically regular terms \cite{Courcelle83}, which naturally support recursion and specifications of (possibly) non-terminating systems, and which can be directly translated into cyclic terms in Prolog.
+Trace expressions differ from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
+Just like trace expressions specify the behavior of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
+A more thorough comparison between these two different approaches is left for future work.
 
 \paragraph{Events}
 Trace expressions can be used to specify the possible correct behavior of a system, w.r.t.\ some property that needs to be verified.
@@ -44,7 +45,7 @@ Given an event \(\ev\) and an event type \(\eventTy\), \(\mtch(\ev, \eventTy) = 
 
 In the rest of the paper, we consider different examples of event domains and, thus, event type languages.
 We do not expect considerable expressivity is needed in this step, and as long as matching and substitution functions are defined, all properties still hold.
-Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply.
+Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply. In practice, here, even types are mapped into Prolog terms, and its semantics is defined by Prolog clauses. 
 
 Considering again the previous files event domain (\ref{eq:filedomain}), a sensible event type matching all write operations would be \(\writet(\xv)\), where \(\xv\) is a variable.
 A sensible definition of matching would lead to the following:
@@ -92,7 +93,7 @@ At this point the shuffle operator is crucial:
 %\footnote{In order for the shuffle to work, we assume that every \(\opent\) operation always gives a fresh file descriptor, which can be reasonably assumed to be ensured by the operating system.}
 following events are allowed to belong either to \(\tau\) (operations on new files, in the correct order) or to \(\tau'\{\avar{fd}\mapsto x\}\) (note the substitution!) where further operations on \(x\) will be checked.
 
-Note that we are not monitoring the correct behavior of the underlying operating system, namely, that the same file descriptor is not assigned to many opened files simultaneously.
+Note that we are not monitoring the correct behavior of the underlying operating system, namely, that the same file descriptor is not assigned to more opened files simultaneously.
 Rather, the specification ensures that the API offered by such system is correctly used.
 
 The binder syntax specifies the scope of the introduced parameter, though this can be non-trivial in the context of equations defining recursive trace expressions.
