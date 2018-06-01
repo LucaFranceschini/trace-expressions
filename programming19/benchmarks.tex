@@ -21,47 +21,47 @@ Table~\ref{table} shows the results of our experiments.
     \multicolumn{4}{|c|}{HTTP module}\\
     \hline
     Content length & 
-    591 RPS &
-    528 RPS &
-    12 \% \\
+    698 RPS &
+    705 RPS &
+    -1 \% \\
 
     Omitted body (HEAD request)&
-    631 RPS &
-    588 RSP &
-    7 \% \\
+    710 RPS &
+    481 RPS &
+    48 \% \\
 
     Omitted body (204 response)&
-    638 RPS &
-    626 RSP &
-    2 \% \\
+    721 RPS &
+    671 RPS &
+    7 \% \\
 
     Omitted body (304 response)&
-    634 RPS &
-    626 RSP &
-    1 \% \\
+    721 RPS &
+    671 RPS &
+    7 \% \\
 
     Unconsumed data &
-     771 RPS &
-     601 RPS &
+     767 RPS &
+     598 RPS &
      28 \% \\
 
     Write head &
-    627 RPS &
-    580 RPS &
-    8 \% \\
+    709 RPS &
+    482 RPS &
+    47 \% \\
     \hline
 
     \multicolumn{4}{|c|}{Express}\\
     \hline
     Hello world & 
-    766 RPS &
-    716 RPS &
-    7 \% \\
+    769 RPS &
+    779 RPS &
+    -1 \% \\
 
     File explorer &
-    588 RPS &
-    312 RPS &
-    88 \%\\
+    646 RPS &
+    365 RPS &
+    77 \%\\
 
     \hline
   \end{tabular}
@@ -69,17 +69,18 @@ Table~\ref{table} shows the results of our experiments.
   \label{table}
 \end{table}
 For each benchmark we have measured the average number of served requests per second (RPS) 
-with a client running a loop to continuously send requests to the server without waiting to collect its response;
+with a client running on the same machine a loop sending requests to the server without waiting to collect its response;
 all measurements have been obtained as the average over ten different runs, each consisting
-of 100K requests sent to the server.
+of a loop of 100K requests.
 
 The second column (Original) displays the values concerning the original server, while the third one
-(Monitored) reports the measurements for the same server under monitoring.
-For all simple servers directly implemented with the \lstinline{http} module we registered modest overheads, as well
-as for the hello world Express server.
+(Monitored) reports the measurements for the same server under monitoring, interacting with the same client as in the measurements displayed in the ``Original'' column.
+For several cases (content length, omitted body -- 204/304 response, hello world) the overhead is negligible;
+for other servers directly implemented with the \lstinline{http} module (omitted body -- head request, unconsumed data and write head)
+we registered a modest overhead (below 50\%)
 
-For the Express file explorer presented in Section~\ref{sec:express}, the client keeps sending GET requests
-with randomly generated paths; in this case the overhead is more significant, but still the overall performance 
-is acceptable: the server could operate at the rate of more than 300 RPS, while the system had to monitor more than 1.5 million events.
+For the Express file explorer presented in Section~\ref{sec:express}, the benchamrking client keeps sending GET requests
+with randomly generated paths; in this case the overhead is more significant (77 \%), but still the overall performance 
+is acceptable: the server could operate at the rate of more than 350 RPS, while the system had to monitor more than 1.5 million events.
 Such a result shows that the optimizations introduced in our prototype implementation allowed us
-to get a 100x speed boost, and that runtime monitoring can be effectively employed for testing servers implemented with Express.
+to get a 120x speed boost, and that runtime monitoring can be effectively employed for testing servers implemented with Express.
