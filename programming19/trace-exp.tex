@@ -44,7 +44,7 @@ Given an event \(\ev\) and an event type \(\eventTy\), \(\mtch(\ev, \eventTy) = 
 
 In the rest of the paper, we consider different examples of event domains and, thus, event type languages.
 We do not expect considerable expressivity is needed in this step, and as long as matching and substitution functions are defined, all properties still hold.
-Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply.
+Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply. In practice, here, even types are mapped into Prolog terms, and its semantics is defined by Prolog clauses. 
 
 Considering again the previous files event domain (\ref{eq:filedomain}), a sensible event type matching all write operations would be \(\writet(\xv)\), where \(\xv\) is a variable.
 A sensible definition of matching would lead to the following:
