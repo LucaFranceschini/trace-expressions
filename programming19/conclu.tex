@@ -20,7 +20,7 @@ To our knowledge, no other currently available tool allows parametric runtime ve
 Although the reported experiments are promising, a considerable amount of work is still required for making our research prototype a tool usable in practice.
 Future work include exploiting our remote server to monitor distributed system, which is the main reason why we keep the Prolog server separated from the original program.
 
-\subsection{Experiments}
+\paragraph{Experiments:}
 Runtime verification of Express servers is an interesting result for the tool; unfortunately,
 no benchmarking suites are available for further testing our tool, hence we are
 considering to include in our suite other Express servers, either implemented by ourselves,
@@ -68,7 +68,7 @@ verification would be quite useful.
 %% Finally, to optimize connection time, it would be worth sending sequence of events rather than one
 %% event at time as happens in the current implementation.
 
-\subsection{Error Reporting and IDE}
+\paragraph{Error Reporting:}
 So far error reporting has been neglected, and in case of failure a message is logged with the associated
 unexpected event that has been traced; clearly, more informative error messages
 are required to allow the user to understand and locate more easily the detected problem.
@@ -83,12 +83,12 @@ would be a simple extension.
 Moreover, the trace expression specification could be serialized and sent to the program for reporting purposes.
 To this aim, JSON Schema \cite{jsonschema} can be useful.
 
-Finally, at the moment, trace expressions must be written directly in Prolog and, although the used syntax
-is similar to that defined in the paper, the interpreter adopts non standard rules to manage operator precedences,
-and does not statically detect ill-formed trace expressions.
+%% Finally, at the moment, trace expressions must be written directly in Prolog and, although the used syntax
+%% is similar to that defined in the paper, the interpreter adopts non standard rules to manage operator precedences,
+%% and does not statically detect ill-formed trace expressions.
 
-To this aim, we are developing in \textit{Xtext}\footnote{\url{https://eclipse.org/Xtext/}} an IDE
-to write specifications with trace expressions at a higher level, and to automatically generate
-the corresponding Prolog code. \textit{Xtext} allows such an IDE to be integrated as an Eclipse plugin
-with support for syntax-highlighting, auto-completion,
-and a number of static checks useful for early error detection of the written specification.
+%% To this aim, we are developing in \textit{Xtext}\footnote{\url{https://eclipse.org/Xtext/}} an IDE
+%% to write specifications with trace expressions at a higher level, and to automatically generate
+%% the corresponding Prolog code. \textit{Xtext} allows such an IDE to be integrated as an Eclipse plugin
+%% with support for syntax-highlighting, auto-completion,
+%% and a number of static checks useful for early error detection of the written specification.

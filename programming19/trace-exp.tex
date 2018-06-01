@@ -48,8 +48,7 @@ We do not expect considerable expressivity is needed in this step, and as long a
 Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply. In practice, here, even types are mapped into Prolog terms, and its semantics is defined by Prolog clauses. 
 
 Considering again the previous files event domain (\ref{eq:filedomain}), a sensible event type matching all write operations would be \(\writet(\xv)\), where \(\xv\) is a variable.
-A sensible definition of matching would lead to the following:
-\[ \mtch(\writet(42), \writet(\xv)) = \{ \xv \mapsto 42 \} \]
+A sensible definition of matching would lead to the following: $\mtch(\writet(42), \writet(\xv)) = \{ \xv \mapsto 42 \}$
 
 %%Trace expressions have been extended with variables in \cite{AnconaFM17}.
 
@@ -70,10 +69,10 @@ Finally, a \emph{trace expression} \(\tau\) identifies a set of traces correspon
 Trace expressions are regular terms (a.k.a. cyclic) \cite{Courcelle83}, thus there is no need for an explicit recursion operator.
 
 For instance, the following trace expression \(\tau\) specifies the correct use of the file descriptor \(42\):
-\begin{align*}
-	\tau &= \emptyseq \orop (\opent(42) \prefixop \tau')\\
-	\tau' &= (\writet(42) \prefixop \tau') \orop (\closet(42) \prefixop \emptyseq)
-\end{align*}
+$$
+	\tau = \emptyseq \orop (\opent(42) \prefixop \tau')\qquad
+	\tau' = (\writet(42) \prefixop \tau') \orop (\closet(42) \prefixop \emptyseq)
+$$
 In the first line, \(\opent\) is forced to be the first operation, if any.
 After that, in \(\tau'\), either there will be write operations or the file will be closed and no more writes will be allowed.
 

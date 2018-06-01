@@ -79,7 +79,7 @@ For several cases (content length, omitted body -- 204/304 response, hello world
 for other servers directly implemented with the \lstinline{http} module (omitted body -- head request, unconsumed data and write head)
 we registered a modest overhead (below 50\%)
 
-For the Express file explorer presented in Section~\ref{sec:express}, the benchamrking client keeps sending GET requests
+For the Express file explorer presented in Section~\ref{sec:express}, the benchmarking client keeps sending GET requests
 with randomly generated paths; in this case the overhead is more significant (77 \%), but still the overall performance 
 is acceptable: the server could operate at the rate of more than 350 RPS, while the system had to monitor more than 1.5 million events.
 Such a result shows that the optimizations introduced in our prototype implementation allowed us

@@ -94,13 +94,10 @@ the header of a server response must be written before calling the \lstinline{en
 A very simple server verifying the specification is the following one:
 \begin{lstlisting}
 const http = require('http');
-
 const server = http.createServer((req, res) => {
-	// preparing response...
-	res.writeHead(200);
+	res.writeHead(200); // preparing response...
 	res.end(() => console.log('response sent'));
 });
-
 server.listen(80);
 \end{lstlisting}
 
@@ -108,25 +105,16 @@ As expected, in this case the tool does not report any anomalous behavior.
 However, if we modify the code above as follows
 \begin{lstlisting}
 const http = require('http');
-
 const server = http.createServer((req, res) => {;
 	res.end(() => console.log('response sent'));
-	// BUG! writing header after calling end() method
-	res.writeHead(204);
+	res.writeHead(204); // BUG! writing header after calling end() method
 });
-
 server.listen(80);
 \end{lstlisting}
 and monitor the server with our tool, then we get an error message associated with the following event, corresponding
 to a call to \lstinline{writeHead}:
 \begin{lstlisting}
-{ event: 'func_pre',
-  name: 'writeHead',
-  id: 12,
-  res: undefined,
-  args: [ 204 ],
-  targetId: 10,
-  resultId: undefined }
+{ event: 'func_pre', name: 'writeHead', id: 12, res: undefined, args: [ 204 ], targetId: 10, resultId: undefined }
 \end{lstlisting}
 
 Similar examples have been used to test our tool with the other specifications.
@@ -149,10 +137,8 @@ const express = require('express');
 const morgan = require('morgan');
 const responseTime = require('response-time');
 const serveIndex = require('serve-index');
-
 const path = process.cwd();
 const app = express();
-
 app.use(morgan('combined'));
 app.use(responseTime());
 app.use('/', express.static(path), serveIndex(path, {'icons': true}));
@@ -160,7 +146,6 @@ app.get('/*', (req, res) => {
     res.writeHead(404, {'Content-Type': 'text/html'});
     res.end('Not found\n');
 });
-
 app.listen(80);
 \end{lstlisting}
 Although the application contains only a dozen of source lines of code, the

@@ -11,14 +11,11 @@ The convention in Node.js is to pass errors (if any) to callbacks as first argum
 \begin{figure}[h]
 	\begin{lstlisting}
 		const fs = require('fs');
-		
 		const LIMIT = 2**8;
-		
 		fs.open('tmp.txt', 'w', (err, fd) => {
 			if (!err)
 			for (let i=0; i<LIMIT; i++)
 				fs.write(fd, i+'\n', () => {});
-			
 			fs.close(fd, () => console.log('bye'));
 		});
 	\end{lstlisting}
@@ -41,34 +38,36 @@ There are two more problems with the code above: first, the numbers can be writt
 
 Trace expressions can be used to formally specify (and later verify) the requirement.
 Consider for instance the following domain (in this simple case, events and event types coincides):
-\[ \eventSet = \{ \opent, \writet, \cbt, \closet \} \]
+$ \eventSet = \{ \opent, \writet, \cbt, \closet \}.$
 
 A trace expression specifying the correct order of operations would then be:
-\begin{align*}
-\tau &= \emptyseq \orop (\opent \prefixop \cbt \prefixop \tau')\\
-\tau' &= (\writet \prefixop \cbt \prefixop \tau') \orop (\closet \prefixop \cbt \prefixop \emptyseq)
-\end{align*}
+$$
+\tau = \emptyseq \orop (\opent \prefixop \cbt \prefixop \tau')\qquad
+\tau' = (\writet \prefixop \cbt \prefixop \tau') \orop (\closet \prefixop \cbt \prefixop \emptyseq)
+$$
 Note that the recursive occurrence of \(\tau'\) is guarded by a \(\writet\) and a \(\cbt\), thus forcing them to be alternating.
 
 The code snippet we discussed would not satisfy the trace expression \emph{as soon as the second write is called}, thus it will not be necessary to reach some system-dependent high number of requests for the bug to be detected.
 
 Assuming the monitor can match asynchronous requests and their callbacks (for instance by generating a unique identifier for each request), a more precise specification would also be able to check that the correct callbacks are called.
 Then events will include this new information:
-\[ \eventSet = \bigcup_{\id \in \mathbb{N}} \{\opent(\id), \writet(\id), \closet(\id), \cbt(\id) \} \]
+$\eventSet = \bigcup_{\id \in \mathbb{N}} \{\opent(\id), \writet(\id), \closet(\id), \cbt(\id) \}.$
 
 This time, however, parametric runtime verification is needed, and variables and event types are required.
 We define event types to be event terms over a set of variables \(\vars\) used as placeholders for request identifiers (the \(\mtch\) will simply compute the appropriate substitution):
-\begin{align*}
-\vars &= \{ \avar{id_1}, \avar{id_2}, \dotsc \}\\
-\mathcal{ET} &= \bigcup_{\xv \in \vars} \{\opent(\xv), \writet(\xv), \closet(\xv), \cbt(\xv) \}
-\end{align*}
+$$
+\vars = \{ \avar{id_1}, \avar{id_2}, \dotsc \}\qquad
+\mathcal{ET} = \bigcup_{\xv \in \vars} \{\opent(\xv), \writet(\xv), \closet(\xv), \cbt(\xv) \}
+$$
 
 Finally, the parametric trace expression is given (\(\tau\), \(\tau_w\) and \(\tau_c\) deal with opening, writing to and closing the file, respectively):
-\begin{align*}
-\tau &= \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop \cbt(\avar{id_1}) \prefixop \tau_w}\\
-\tau_w &= \var{id_2}{\writet(\avar{id_2}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c\\
-\tau_c &= \var{id_3}{\closet(\avar{id_3}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
-\end{align*}
+$$
+\begin{array}{l}
+\tau = \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop \cbt(\avar{id_1}) \prefixop \tau_w}\qquad
+\tau_c = \var{id_3}{\closet(\avar{id_3}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}\\
+\tau_w = \var{id_2}{\writet(\avar{id_2}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c
+\end{array}
+$$
 Note that different variable names are only used for the sake of clarity, even if using the same variable in every binder would work since trace expression semantics correctly handles the shadowing of variables in nested scopes.
 
 Identifiers are crucial to match asynchronous operations with their callbacks: after event \(\opent(\avar{id}_i)\) occurs, meaning an asynchronous call to \lstinline|open| has been made and a callback for it has been registered, event \(\cbt(\avar{id}_i)\) will occur when \emph{that} callback will be executed.
@@ -76,12 +75,14 @@ Identifiers are crucial to match asynchronous operations with their callbacks: a
 The trace expressions above are limited to a single file.
 If monitoring a collection of concurrently modified files is required, more parameters are necessary, since the monitor needs to track functions arguments\footnote{For the sake of brevity, from now on we will omit the explicit definition of the employed event domains.} in order to retrieve file descriptors:
 %(from this point, event and event types will not be explicitly written anymore):
-\begin{align*}
-\tau &= \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop (\tau' \shuffleop \tau)}\\
-\tau' &= \var{fd}{\cbt(\avar{id_1}, \avar{fd}) \prefixop \tau_w}\\
-\tau_w &= \var{id_2}{\writet(\avar{id_2}, \avar{fd}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c\\
-\tau_c &= \var{id_3}{\closet(\avar{id_3}, \avar{fd}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
-\end{align*}
+$$
+\begin{array}{l}
+\tau = \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop (\tau' \shuffleop \tau)}\qquad
+\tau_w = \var{id_2}{\writet(\avar{id_2}, \avar{fd}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c\\
+\tau' = \var{fd}{\cbt(\avar{id_1}, \avar{fd}) \prefixop \tau_w}\qquad
+\tau_c = \var{id_3}{\closet(\avar{id_3}, \avar{fd}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
+\end{array}
+$$
 The shuffle operator allows to concurrently monitor the use of the opened file as well as other files.
 
 \subsection{Web Requests}
@@ -91,18 +92,15 @@ Recalling the web server presented in \Cref{lst:http}, let us consider the (bugg
 \begin{figure}[h]
 \begin{lstlisting}
 const http = require('http');
-
 const options = {
 	method: 'POST',
 	headers: {
 		'content-length': 10  // BUG! size too high
 	}
 };
-
 const req = http.request(options, res => {
 	res.on('data', console.log);
 });
-
 req.write('hey!');
 req.end('bye');
 \end{lstlisting}
@@ -149,13 +147,15 @@ the sequence of bytes being sent.
 %\end{align*}
 
 The following is a possible trace expression specification of the correct behavior:
-\begin{align*}
-\tau &= \emptyseq \orop \var{id}{\var{cl}{ \req(\avar{id}, \avar{cl}) \prefixop (\tau_w\shuffleop\tau)}}\\
-\tau_w &= \var{cl'}{\writet(\avar{id}, \avar{cl}, \avar{cl'})\prefixop\tau_w'} \orop \tau_e\\
-\tau_w' &= \var{cl}{\writet(\avar{id}, \avar{cl'}, \avar{cl})\prefixop \tau_w} \orop \tau_e'\\
-\tau_e &= \myend(\avar{id}, \avar{cl})\prefixop \emptyseq\\
-\tau_e' &= \myend(\avar{id}, \avar{cl'})\prefixop\emptyseq
-\end{align*}
+$$
+\begin{array}{l}
+\tau = \emptyseq \orop \var{id}{\var{cl}{ \req(\avar{id}, \avar{cl}) \prefixop (\tau_w\shuffleop\tau)}}\qquad
+\tau_w = \var{cl'}{\writet(\avar{id}, \avar{cl}, \avar{cl'})\prefixop\tau_w'} \orop \tau_e\\
+\tau_w' = \var{cl}{\writet(\avar{id}, \avar{cl'}, \avar{cl})\prefixop \tau_w} \orop \tau_e'\qquad
+\tau_e = \myend(\avar{id}, \avar{cl})\prefixop \emptyseq\qquad
+\tau_e' = \myend(\avar{id}, \avar{cl'})\prefixop\emptyseq
+\end{array}
+$$
 The event types above have the following semantics:
 \begin{itemize}
 \item  \(\req(\avar{id}, \avar{cl})\): a request object identified by \(\avar{id}\) has been created, with a declared \lstinline{'content-length'} \(\avar{cl}\);
