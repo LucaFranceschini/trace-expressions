@@ -4,7 +4,7 @@ The framework gained popularity in recent years as it allows developers to succe
 
 At its core, Node.js is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, scheduling the request for later execution.
 Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always runs on a single thread.
-This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge amounts of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with concurrency and parallelism.
+This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge amounts of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with multi-threading and parallelism.
 
 
 %Besides, the huge package ecosystem promotes code reuse and fast development.
@@ -28,7 +28,7 @@ attributed context-free grammars \cite{de2014combining} and LTL\textsubscript{3}
 
 Though trace expressions were initially devised to verify protocol-compliance in multi-agent systems, existing work and preliminary results show that trace expressions can be used as general specification formalism for parametric runtime verification \cite{ParametricJava17, TowardsIoT17};
 the expressive power and the algebraic properties of the underlying operators have been partially investigated \cite{ParametricJava17,ancona2016comparing}.
-Parametricity is a key feature of trace expressions: correctness of execution may depend on the actual values associated with events at runtime.
+Parametric verification is a key feature of trace expressions: correctness of execution may depend on the actual values associated with events at runtime.
 This makes the formalism very expressive and allows runtime verification of complex properties.
 Another interesting characteristic is their independence from the monitored system and underlying programming language,
 obtained through the abstraction of event type.
@@ -53,8 +53,8 @@ programming with the \lstinline{coinduction}\footnote{\url{http://www.swi-prolog
 module. 
 
 The tool offers a simple HTTP interface based on JSON to allow runtime verification of
-distributed and heterogeneous components; in this way, the tool is ready to
-support runtime verification in the context of the Internet of Things.
+distributed and heterogeneous components.
+%; in this way, the tool is ready to support runtime verification in the context of the Internet of Things.
 
 To experiment with the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used 
 in Node.js, to mine specifications expressible with parametric trace expressions, with the aim of dynamically verifying

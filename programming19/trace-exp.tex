@@ -6,7 +6,8 @@ Global types, and thus trace expressions, derive from the notion of behavioral t
 
 Later on, with the introduction of the notion of event type, trace expressions have become system and language agnostic, so that they can be exploited for runtime verification in several different contexts.
 
-We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing} and have been expressly devised for easing specification of complex properties to be efficiently monitored at runtime; they support parametricity \cite{AnconaFM17} and an implementation in Prolog is available (see \cite{TowardsIoT17} for more details).
+
+We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing} and have been expressly devised for easing specification of complex properties to be efficiently monitored at runtime; they support parametric verification \cite{AnconaFM17} and an implementation in Prolog is available (see \cite{TowardsIoT17} for more details).
 Furthermore they are syntactically regular terms \cite{Courcelle83}, which naturally support recursion and specifications of (possibly) non-terminating systems, and which can be directly translated into cyclic terms in Prolog.
 Trace expressions differ from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
 Just like trace expressions specify the behavior of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
@@ -87,13 +88,17 @@ The trace expression above can only verify the correct use of a single file desc
 \label{eq:files2}
 \tau' &= (\writet(\avar{fd}) \prefixop \tau') \orop (\closet(\avar{fd}) \prefixop \emptyseq)
 \end{align}
-When the first event \(\opent(x)\) will occur, it will match the prefix computing the substitution \(\{\avar{fd}\mapsto x\}\).
+When the first event \(\opent(x)\) will occur, it will match the prefix computing the substitution \(\{\avar{fd}\mapsto x\}\) (this comes from matching the event \(\opent(x)\) against the event type \(\opent(\avar{fd})\) in the standard way).
 At this point the shuffle operator is crucial:
 %\footnote{In order for the shuffle to work, we assume that every \(\opent\) operation always gives a fresh file descriptor, which can be reasonably assumed to be ensured by the operating system.}
 following events are allowed to belong either to \(\tau\) (operations on new files, in the correct order) or to \(\tau'\{\avar{fd}\mapsto x\}\) (note the substitution!) where further operations on \(x\) will be checked.
 
 Note that we are not monitoring the correct behavior of the underlying operating system, namely, that the same file descriptor is not assigned to more opened files simultaneously.
 Rather, the specification ensures that the API offered by such system is correctly used.
+
+The binder syntax specifies the scope of the introduced parameter, though this can be non-trivial in the context of equations defining recursive trace expressions.
+In \Cref{eq:files2}, \(\tau'\) is an open term with an unbound parameter.
+Though this cannot happen at the top-level, it is fine when the term is used inside a binder, as it happens in \Cref{eq:files1}: in this case, the occurrence of \(\avar{fd}\) is bound to the binder in \Cref{eq:files1}.
 
 \paragraph{Operational Semantics}
 \begin{figure}[t]
@@ -112,6 +117,12 @@ For instance, considering again trace expressions in \Cref{eq:files1,eq:files2},
 
 Transition rules depend on predicate \(\isEmpty(-)\) which checks for termination, i.e., \(\isEmpty(\tau)\) holds only if \(\tau\) accepts the empty trace \(\emptyseq\).
 More generally, a trace expression \(\tau\) accepts a (possibly infinite) event trace \(\ev_1\ev_2\dots\) iff there exists a (possibly infinite) reduction \(\tau \trans{\ev_1} \tau' \trans{\ev_2} \dotsb\).
+This is crucial for concatenation, see rule (cat-r).
+When a concatenation \(\tau_1\catop\tau_2\) is given, \(\tau_2\) can only be used if \(\tau_1\) accepts the empty trace, meaning, it is not mandatory anymore for \(\tau_1\) to match any event.
+
+Note that two different relations are defined.
+\(\trans{\ev}\) holds iff a trace expression accepts event \(\ev\).
+In order to implement this, the auxiliary relation \(\extrans{\ev}\) is defined, which computes the substitution for the parameters in the specification, if any.
 
 The operational semantics rule for the intersection operator depends on the side condition \(\subs=\subs_1\subsMerge\subs_2\).
 Such equality holds when \(\subs_1\) and \(\subs_2\) coincide on \(\dom(\subs_1) \cap \dom(\subs_2)\).

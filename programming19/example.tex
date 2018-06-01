@@ -179,3 +179,8 @@ At the beginning, both variables \(\avar{id}\) and \(\avar{cl}\) are free and th
 On the other end, upon writing, the current amount of data that still has to be sent is known, but the updated one has to be computed based on the
 size of $\data$.
 Finally, \(\myend\) event is expected to send the exact amount of data left, and no further substitution is needed.
+
+The \(\mtch\) function needs to be defined in order to use an event domain.
+The same domain and \(\mtch\) function, however, can be used for many trace expressions.
+Here, for instance, the function could be reused for any specification based on the event types above.
+When event types are simply open terms over the signature of events, as it happens for instance in the first example on file operations in this section, the \(\mtch\) function is simply the standard term substitution computation.

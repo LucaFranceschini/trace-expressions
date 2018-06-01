@@ -453,33 +453,18 @@ bibsource = {dblp computer science bibliography, http://dblp.org}
 	month={12}
 }
 
-@inproceedings{contracts,
-  author    = {Bertrand Meyer},
-  title     = {At the Edge of Design by Contract},
-  booktitle = {{TOOLS} Europe 2001: 38th International Conference on Technology of
-               Object-Oriented Languages and Systems, Components for Mobile Computing,
-               Zurich, Switzerland, 12-14 March 2001},
-  pages     = {3},
-  year      = {2001},
-  crossref  = {DBLP:conf/tools/38-2001},
-  url       = {http://doi.ieeecomputersociety.org/10.1109/TOOLS.2001.10004},
-  doi       = {10.1109/TOOLS.2001.10004},
-  timestamp = {Mon, 30 Oct 2017 11:35:08 +0100},
-  biburl    = {https://dblp.org/rec/bib/conf/tools/Meyer01b},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
-}
-
-@proceedings{DBLP:conf/tools/38-2001,
-  title     = {{TOOLS} Europe 2001: 38th International Conference on Technology of
-               Object-Oriented Languages and Systems, Components for Mobile Computing,
-               Zurich, Switzerland, 12-14 March 2001},
-  publisher = {{IEEE} Computer Society},
-  year      = {2001},
-  url       = {http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=7282},
-  isbn      = {0-7695-1095-7},
-  timestamp = {Fri, 27 May 2016 11:20:45 +0200},
-  biburl    = {https://dblp.org/rec/bib/conf/tools/38-2001},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+@article{contracts, 
+	author={Bertrand Meyer}, 
+	journal={Computer}, 
+	title={Applying 'design by contract'}, 
+	year={1992}, 
+	volume={25}, 
+	number={10}, 
+	pages={40-51}, 
+	keywords={contracts;object-oriented programming;software reliability;software reusability;Eiffel;design by contract;object-oriented software construction;object-oriented techniques;programming language;software libraries;software reliability;Books;Computer bugs;Contracts;Guidelines;Object oriented programming;Pressing;Reliability theory;Robustness;Software engineering;Software systems}, 
+	doi={10.1109/2.161279}, 
+	ISSN={0018-9162}, 
+	month={10}
 }
 
 @InProceedings{sessiontypes,
@@ -530,17 +515,15 @@ isbn="978-3-540-47968-0"
 @article{globalst,
  author = {Honda, Kohei and Yoshida, Nobuko and Carbone, Marco},
  title = {Multiparty Asynchronous Session Types},
- journal = {SIGPLAN Not.},
- issue_date = {January 2008},
- volume = {43},
- number = {1},
- month = jan,
+ booktitle = {Proceedings of the 35th Annual ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '08},
  year = {2008},
- issn = {0362-1340},
+ isbn = {978-1-59593-689-9},
+ location = {San Francisco, California, USA},
  pages = {273--284},
  numpages = {12},
- url = {http://doi.acm.org/10.1145/1328897.1328472},
- doi = {10.1145/1328897.1328472},
+ url = {http://doi.acm.org/10.1145/1328438.1328472},
+ doi = {10.1145/1328438.1328472},
  acmid = {1328472},
  publisher = {ACM},
  address = {New York, NY, USA},
@@ -611,4 +594,20 @@ isbn="978-3-540-47968-0"
  publisher = {International World Wide Web Conferences Steering Committee},
  address = {Republic and Canton of Geneva, Switzerland},
  keywords = {JSON, JSON schema, JSON validation, expressiveness of schema languages},
+}
+
+@InProceedings{eventloop,
+	author="Miller, Mark S.
+	and Tribble, E. Dean
+	and Shapiro, Jonathan",
+	editor="De Nicola, Rocco
+	and Sangiorgi, Davide",
+	title="Concurrency Among Strangers",
+	booktitle="Trustworthy Global Computing",
+	year="2005",
+	publisher="Springer Berlin Heidelberg",
+	address="Berlin, Heidelberg",
+	pages="195--229",
+	abstract="Programmers write programs, expressing plans for machines to execute. When composed so that they may cooperate, plans may instead interfere with each other in unanticipated ways. Plan coordination is the art of simultaneously enabling plans to cooperate, while avoiding hazards of destructive plan interference. For sequential computation within a single machine, object programming supports plan coordination well. For concurrent computation, this paper shows how hard it is to use locking to prevent plans from interfering without also destroying their ability to cooperate.",
+	isbn="978-3-540-31483-7"
 }
