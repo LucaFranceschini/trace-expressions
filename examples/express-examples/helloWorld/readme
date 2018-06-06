@@ -1,3 +1,6 @@
-il server riceve richieste HTTP e risponde 'Hello world'.
+The server responds with 'Hello world' to any request.
 
-`bench-mark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+The client sends GET requests.
+
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).

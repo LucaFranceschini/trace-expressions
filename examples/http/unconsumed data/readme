@@ -1,9 +1,7 @@
-il server http risponde con ~10mb di dati
+The server sends a response with 10MB data.
 
-il client fa 1000 richieste.
-quello corretto consuma i dati (senza farci nulla) così che possano essere deallocati.
-quello sbagliato non li consuma e la memoria si riempie piuttosto in fretta.
+The correct client correctly consume the server response, while the buggy client
+does not consume it, with a serious memory leak.
 
-N.B.: blocca il computer, meglio tenere top aperto e killare alla 300-esima richiesta...
-
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).
