@@ -1,7 +1,8 @@
-il client invia una semplice richiesta HTTP e stampa 'done' quando riceve la risposta.
+The client sends a GET request, and prints 'ok' and terminates after it has received the server response.
 
-il server corretto risponde ed invoca la end, quindi il client stampa e termina.
+The correct server invokes the 'end' method to complete the response which is correctly received by the client.
 
-il server buggato invia il corpo della risposta ma non chiama end, quindi il client riceve il corpo ma non termina.
+The buggy server does not close the response by calling the 'end' method, therefore the client cannot terminate.
 
-DOMANDA: è monitorabile?
+The specification has not been formalized yet.
+
