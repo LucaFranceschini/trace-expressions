@@ -1,5 +1,6 @@
 #! /bin/bash
-CWD=~/TechRep/programming18/git/trace-expressions/examples/express-examples/helloWorld
+#CWD=~/TechRep/programming18/git/trace-expressions/examples/express-examples/helloWorld
+CWD=.
 for i in `seq 1 10`
 do node $CWD/hello_world.js &
 sleep 5
