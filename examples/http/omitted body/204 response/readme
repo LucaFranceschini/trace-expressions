@@ -1,8 +1,9 @@
-Il client invia una richiesta HTTP PUT (vuota) e stampa il corpo della risposta, se presente.
-Uso le PUT perché sono il caso più comune in cui vengono usate risposte 204.
+The client sends an empty PUT request and prints the body of the server's response, if present.
+PUT requests correspond to the most typical case requiring a 204 response.
 
-Il server corretto risponde con una 204 senza corpo.
+The correct server sends a 204 response without body.
 
-Il server buggato risponde con una 204 con un corpo, che viene inviato ma non ricevuto dal client.
+The buggy server sends a 204 response with a body which, however, cannot be received by the client.
 
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo. 
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).

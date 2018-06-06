@@ -1,11 +1,17 @@
-il server riceve richieste HTTP e risponde 'ok' quando ha finito di ricevere il messaggio (evento 'end').
+The server processes HTTP requests by collecting their bodies, and prints 'ok' when all body chunks
+have been received ('end' event).
 
-il client corretto invia una POST con un messaggio e l'header content-length corretto, riceve la risposta 'ok' e termina.
+The correct client sends a POST request where content-length field is correctly set to the size of the body, then receives
+an 'ok' response from the server and terminates.
 
-buggyClientTooHigh fa la stessa cosa ma con un content-length errato (più alto), e non riceve mai la risposta perché lato server l'evento 'end' non viene mai invocato, perché il sistema crede ci siano ancora dati da ricevere.
+The behavior of `buggyClientTooHigh.js` is similar, but the content-length field is set to a number greater than the correct size;
+as a consequence, the server waits forever for the 'end' event which will never occur, since the system waits for more data chunks, and, hence,
+the client does not receive any response.
 
-viceversa, buggyClientTooLow usa un content-length minore della reale lunghezza, ed il resto del messaggio viene perso!
+In `buggyClientTooLow.js` the content-length field is set to a number lower than the correct size, therefore the body is received only
+partially.
 
-lazyClient non specifica il content-length, che viene calcolato ed automaticamente aggiunto all'header.
+In `lazyClient.js` the content-length field is not explicitly specified, therefore it is automatically added with the correct value.
 
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).

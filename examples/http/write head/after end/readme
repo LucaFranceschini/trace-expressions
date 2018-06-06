@@ -1,7 +1,8 @@
-il client invia una richiesta HTTP, riceve la risposta e la stampa.
+The client sends a HTTP request, then it receives the response and prints it.
 
-il server corretto scrive l'header prima di chiamare la end.
+The correct server writes the header before calling method `end`.
 
-il server buggato scrive l'header dopo aver chiamato la head, e viene perso (ne viene usato uno di default).
+The buggy server writes the header after calling method `end`; a default header, which is not the correct one, is received by the server.
 
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).

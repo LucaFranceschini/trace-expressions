@@ -1,7 +1,8 @@
-Il server riceve una richiesta HTTP e stampa il corpo, se presente.
+The server receives an HTTP request and prints its body, if present,  on the stdout  
 
-Il client corretto invia una richiesta HTTP HEAD senza corpo, come specificato dalla documentazione.
+The correct client sends a HEAD request without body, as specified in the documentation  
 
-Il client buggato invia una richiesta HTTP HEAD con un corpo, che non viene però ricevuto dal server.
+The buggy client sends a HEAD request with a body which, however, cannot be received by the server 
 
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).

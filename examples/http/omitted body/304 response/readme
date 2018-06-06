@@ -1,7 +1,8 @@
-Il client invia una richiesta HTTP GET e stampa il corpo della risposta, se presente.
+The client sends a GET request and prints the body of the response, if present.
 
-Il server corretto risponde con una 304 senza corpo.
+The correct server sends a 304 response without body.
 
-Il server buggato risponde con una 304 con un corpo, che viene inviato ma non ricevuto dal client.
+The buggy server sends a 304 response with a body which, however, cannot be received by the client.
 
-`benchmark-client.js` prende come argomento il numero di richieste e calcola il numero di richieste per secondo.
+`benchmark-client.js` sends N (passed as argument) requests to the server without collecting its responses, and then computes the number of requests
+per second (RPS).

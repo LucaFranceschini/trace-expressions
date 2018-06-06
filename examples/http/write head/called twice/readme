@@ -1,7 +1,7 @@
-il client invia una richiesta HTTP, riceve la risposta e la stampa.
+The client sends a HTTP request, then it receives the response and prints it.
 
-il server corretto scrive una sola volta l'header nella risposta.
+The correct server writes the header just once.
 
-il server buggato scrive due volte l'header per lo stesso messaggio, e la seconda sovrascrive la prima.
+The buggy server writes the header twice for the same response.
 
-PER LA SPECIFICA: questo viene troppo complicato senza il supporto all'identificazione degli oggetti passati come argomento secondo me, considerando anche che l'esempio non è super interessante.
+This is not a very interesting example.
