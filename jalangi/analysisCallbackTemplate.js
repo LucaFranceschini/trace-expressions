@@ -99,102 +99,6 @@
      * @class
      */
     function MyAnalysis() {
-	// test for async comunication (Davide)
-	const cp = require('child_process')
-	const sender=cp.fork(__dirname + '/send_to_monitor.js')
-	
-	// end test
-	
-        const util = require('util');
-        
-        // store names of the following modules
-        const supportedModules = ['fs', 'http'];
-        
-        // callbacks module (should export beforeFunction and afterFunction)
-        const instr = require('./callbacksInstrumentation.js');
-        
-        // default name for anonymous functions
-        const anonymous = '[anonymous]';
-        
-        // unique incremental ID for function calls (useful to match async functions and callbacks)
-        // make it start from 1, 0 is falsy...
-        // 17/08/17 UPDATE: let's also use this for unique object identifiers
-        let uniqueId = 1;
-        
-        // map from objects to uniqe IDs, weakness allows garbage collection
-        // useful when the specification needs to identify objects (no === there...)
-        const objectIds = new WeakMap();
-        
-        // map from functions to names (with module, e.g. 'fs.write')
-        const functionNames = new Map();
-        
-        // functionExit does not have the function metadata
-        let lastEnterData;
-        
-        // stack of events 'invokeFunPre' and 'functionEnter'
-        const stack = [],
-              PRE = false,
-              ENTER = true;
-        function stackTop() { return isStackEmpty() ? undefined : stack[stack.length-1]; }
-        function isStackEmpty() { return stack.length === 0; };
-        
-        // last function for which invokeFunPre has been called
-        let lastInvoked;
-        
-        /*
-        Set when a property is accessed as part of a method call.
-        Unset when invoking the function.
-        */
-        let lastMethodName;
-        
-        for (const moduleName of supportedModules)
-        	readModule(moduleName);
-        
-        // save module function names
-        function readModule(modName) {
-            const mod = require(modName);
-            
-            for (const key in mod)
-							// only save functions if they do not come from the prototype
-							if (mod.hasOwnProperty(key) && typeof mod[key] === 'function')
-								functionNames.set(mod[key], modName+'.'+key);
-				}
-        
-        
-        // unified view over invokeFun/invokeFunPre and functionEnter/functionExit
-        
-        function beforeFunction(metadata) {
-        	//console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
-        	// add target object ID to metadata, if any
-        	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const target = metadata.target;
-        	if (Object(target) === target) {
-        		// only add if it's not already there
-        		if (!objectIds.has(target))
-        			objectIds.set(target, uniqueId++);
-        		
-        		metadata.targetId = objectIds.get(target);
-        	}
-        	
-            return instr.before(metadata,sender);
-        }
-        
-        function afterFunction(metadata) {
-        	// add returned object ID to metadata, if any
-        	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const result = metadata.result;
-        	if (Object(result) === result) {
-        		// only add if it's not already there
-        		if (!objectIds.has(result))
-        			objectIds.set(result, uniqueId++);
-        		
-        		metadata.resultId = objectIds.get(result)
-        	}
-        	
-            return instr.after(metadata,sender);
-        }
-        
-        
         /**
          * This callback is called before a function, method, or constructor invocation.
          * Note that a method invocation also triggers a {@link MyAnalysis#getFieldPre} and a
@@ -223,8 +127,7 @@
          * @param {Array} args - The array of arguments passed to <tt>f</tt>
          * @param {boolean} isConstructor - True if <tt>f</tt> is invoked as a constructor
          * @param {boolean} isMethod - True if <tt>f</tt> is invoked as a method
-         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
-         * @param {number} functionSid - The sid (i.e. the unique script identifier) where the function was created
+         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) passed to the callback
          * {@link MyAnalysis#functionEnter} when the function <tt>f</tt> is executed.  The <tt>functionIid</tt> can be
          * treated as the static identifier of the function <tt>f</tt>.  Note that a given function code block can
          * create several function objects, but each such object has a common <tt>functionIid</tt>, which is the iid
@@ -235,31 +138,8 @@
          * an object is returned.
          *
          */
-        this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
-            let metadata = {
-            		location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
-                callIid: iid,  // instruction identifier
-                callId: uniqueId++,  // unique call identifier to match the callback exactly
-                functionObject: f,
-                target: base,
-                arguments: args,
-                isConstructor: isConstructor,
-                isMethod: isMethod,
-                functionIid: functionIid,
-                functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
-            };
-            
-            metadata = beforeFunction(metadata);
-            
-            stack.push(PRE);
-            lastInvoked = f;
-            lastMethodName = undefined;
-            
-            return {f: metadata.functionObject,
-                    base: metadata.target,
-                    args: metadata.arguments,
-                    skip: false};
+        this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid) {
+            return {f: f, base: base, args: args, skip: false};
         };
 
         /**
@@ -295,8 +175,7 @@
          * @param {*} result - The value returned by the invocation
          * @param {boolean} isConstructor - True if <tt>f</tt> is invoked as a constructor
          * @param {boolean} isMethod - True if <tt>f</tt> is invoked as a method
-         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
-         * @param {number} functionSid - The sid (i.e. the unique script identifier) where the function was created
+         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) passed to the callback
          * {@link MyAnalysis#functionEnter} when the function f is executed.  <tt>functionIid</tt> can be treated as the
          * static identifier of the function <tt>f</tt>.  Note that a given function code block can create several function
          * objects, but each such object has a common <tt>functionIid</tt>, which is the iid that is passed to
@@ -306,31 +185,8 @@
          * value that is returned by the actual function invocation.
          *
          */
-        this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid) {
-            // do nothing for require
-            if (f.name === 'require')
-                return {result: result};
-            
-            let metadata = {
-            		location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
-                callIid: iid,
-                functionObject: f,
-                target: base,
-                arguments: args,
-                result: result,
-                isConstructor: isConstructor,
-                isMethod: isMethod,
-                functionIid: functionIid,
-                functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
-            };
-            
-            metadata = afterFunction(metadata);
-            
-            stack.pop();
-            last = null;
-            
-            return {result: metadata.result};
+        this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod, functionIid) {
+            return {result: result};
         };
 
         /**
@@ -447,9 +303,6 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-            if (isMethodCall)
-                lastMethodName = offset;
-            
             return {result: val};
         };
 
@@ -567,23 +420,6 @@
          * @returns {undefined} - Any return value is ignored
          */
         this.functionEnter = function (iid, f, dis, args) {
-            if (lastInvoked !== f) {
-		          const metadata = {
-            			location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
-		              functionIid: iid,
-		              functionObject: f,
-		              target: dis,
-		              arguments: args,
-                  functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
-		          };
-		          lastEnterData = metadata;
-		          
-            	beforeFunction(metadata);
-            	
-              stack.push(ENTER);
-            }
-            
-            lastInvoked = null;
         };
 
         /**
@@ -602,22 +438,7 @@
          * symbolic execution.
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            if (stackTop() === ENTER) {
-                lastEnterData.returnValue = returnVal;
-                lastEnterData.wrappedException = wrappedExceptionVal;
-                
-                lastEnterData = afterFunction(lastEnterData);
-                
-                stack.pop();
-            
-						    return {returnVal: lastEnterData.returnValue,
-						            wrappedExceptionVal: lastEnterData.wrappedException,
-						            isBacktrack: false};
-            }
-            
-            return {returnVal: returnVal,
-                    wrappedExceptionVal: wrappedExceptionVal,
-                    isBacktrack: false};
+            return {returnVal: returnVal, wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
         /**
@@ -788,8 +609,7 @@
          * if returns true, instrumented function body is executed, else uninstrumented function body is executed
          * @param {number} iid - Static unique instruction identifier of this callback
          * @param {function} f - The function whose body is being executed
-         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) where the function was created
-         * @param {number} functionSid - The sid (i.e. the unique script identifier) where the function was created
+         * @param {number} functionIid - The iid (i.e. the unique instruction identifier) passed to the callback
          * {@link MyAnalysis#functionEnter} when the function <tt>f</tt> is executed.  The <tt>functionIid</tt> can be
          * treated as the static identifier of the function <tt>f</tt>.  Note that a given function code block can
          * create several function objects, but each such object has a common <tt>functionIid</tt>, which is the iid
@@ -797,7 +617,7 @@
          * @returns {boolean} - If true is returned the instrumented function body is executed, otherwise the
          * uninstrumented function body is executed.
          */
-        this.runInstrumentedFunctionBody = function (iid, f, functionIid, functionSid) {
+        this.runInstrumentedFunctionBody = function (iid, f, functionIid) {
             return false;
         };
 

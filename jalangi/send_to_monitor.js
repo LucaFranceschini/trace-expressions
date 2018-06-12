@@ -1,7 +1,7 @@
 const http=require('http')
 const cp = require('child_process')
 const log = true // logs queue length
-
+      
 const queue=[]
 
 const options = {
@@ -17,6 +17,9 @@ function http_request(data,port,callback){
     options.port=port
     options.headers['Content-Length']=Buffer.byteLength(data)
     const req = http.request(options, res => {
+	/* let res_data=''
+	   res.on('data', chunk => res_data+=chunk)
+	   res.on('end', () => callback(null,res_data)) */
 	queue.shift()
 	log_queue()
 	if(queue.length>0)
@@ -31,11 +34,13 @@ function handle_response(err,data){
   if(err) {
     console.log(data)
     console.error(err.message)
+  } /*else
+    console.log(JSON.parse(data))*/
 }
 
 const port = 8081
 
-process.on('message',data =>
+process.on('message',data => 
 	   {
 	       queue.push(data)
 	       log_queue()

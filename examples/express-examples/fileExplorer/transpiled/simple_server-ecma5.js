@@ -1,4 +1,4 @@
-var express = require('express')
+var express = require('../../instrumentation/node_modules/express')
 var morgan = require('morgan');
 var responseTime = require('response-time')
 var serveIndex = require('serve-index')
