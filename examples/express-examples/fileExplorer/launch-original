@@ -1,6 +1,6 @@
 #! /bin/bash
 for i in `seq 1 10`
-do node simple_server.js &
+do node transpiled/simple_server-ecma5-no-instr.js &
 sleep 5
 node benchmark-client.js $1 >> results-original.txt
 pkill node   
