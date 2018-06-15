@@ -1,2 +1,9 @@
 #! /bin/bash
-IFS=$'\n';for f in `find . -name 'launch-benchmark'`; do "$f" 100000; done
+BENCH=launch-benchmark
+IFS=$'\n'
+for d in `find . -name $BENCH -printf "%h\n"`
+do
+    cd $d
+    ./$BENCH 1
+    cd -
+done
