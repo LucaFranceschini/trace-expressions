@@ -1,8 +1,9 @@
 #! /bin/bash
+BENCH=launch-original
 IFS=$'\n'
-for d in `find . -name 'launch-original' -printf "%h\n"`
+for d in `find . -name $BENCH -printf "%h\n"`
 do
     cd $d
-    ./launch-original 100000
+    ./$BENCH 100000
     cd -
 done
