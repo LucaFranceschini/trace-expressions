@@ -1,10 +1,13 @@
 #! /bin/bash
-CWD=~/TechRep/programming18/git/trace-expressions/examples/http/"omitted body/head request"
+DIR=../../../..
+gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/omitted\ body/204\ response/spec.pl"
 for i in `seq 1 10`
-do node ~/node_modules/jalangi2/src/js/commands/jalangi.js --inlineIID --inlineSource --analysis ~/TechRep/programming18/svn_impl/jalangi-async-test-omitted-body/functionInvocationAnalysis.js "$CWD"/transpiled/server.js &
+do 
 sleep 5
-node "$CWD"/benchmark-client.js $1 >> "$CWD"/results-monitored.txt
-pkill node   
+node $DIR/examples/express-examples/instrumentation/node_modules/jalangi2/src/js/commands/jalangi.js --inlineIID --inlineSource --analysis $DIR/jalangi/functionInvocationAnalysis.js transpiled/server.js &
+sleep 5
+node benchmark-client.js $1 >> results-monitored.txt
+pkill node
 sleep 5
 done
-
+pkill swipl
