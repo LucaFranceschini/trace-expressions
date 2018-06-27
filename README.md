@@ -19,7 +19,7 @@ To exit the interactive Prolog interpreter type `halt.`.
 ## npm dependencies
 To install Node.js npm dependencies (Jalangi2, Express, ...) run
 
-    npm i
+    $ npm i
 
 ## Jalangi2 Instrumentation
 [Jalangi2](https://github.com/Samsung/jalangi2) is a framework for dynamic analysis of JavaScript, based on code instrumentation.
