@@ -30,11 +30,13 @@ To execute a script with Node.js, instrumenting on-the-fly with our function inv
 
 ## Examples
 Different examples can be found in `examples`.
-Every folder is a different example and usually contains the following files
+Every folder is a different example and usually contains the following files:
 - "good" (correct) and "bad" (buggy) version of example;
 - Prolog specification file (`.pl`);
 - `readme` explaining what is wrong about the example;
 - `transpiled` directory with ES5 code (for Jalangi2), if needed.
+
+Examples folders also contain Bash scripts that run the example scripts.
 
 ## Benchmarks (specific for `examples/express-examples/fileExplorer`)
 
