@@ -36,20 +36,22 @@ Every folder is a different example and usually contains the following files
 - `readme` explaining what is wrong about the example;
 - `transpiled` directory with ES5 code (for Jalangi2), if needed.
 
-## Benchmarks (specific for `examples/express-examples/fileExplorer`) 
+## Benchmarks (specific for `examples/express-examples/fileExplorer`)
 
-1. Run Prolog server from directory `trace-expressions`:
+1. `cd` into the repo directory.
+
+2. Run Prolog server from directory `trace-expressions`:
 ```
 $ swipl -p node=prolog prolog/server.pl -- examples/http/omitted\ body/204\ response/spec.pl
 ```
-2. Run Node.js server with  instrumented Express library.
+3. Run Node.js server with  instrumented Express library.
 
 **Important: the available Express libraries for the launched server must be instrumented.
 The instrumented library is not yet available on GitHub.**
 ```
-$ node ~/node_modules/jalangi2/src/js/commands/direct.js --analysis ~/TechRep/programming18/svn_impl/jalangi-async-test-omitted-body/functionInvocationAnalysis.js ~/TechRep/programming18/express-examples/simple_server-ecma5.js
+$ node node_modules/jalangi2/src/js/commands/direct.js --analysis jalangi/functionInvocationAnalysis.js examples/express-examples/fileExplorer/transpiled/simple_server-ecma5.js
 ```
-3. Run Node.js client
+4. Run Node.js client.
 ```
 $ node examples/express-examples/fileExplorer/benchmark-client.js 10
 ```
