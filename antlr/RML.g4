@@ -7,14 +7,14 @@ VAR: [A-Z][a-zA-Z0-9_]* ;
 
 main : dec+ EOF;
 dec : VAR '=' exp ;
-exp :  eventType #evtype |
-         <assoc=right> exp exp #cat |
-          exp '/\\' exp #and |
+exp : eventType #evtype |
+      <assoc=right> exp exp #cat |
+      exp '/\\' exp #and |
 	  exp '\\/' exp #or |
 	  exp '|' exp #shuf |
 	  '(' exp ')'  #par |
 	  'eps' #eps |
-	   VAR #var;
+	  VAR #var;
 
 eventType:  ID'('atoms')' #argsPred | ID #constPred;
 
