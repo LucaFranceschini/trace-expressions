@@ -13,7 +13,7 @@ This asynchronous, single-thread execution model turned out to be an effective w
 %From a software engineering point of view however, Node.js has its downsides and pitfalls and poses serious challenges.
 
 On the other hand, asynchronous programming heavily relies on the notion of callback, which can lead to many levels of nested blocks and obfuscate the actual execution flow, making the code hard both to read and to debug.
-When an asynchronous request is made a callback (i.e., a function) is expected, and it will be executed when the result of the request will be available.
+When an asynchronous request is made a callback (i.e., a function) will be executed when the result of the request will be available.
 This, together with the non-deterministic environments in which Node.js is employed, and the dynamic nature of JavaScript itself, makes it challenging to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
 
 \emph{Runtime verification} \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given (formal) specification of the expected behavior.
