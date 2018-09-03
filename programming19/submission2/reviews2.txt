@@ -193,7 +193,7 @@ minor changes:
 change your url references that are footnotes to ordinary citations to the bibliography
 page 2
 amounts -> numbers ***D: done
-is expected and it -> (just delete)
+is expected and it -> (just delete) ***D: done
 will be -> becomes
 page 5
 into -> inside
