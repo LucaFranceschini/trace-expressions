@@ -1,0 +1,264 @@
+Dear Davide Ancona,
+
+While I regret to report that your submission to <Programming> 2019 has not been accepted for this issue, the reviewers feel that this is promising work. We hope that you will choose to revise and resubmit the paper by the issue 3 deadline on October 1. In that case, the same reviewers will be assigned to your paper for another review.
+
+You may instead choose to submit the paper to a future <Programming> volume (associated to a future year of the conference). In that case, the paper will most likely be assigned to a new set of reviewers, since the journal recruits a new review board for each volume.
+
+I hope your find the reviews helpful, and please don't hesitate to contact me if you have any questions.
+
+Thank you,
+Matthew Flatt
+Associate Journal Editor and Program Chair for <Programming> 2019
+
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 19
+TITLE: Parametric Runtime Verification of Node.js Applications with Trace Expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall evaluation: -1 (weak reject, some problems)
+
+----------- Review -----------
+This paper presents work that enables run-time verification of event-based
+applications using trace expressions. Trace expressions are a way to reason
+about event traces and define expected patterns. These can be used online or
+offline to check traces for violations. The paper applies these ideas to
+Node.js, and evaluates them based on an HTTP service. It does an evaluation of
+the performance impact and finds that tracing induces an overhead between 0 and
+77%, depending on the concrete work load.
+
+The paper in its current form does not yet meet my expectations for a journal
+paper. When reading it, it seems to be more structured as a work report, a
+write up that reports on the work that was done, but does not position itself
+sufficiently in the scientific context. For instance, the connection to related
+work is only vaguely hinted at in the introduction and sec 3. But it does not
+discuss the difference with other tracing approaches in any detail. For
+instance, how does it compare from the perspective of performance,
+expressiveness, or kinds of bugs that can be detected? The introduction claims
+that the paper shows that trace expression can be used in the context of
+runtime verification, but it does not discuss limitations or benefits over
+other approaches.
+
+The actually stated contributions also seem very shallow:
+(a) complete set of examples: not a scientific contribution, though very welcome for a journal exposition
+(b) support for tracking objects and cycles in object graphs: not a scientific contribution, as far as I can see, also only explained in 2 paragraphs.
+For a contribution, I would expect that a main section is dedicated to each major contribution.
+(c) optimizations: also only sketched very shallowly, and not actually evaluated, i.e., barely any experiments done
+
+I am also not sure the chosen category for the paper is the most applicable.
+Empirical Science was chosen, but this seems more like a paper for the Engineering category.
+
+A further problem for me is the choice to position this work in the context of
+IoT. It is unclear how this work relates to IoT, and the paper does not seem to
+motivate it. This should be elaborated or removed. Because there does not seem
+to be any consideration of IoT in the design or chosen architecture. IoT
+implies for me many many small devices (possibly low computing power, possibly
+on batteries, possibly interconnected) and a few infrastructure servers. None
+of this is discussed or evident in the design.
+
+The focus on Node.js seems also restricting the wider inquiry. Node.js seems to
+be in the tradition of classic event-based systems, which have been around
+since the last millennium.
+And the world seems to be going back and forth on whether they are a good idea.
+Just one example: https://www.usenix.org/conference/hotos-ix/presentation/why-events-are-bad-idea-high-concurrency-servers
+
+
+# Other quibbles
+
+Intro:
+- "we propose trace expressions"
+  unclear, is this a claimed contribution of this work? if so, why is there a reference?
+  Is this paper supposed to be an extended write up of previous work?
+  If so, I think this should be stated explicitly.
+
+Sec. 4
+- semantics of shuffle operation is unclear to me
+  I got an intuition from the later examples, but I don't think I know what this means formally.
+
+Sec. 6
+- ordering of events:
+  You avoid synchronization but need to enforce sequence.
+  I don't understand the problem.
+  The text is not very clear to me.
+  Also, you use HTTP over TCP, so ordering should be guaranteed, no?
+  If the problem is else where, why not simply sequence-number the events?
+
+- not trivial, 350 LOC in 5 files
+  Why is this not trivial? Sounds trivial to me. So, needs perspective and explanation.
+
+- anonymous functions don't have names, that's why they are "an onoma" (without name)
+- tracking the flow is not easy: unsupported subjective judgement
+  It seems to be preferable to simply explain what needs to be done.
+
+- prototype needs to store info about tracked objects
+  Why is this relevant, what are the implications, and does this need to be discussed further?
+
+- use of Prolog and coinduction library: said 3 times or more. rather redundant
+
+
+Sec. 7
+  - unclear what kind of violations have been evaluated
+    Do the programs still work, so they can run, or do they crash?
+    The big question here is what kind of issues can the trace detect that do not lead to crashes anyway?
+
+Sec. 7.3
+- code base of considerable size
+  What are the concrete numbers? The 1000 LOC mentioned before?
+  Unclear what should be communicated here.
+  Could it be that it is considered large and representative for real world code?
+  This seems to require justification.
+
+Sec. 7.4
+  - How do you compute average number of requests per second?
+    Some people argue that this requires the harmonic mean to be meaningful.
+    https://dl.acm.org/citation.cfm?id=63043
+
+  - In the last paragraph it is unclear what exactly is measured,
+    and what is compared to. There doesn't seem to be data actually given for
+    this either.
+
+  - perhaps it would be worth considering the   
+    https://github.com/nodejs/benchmarking benchmarks for further experiments
+    Especially, the AcmeAir project seems to be a source for a larger relevant
+    system.
+
+
+- strange formulations/typos
+  - simply/trivial/etc: should be avoided, do not mean anything
+  
+  - of event trace (word missing?)
+  - On the top of events? (cut `the'?)
+  - We do not expect considerable expressivity is needed in this step, (say what? rephrase)
+  - one of the main use of Node (uses, use cases?)
+  - Node.js verifies the HTTP requirements (rephrase)
+  - creates a middleware
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 19
+TITLE: Parametric Runtime Verification of Node.js Applications with Trace Expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall evaluation: -1 (weak reject, some problems)
+
+----------- Review -----------
+This paper presents a framework for runtime monitoring of Node.js applications against behavioral specifications written in parametric trace expressions. A specification captures a set of event traces that describe expected system behavior, and a sequence of observed events generated from an instrumented program is compared against this specification for compliance. The paper also describes a set of experiments to validate the approach on complex Node.js applications.
+
+Strengths:
+* The overall approach is promising, and would be a great aid to developers in debugging subtle, hard-to-find flaws that often arise from asynchronous calls.
+* Trace expressions appear powerful enough to capture a wide range of specifications. 
+* The paper is generally well-written, with illustrative examples.
+
+Weaknesses:
+
+* The evaluation section is missing several key details on the experiments. 
+** In Section 7.2, How many test applications were used to evaluate the tool? Is the simple server example the only one used for testing? Was there any test specification or application that revealed a flaw or limitation of the tool?
+** Again, Section 7.3 is rather light on the details of the experiments. What is the size of the Express libraries that were mined for specs? How about the size of the event domain? How many Express applications were tested? It would also be helpful to see an example of a specification here.
+** The benchmarks on Express were produced on the program in Section 7.3, which is rather small. A more diverse benchmark with larger test programs would provide more convincing evidence of the scalability of the approach.
+** How well do the results of these experiments generalize to other libraries or frameworks on Node.js? Are the specs mined from Express representative of the kind of specifications that are useful for debugging Node.js? 
+** How much effort was involved in mining and developing trace specifications for http and Express?
+
+* What exactly does an application developer need to provide to use this framework? Is the instrument process for an application automatic, as long as the libraries themselves are instrumented? Who writes 350 SLOC and 1K SLOC of instrumentation code that are mentioned in Section 6 and 7?
+
+* In general, the relationship between abstract events and code-level functions being modeled is not a simple name-to-name mapping (e.g., request(id, cl) maps to http.request function with cl representing the content-length while ignoring other headers in options). Where and how is this mapping specified? 
+
+* In Section 6, anonymous functions are mentioned as one of the challenges, but the authors do not describe how they solve this issue.
+
+Minor comments:
+* References [6] and [7] seem to be duplicates.
+* In rule var-t in Figure 4, should “\sigma\tau’” be “\tau’” instead? Otherwise, what is the meaning of “\sigma\tau’”?
+* In Section 5.2, “write(id,data)” and “write(id’,cl,cl’)” are written using the same typography, but one represents an event type while the other represents an event. This is confusing as they look like the same event taking different numbers of arguments.
+* Section 6: “...though its performance are reported to be worst…” -> “though its performance is reported to be worse”
+
+Additional comment:
+* Although the paper focuses on Node.js applications, it seems that the same approach based on trace expressions could be used in other event-based frameworks (e.g., Android). A discussion on the applicability of the approach would strengthen the paper.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 19
+TITLE: Parametric Runtime Verification of Node.js Applications with Trace Expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall evaluation: 1 (weak accept, needs some revision)
+
+----------- Review -----------
+This paper is a piece of work about a run-time verification technique using traces applied to Node.js. There is both a formal system as well as an implementation. The paper shows that errors in commonly used libraries are caught and when they tried correct code it did not find false errors.
+
+My concerns include that this seems to be very incremental work - looking at earlier papers I see many of the same ideas. Much of this work has been published in the context of IoT (hence a lack of IoT content here).
+
+In the introduction I would like to see something specific of the size code used in the experiments. In Section 3 on Context your context is too broad. I would have liked the systems with runtime verification that you looked at to all be distributed. You list several under Applications which should be expanded. In section 5 I would like to understand better what these examples are. Are they actual examples from a core library, or simplified versions of provided examples or did you write them from scratch (with intentional errors). That is are the errors provided. You should have an explicit statement before 5.1. In section 7 where did the constraints that you are checking come from? Are the errors that you find known about?  I would have liked to see a table of all the experiments you ran. In section 7.4 I think you should have had more benchmark programs to run. 
+
+minor changes:
+
+change your url references that are footnotes to ordinary citations to the bibliography
+page 2
+amounts -> numbers
+is expected and it -> (just delete)
+will be -> becomes
+page 5
+into -> inside
+came -> (just delete)
+page 6
+as it is -> as is
+verification traces -> verification, traces
+page 7
+needs -> need
+to extract -> the extraction of
+page 8
+the set of traces -> the set of traces for a given system
+on files -> to files
+of event -> of an event
+page 9
+apply -> applies
+first line -> first expression (more critically you have a (3) and (4) on the next page but you did not label these expressions as (1) and (2)
+page 11
+of inference -> of an inference
+page 13
+the requirement -> a requirement
+allows -> is useful
+page 16
+generate -> generates
+instrument -> instruments
+Note that even if we strongly rely on Jalangi2, these -> These
+Remove paragraph starting with "The current" as you have said this a few pages previously.
+page 17
+performances -> performance
+optimization -> optimized (or s instead of z)
+page 18
+real -> a real
+page 19
+depend from -> depend on
+update reference 9
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 19
+TITLE: Parametric Runtime Verification of Node.js Applications with Trace Expressions
+AUTHORS: Davide Ancona, Luca Franceschini, Giorgio Delzanno, Maurizio Leotta, Marina Ribaudo and Filippo Ricca
+
+Overall evaluation: -2 (reject, serious problems)
+
+----------- Review -----------
+Summary
+
+This paper shows how trace expressions can be employed for runtime verificationns of Node.js
+applications. There is an implementation showing this for the http Node.js library.
+
+Review
+
+The  paper is well written and the topic is very relevant.
+
+However, there is a significant quantity of similar material between [9] and the current submission.
+
+The new contributions with respect to previous work, as claimed by the authors, are:
+- new examples
+- the implementation now keep track of target objects in method invocations.
+- optimization, filtering non-relevant  events and by making communication asynchronous
+- benchmarks
+
+I could find only one example (the on in Figure 6) that did not appear in previous authors work.
+Target objects appear for the first and only time on page 16 and the need to handle them seem to be related to the http library of Node.js. From the current explanation on target objects,  it is unclear what is exactly the problem or the solution with these target objects and what is exactly the  contribution regarding them (although it is clear that some extension to Jalangi2 was needed).
+
+My conclusion is that the new contributions are not sufficient or at least its importance has not been explained in the current paper as to understand why do they justify a new paper.
+
+

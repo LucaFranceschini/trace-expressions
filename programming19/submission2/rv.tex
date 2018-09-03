@@ -1,0 +1,70 @@
+\section{Runtime Verification}
+\label{sec:rv}
+\paragraph{Context}
+Historically, different approaches has been proposed to solve the problem of verifying the behavior of software systems.
+
+On one hand \emph{formal methods} have been proposed, including theorem proving \cite{itp}, a semi-automated class of techniques inspired by mathematical proofs, and model checking \cite{modelchecking}, which aims to automatically verify a suitably small model of the system against expected properties.
+These techniques have been extensively studied in the literature and are quite mature.
+However, they require either a deep theoretical knowledge or a simplified model of the system, and this may not be the case for many real-world scenarios.
+Furthermore, with runtime verification, the specification of the whole system is formalized, as opposed to less global approaches, such as type-based ones (see for instance session types \cite{sessiontypes}, or more generally behavioral types \cite{AnconaBB0CDGGGH16}) or design by contract \cite{contracts}, where specification of single parts of the system is given. Rather than functional properties of single operations,
+runtime monitoring is concerned with the verification of \emph{protocols}\footnote{Here the term \emph{protocol} is used in a more general sense, meaning all rules governing the correct use of a set of offered operations/services, independently from the presence of explicit communication primitives.} specifying the correct use of operations/services with non trivial interplay, especially when (a) such protocols cannot be effectively verified statically (b) and must be formalized in an abstract way, independently of their possible implementations.      
+On the other hand, software \emph{testing} \cite{testing} has been successfully employed in industry, to find bugs by running (part of) the system on input whose correct output is known.
+Testing proved itself useful by working on many different levels of abstraction, from unit-test of small code snippets to black-box testing of complex systems as a whole.
+
+More recently another approach to the problem has been proposed, that is, \emph{Runtime Verification} \cite{rv}.
+%as suggested by the name, consists in verifying a real run of the system against a given specification.
+First, a \emph{monitor} is attached to the system under test in order to observe all relevant events.
+The result of this is said to be a \emph{trace}, and it encodes the observed run.
+Then, the trace is verified against correctness properties expressed in a suitable formalism.
+
+\paragraph{Word Problem}
+Runtime verification is often considered a \emph{lightweight} verification technique, since it aims at analyzing only a \emph{single run} of the system, and not all the possible execution paths (as it is customary, for instance, in model checking).
+If we think of correctness properties as some set \(S\) of traces satisfying them, the problem tackled by runtime verification is clearly easier than the one solved by static techniques.
+Essentially it is a \emph{word problem} (check whether a given trace belongs to \(S\)) rather than an \emph{inclusion} problem (check whether the set of all possible traces is included in \(S\)).
+
+%TODO: c'\`e un esempio nel survey di Leucker sugli NDFA volendo: l'inclusione fra NDFA \`e PSPACE-completa ma l'appartenenza \`e NL-completa (non deterministico logaritmica), e l'inclusione fra le due classi \`e stretta. Forse per\`o \`e un po' ``hardcore''...
+
+\paragraph{Expressiveness}
+Part of the complexity comes from the expressiveness of the specification language in use, and different formalisms have been proposed,
+including regular expressions, context-free grammars with attributes \cite{de2014combining,BoerEtAl14},
+and \emph{Linear Temporal Logic (LTL)} \cite{ltl} (and its variations), a modal logic where modalities refer to time which is
+one of the most commonly used specification formalism. 
+While LTL deals with infinite traces, when doing runtime verification traces are always finite for obvious reasons.
+Nonetheless, it is useful to verify non-terminating systems: in such cases, only finite trace prefixes are available.
+In order to deal with this, \emph{LTL\textsubscript{3}} has been proposed as a three-valued LTL \cite{ltl3}, with the additional truth value encoding an inconclusive verification result.
+
+%The formalism we plan (and already started) to use, i.e., \emph{trace expressions} \cite{AnconaDM12, AnconaBB0CDGGGH16}, compares well to linear temporal logics.
+Though they are not comparable to LTL (meaning none of them is more expressive than the other), trace expressions \emph{are} more expressive than LTL\textsubscript{3} \cite{ancona2016comparing}, which is very relevant for runtime verification purposes since the formalism has explicitly been devised for that \cite{ltl3}.
+
+\paragraph{Monitoring Techniques}
+Besides specification, a crucial point of runtime verification is the monitoring part, which can either be \emph{offline} or \emph{online}.
+With the former approach, the execution is observed and, in the end, a trace is produced as a result; then it is checked against the specification.
+The latter approach can offer more possibilities, since events are observed by the monitor as soon as they occur, and the updated trace is checked in real-time.
+While this can slow down the execution, it offers some advantages.
+Not only errors are caught (almost) as soon as they manifest, but it is also possible to take \emph{recovery actions} \cite{ancona2015global} in case
+monitoring is efficient enough to be performed even after deployment.
+
+Programs implementing such behaviors have to be aware of the monitor and to interact with it.
+Different patterns and paradigms have been proposed for this, see \emph{Monitor-Oriented Programming (MOP)} \cite{mop}, a framework for runtime verification of Java programs, or \emph{Runtime Reflection} \cite{rr}, an architectural pattern designed for monitor-aware systems able to diagnose problems and mitigate issues.
+
+Another critical aspect of runtime verification systems is the generation of the monitor itself, especially since it is desirable to automatically generate them from the high-level formal specification, thus making their adoption and application easier.
+Such a monitor should avoid interfering with the program behavior as much as possible, in order for the verification to be effective.
+This is very important when the system under test has to operate in real-time, and/or when the property to be checked contains time constraints itself.
+
+\paragraph{Applications}
+Runtime verification can also be seen as a complement to more traditional approaches, like formal methods and testing, either for inherently dynamic properties that otherwise would be hard to verify, or for (safety-)critical systems that needs to be constantly checked, even \emph{after deployment} and not only during the development cycle.
+Runtime verification can be used in conjunction with testing in order to generate test cases, as shown in \cite{artho2005combining}.
+As a note, however, neither testing nor runtime verification are \emph{complete}.
+In other words, they cannot prove that a program satisfy some property for every input.
+
+Runtime verification has been successfully applied to many other contexts, including \emph{web services and applications} \cite{webservices, webapps}, \emph{multi-agent systems} \cite{AnconaDM12}, \emph{object-oriented languages} \cite{pql, javadynamic, de2014combining, BoerEtAl14} and the \emph{Internet of Things} \cite{rviot1, rviot2}.
+
+\paragraph{Node.js}
+In the context of runtime verification, we only found one work that has been applied to Node.js applications \cite{Rosenberg2016}.
+The approach is based on DTrace \cite{dtrace}, a low-level dynamic tracing framework that allows to extract a trace from a running system.
+However, there are important differences both in the implementation and in the goals.
+The monitors produces in the cited work exploit LTL \cite{ltl} as a specification formalism, thus parametric verification is not supported (i.e., we cannot use values that will be discovered at runtime in the formula), but as we show in the examples this is an important feature that increases expressiveness.
+Moreover, we chose to use a remote monitoring server which runs independently from the monitored program; on the other hand, DTrace works at a lower level, closer the system under test, thus being more efficient.
+
+\paragraph*{}
+For a more in-depth, authoritative survey of runtime verification see \cite{rv}.
