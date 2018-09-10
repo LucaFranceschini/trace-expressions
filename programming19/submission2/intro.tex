@@ -15,24 +15,24 @@ On the other hand, asynchronous programming heavily relies on the notion of call
 In reaction to an asynchronous request, a callback function is executed on the result of the corresponding operation when available.
 This, together with the non-deterministic scheduling of requests, and the dynamic nature of JavaScript itself, are challenges to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
 
-\emph{Runtime verification} \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given formal specification of the expected behavior.
+\emph{Runtime verification} (RV) \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given formal specification of the expected behavior.
 When efficiently implemented, it can even support post production release verification.
 
-As preliminary results suggest \cite{TowardsIoT17}, runtime verification can be fruitfully used to monitor Node.js systems as a complement to formal verification and testing.
+As preliminary results suggest \cite{TowardsIoT17}, RV can be fruitfully used to monitor Node.js systems as a complement to formal verification and testing.
 The approach suggested in \cite{TowardsIoT17} to implement a monitoring system for JavaScript and Node.js is based on code instrumentation, to allow suitable (and automatic) modification of the original code for appropriate reaction upon occurrences of interesting events.
 
 For specifying systems behavior we use \emph{trace expressions} \cite{ancona2016comparing}, a formalism which is more expressive than others
-commonly adopted for runtime verification, as
+commonly adopted for RV, as
 attributed context-free grammars \cite{de2014combining} and LTL\textsubscript{3} \cite{ltl3}; see \cite{AnconaFM16} for a comparison between trace expressions and linear temporal logics.
 
 Though trace expressions were initially devised to verify protocol-compliance in multi-agent systems, more recently they have been successfully
 used as a more general specification formalism \cite{ParametricJava17, TowardsIoT17} thanks to their independence from the monitored system and underlying programming language, obtained through the abstraction of event type;
-furthermore, they support \emph{parametric} verification, a key feature to increase the expressive power of the formalism and, hence, allow runtime verification of complex properties whose specification may depend on the actual values associated with events at runtime.
+furthermore, they support \emph{parametric} verification, a key feature to increase the expressive power of the formalism and, hence, allow RV of complex properties whose specification may depend on the actual values associated with events at runtime.
 
-In this work we show how trace expressions can be successfully used in the context of runtime verification for
-Node.js applications, to formally specify the correct use of the features exported by a Node.js module as
-can be derived from its documentation, and to dynamically verify such a specification.
-This is the core idea of this work and the main novelty, since (runtime) verification of Node.js has not been studied before.
+In this work we show how trace expressions can be successfully used to support RV of Node.js applications, a topic that has not
+been fully investigated yet;  to this aim, from the documentation of Node.js we have mined the constraints that have
+to be met to correctly use the functions exported by a module, and translated into trace expressions to allow RV of
+such constraints. 
 
 A corresponding prototype
 %\footnote{The implementation and a script for running all tests reported in this paper are available at \url{https://github.com/LucaFranceschini/trace-expressions}.}
@@ -51,15 +51,15 @@ a natural support to cyclic terms, needed for recursive trace expressions, and c
 programming with the \lstinline{coinduction}\footnote{\url{http://www.swi-prolog.org/pldoc/doc/_SWI_/library/coinduction.pl}.}
 module. 
 
-The tool offers a simple HTTP interface based on JSON to allow runtime verification of
+The tool offers a simple HTTP interface based on JSON to allow RV of
 distributed and heterogeneous components.
-%; in this way, the tool is ready to support runtime verification in the context of the Internet of Things.
+%; in this way, the tool is ready to support RV in the context of the Internet of Things.
 %
 To test the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used 
 in Node.js, to mine specifications expressible with trace expressions, with the aim of dynamically verifying
 the correct use of \lstinline{http} in Node.js code.
 Preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
-that our prototype tool is able to support runtime verification of real Node.js code.
+that our prototype tool is able to support RV of real Node.js code.
 
 The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summarized as follows:
 \begin{enumerate*}[label=(\alph*)]
@@ -73,11 +73,11 @@ The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summ
 
 %\vspace{-.3cm}
 \paragraph{Outline}
-\Cref{sec:node,sec:rv,sec:trace} give the necessary background and state of the art on Node.js, runtime verification and trace expressions, respectively.
+\Cref{sec:node,sec:rv,sec:trace} give the necessary background and state of the art on Node.js, RV and trace expressions, respectively.
 %\Cref{sec:node} motivates the choice of Node.js, and together with \Cref{sec:trace} they give the necessary background about Node.js and trace expressions.
-%\Cref{sec:rv} is a study of the state of the art for runtime verification techniques, while
+%\Cref{sec:rv} is a study of the state of the art for RV techniques, while
 \Cref{sec:examples} shows how the approach can help to detect bugs in Node.js programs with motivating examples.
-\Cref{sec:impl} presents the implementation of our framework for runtime verification of Node.js based on trace expressions.
+\Cref{sec:impl} presents the implementation of our framework for RV of Node.js based on trace expressions.
 \Cref{sec:exps} reports on some preliminary experiments conducted with Node.js programs based on the standard module
 \lstinline{http} and the widely adopted framework Express.
 Finally, \Cref{sec:conclu} draws conclusions and discusses future research directions.
