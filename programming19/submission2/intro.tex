@@ -1,8 +1,7 @@
 \section{Introduction}
-\emph{Node.js} is a runtime environment that allows JavaScript programs to be executed outside a browser.
-The framework gained popularity in recent years as it allows developers to successfully employ JavaScript for server-side programming.
+\emph{Node.js} is an increasingly popular runtime environment that supports server-side programming in JavaScript.
 
-At its core, Node.js is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, scheduling the request for later execution.
+At its core, it is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, non-deterministically scheduling the request for later execution.
 Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always runs on a single thread.
 This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge numbers of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with multi-threading and parallelism.
 
@@ -13,25 +12,22 @@ This asynchronous, single-thread execution model turned out to be an effective w
 %From a software engineering point of view however, Node.js has its downsides and pitfalls and poses serious challenges.
 
 On the other hand, asynchronous programming heavily relies on the notion of callback, which can lead to many levels of nested blocks and obfuscate the actual execution flow, making the code hard both to read and to debug.
-When an asynchronous request is made a callback (i.e., a function) will be executed when the result of the request will be available.
-This, together with the non-deterministic environments in which Node.js is employed, and the dynamic nature of JavaScript itself, makes it challenging to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
+In reaction to an asynchronous request, a callback function is executed on the result of the corresponding operation when available.
+This, together with the non-deterministic scheduling of requests, and the dynamic nature of JavaScript itself, are challenges to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
 
-\emph{Runtime verification} \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given (formal) specification of the expected behavior.
-When efficiently implemented, the verification process can even run after deployment in order to monitor real scenarios.
+\emph{Runtime verification} \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given formal specification of the expected behavior.
+When efficiently implemented, it can even support post production release verification.
 
 As preliminary results suggest \cite{TowardsIoT17}, runtime verification can be fruitfully used to monitor Node.js systems as a complement to formal verification and testing.
 The approach suggested in \cite{TowardsIoT17} to implement a monitoring system for JavaScript and Node.js is based on code instrumentation, to allow suitable (and automatic) modification of the original code for appropriate reaction upon occurrences of interesting events.
 
-We propose \emph{trace expressions} \cite{ancona2016comparing} as a formalism to write down formal specifications.
-They are more expressive than other formalisms commonly adopted for runtime verification, as
+For specifying systems behavior we use \emph{trace expressions} \cite{ancona2016comparing}, a formalism which is more expressive than others
+commonly adopted for runtime verification, as
 attributed context-free grammars \cite{de2014combining} and LTL\textsubscript{3} \cite{ltl3}; see \cite{AnconaFM16} for a comparison between trace expressions and linear temporal logics.
 
-Though trace expressions were initially devised to verify protocol-compliance in multi-agent systems, existing work and preliminary results show that trace expressions can be used as general specification formalism for parametric runtime verification \cite{ParametricJava17, TowardsIoT17};
-the expressive power and the algebraic properties of the underlying operators have been partially investigated \cite{ParametricJava17,ancona2016comparing}.
-Parametric verification is a key feature of trace expressions: correctness of execution may depend on the actual values associated with events at runtime.
-This makes the formalism very expressive and allows runtime verification of complex properties.
-Another interesting characteristic is their independence from the monitored system and underlying programming language,
-obtained through the abstraction of event type.
+Though trace expressions were initially devised to verify protocol-compliance in multi-agent systems, more recently they have been successfully
+used as a more general specification formalism \cite{ParametricJava17, TowardsIoT17} thanks to their independence from the monitored system and underlying programming language, obtained through the abstraction of event type;
+furthermore, they support \emph{parametric} verification, a key feature to increase the expressive power of the formalism and, hence, allow runtime verification of complex properties whose specification may depend on the actual values associated with events at runtime.
 
 In this work we show how trace expressions can be successfully used in the context of runtime verification for
 Node.js applications, to formally specify the correct use of the features exported by a Node.js module as
