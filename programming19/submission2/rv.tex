@@ -42,17 +42,17 @@ With the former approach, the execution is observed and, in the end, a trace is 
 The latter approach can offer more possibilities, since events are observed by the monitor as soon as they occur, and the updated trace is checked in real-time.
 While this can slow down the execution, it offers some advantages.
 Not only errors are caught (almost) as soon as they manifest, but it is also possible to take \emph{recovery actions} \cite{ancona2015global} in case
-monitoring is efficient enough to be performed even after deployment.
+monitoring is efficient enough to be performed even after production release.
 
 Programs implementing such behaviors have to be aware of the monitor and to interact with it.
 Different patterns and paradigms have been proposed for this, see \emph{Monitor-Oriented Programming (MOP)} \cite{mop}, a framework for runtime verification of Java programs, or \emph{Runtime Reflection} \cite{rr}, an architectural pattern designed for monitor-aware systems able to diagnose problems and mitigate issues.
 
-Another critical aspect of runtime verification systems is the generation of the monitor itself, especially since it is desirable to automatically generate them from the high-level formal specification, thus making their adoption and application easier.
+Another critical aspect of runtime verification systems is the implementation of the monitor itself, especially since it is desirable to automatically generate its code from the high-level formal specification. %%, thus making their adoption and application easier.
 Such a monitor should avoid interfering with the program behavior as much as possible, in order for the verification to be effective.
 This is very important when the system under test has to operate in real-time, and/or when the property to be checked contains time constraints itself.
 
 \paragraph{Applications}
-Runtime verification can also be seen as a complement to more traditional approaches, like formal methods and testing, either for inherently dynamic properties that otherwise would be hard to verify, or for (safety-)critical systems that needs to be constantly checked, even \emph{after deployment} and not only during the development cycle.
+Runtime verification can also be seen as a complement to more traditional approaches, like formal methods and testing, either for inherently dynamic properties that otherwise would be hard to verify, or for (safety-)critical systems that need to be constantly checked, even after production release and not only during the development cycle.
 Runtime verification can be used in conjunction with testing in order to generate test cases, as shown in \cite{artho2005combining}.
 As a note, however, neither testing nor runtime verification are \emph{complete}.
 In other words, they cannot prove that a program satisfy some property for every input.
@@ -61,10 +61,13 @@ Runtime verification has been successfully applied to many other contexts, inclu
 
 \paragraph{Node.js}
 In the context of runtime verification, we only found one work that has been applied to Node.js applications \cite{Rosenberg2016}.
-The approach is based on DTrace \cite{dtrace}, a low-level dynamic tracing framework that allows to extract a trace from a running system.
+The approach is based on DTrace \cite{dtrace}, a low-level dynamic tracing framework that allows extraction of a trace from a running system.
 However, there are important differences both in the implementation and in the goals.
-The monitors produces in the cited work exploit LTL \cite{ltl} as a specification formalism, thus parametric verification is not supported (i.e., we cannot use values that will be discovered at runtime in the formula), but as we show in the examples this is an important feature that increases expressiveness.
-Moreover, we chose to use a remote monitoring server which runs independently from the monitored program; on the other hand, DTrace works at a lower level, closer the system under test, thus being more efficient.
+The cited work exploits LTL \cite{ltl}, which, however, does not support parametric verification, while the examples
+in \Cref{sec:examples} show that this is an essential feature to verify properties of real Node.js applications.
+Moreover, we chose to use a remote monitoring server which runs independently from the monitored program, to favor interoperability and
+distribution, whereas DTrace is strongly coupled with the system under test for efficiency reasons, but it is
+less suited for verification of distributed systems. 
 
 \paragraph*{}
 For a more in-depth, authoritative survey of runtime verification see \cite{rv}.
