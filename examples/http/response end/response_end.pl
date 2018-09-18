@@ -1,23 +1,22 @@
-:- module(spec,[trace_expression/2, match/3]).
+:- module(spec,[trace_expression/2, match/2]).
 
-:- discontiguous match/3.
-:- discontiguous event/2.
+%:- discontiguous match/3.
 
 :- use_module(node(func_match)).
 
-match(unconsumed,json(O), filter) :- func_pre(json(O) , 'on' , _ , ['data'|_] , _).
-event(unconsumed, json(O)).
+match(Json, filter) :- func_pre_names(Json , ['http.createServer', 'write' , 'writeHead' , 'end']).
+match(Json, filter) :- cb_pre(Json).
 
-match(unconsumed,json(O), filter) :- func_pre(json(O) , 'on' , _ , ['end'|_] , _).
-event(unconsumed, json(O)).
+match(Json, createServer(CbId)) :- func_pre(Json , 'http.createServer', CbId, _ , _).
 
-match(unconsumed,json(O), onData(ResponseId)) :- func_pre(json(O) , 'on' , _ , ['data'|_] , ResponseId).
-event(unconsumed, json(O)).
+match(Json, write(RespId)) :- func_pre(Json , 'write' , _ , _ , RespId).
+match(Json, write(RespId)) :- func_pre(Json , 'writeHead', _ , _ , RespId). %% writeHead allowed to be called multiple times and after write
 
-match(unconsumed,json(O), onEnd(ResponseId)) :- func_pre(json(O) , 'on' , _ , ['end'|_] , ResponseId).
-event(unconsumed, json(O)).
+match(Json, end(RespId)) :- func_pre(Json , 'end', _, _, RespId).
 
+match(Json, cb_start(CbId,RespId)) :- cb_pre(Json , _ , CbId, [ _ , RespId | _ ] , _).
 
-trace_expression('unconsumed', filter >> Main) :-
-Main = var( ResponseId, (onData(ResponseId) :((((onEnd(ResponseId) :epsilon)) | Main)))),
-numbervars(Main, 0, _).
+trace_expression('response_end', Main) :-
+Main = filter >> var(cbId , createServer(var(cbId)):Start),
+Start = var(respId , cb_start(var(cbId),var(respId)):(Writes|Start)),
+Writes = (write(var(respId)):Writes) \/ (end(var(respId)):eps).
