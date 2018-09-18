@@ -38,12 +38,10 @@ log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace express
 manage_request(Request) :-
     http_read_json(Request, E),
     nb_getval(state,TE1),
-    nb_getval(traceid,ID),
     log(TE1,E),
-    (next(ID,TE1,E,TE2)->nb_setval(state,TE2),reply_json(json([error=(@false)]));reply_json(json([error=(@true)]))).
+    (next(TE1,E,TE2)->nb_setval(state,TE2),reply_json(json([error=(@false)]));reply_json(json([error=(@true)]))).
 
-exception(undefined_global_variable,state,   retry) :- trace_expression(_, TE), nb_setval(state,   TE).
-exception(undefined_global_variable,traceid, retry) :- trace_expression(ID, _), nb_setval(traceid, ID).
+exception(undefined_global_variable,state,retry) :- trace_expression(_, TE), nb_setval(state,TE).
 exception(undefined_global_variable,log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,write,Stream);Stream=null),nb_setval(log, Stream).
 
 :- server(8081).
