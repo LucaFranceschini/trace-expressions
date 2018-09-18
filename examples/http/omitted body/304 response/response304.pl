@@ -5,9 +5,6 @@
 
 :- use_module(node(func_match)).
 
-match(response304,json(O), filter) :- cb_pre(json(O) , _ , _ , _ , _).
-event(response304, json(O)).
-
 match(response304,json(O), filter) :- func_pre(json(O) , 'http.createServer' , _ , _ , _).
 event(response304, json(O)).
 
@@ -21,9 +18,6 @@ match(response304,json(O), filter) :- func_pre(json(O) , 'end' , _ , _ , _).
 event(response304, json(O)).
 
 match(response304,json(O), createServer(Id)) :- func_pre(json(O) , 'http.createServer' , Id , _ , _).
-event(response304, json(O)).
-
-match(response304,json(O), callback(Id)) :- cb_pre(json(O) , _ , Id , _ , _).
 event(response304, json(O)).
 
 match(response304,json(O), write) :- func_pre(json(O) , 'write' , _ , _ , _).
