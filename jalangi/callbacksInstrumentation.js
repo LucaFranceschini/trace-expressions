@@ -62,15 +62,15 @@ function isInSupportedModule(data) {
 }
 
 function afterFunction(data,sender) { // added sender to test async communication (Davide)
-	// check if it is a callback
-    // 	if (data.functionObject._jalangi_callId) {
-    // 		data.callId = data.functionObject._jalangi_callId;
-    // 		data.event = 'cb_post';
-    // 	}
-    // 	else
-    // 		data.event = 'func_post';
+//	check if it is a callback
+    	if (data.functionObject._jalangi_callId) {
+    		data.callId = data.functionObject._jalangi_callId;
+    		data.event = 'cb_post';
+    	}
+    	else
+    		data.event = 'func_post';
 	
-    // monitor.sendEvent(data,sender); // added sender to test async communication (Davide)
+    monitor.sendEvent(data,sender); // added sender to test async communication (Davide)
 	
 	return data;
 }
