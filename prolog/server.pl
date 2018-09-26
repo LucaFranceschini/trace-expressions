@@ -33,7 +33,7 @@ server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]).
 
 %TODO better way than using globals with exceptions?
 
-log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, '');true.
+log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, ''),flush_output(Stream);true.
 
 manage_request(Request) :-
     http_read_json(Request, E),
