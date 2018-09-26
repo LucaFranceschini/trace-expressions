@@ -1,93 +1,58 @@
 \section{Monitoring Examples}
 \label{sec:examples}
-\subsection{File System}
-The \lstinline{fs} standard module for Node.js deals with the file system, and its typical uses are good examples of code that would benefit from runtime verification techniques.
+\subsection{Web Request Finalization}
+The \lstinline{http} Node.js module exposes a complete API for HTTP clients and servers, and its typical uses are good examples of code that would benefit from runtime verification techniques.
 
-Consider the snippet in \Cref{lst:fs}, writing to a file all numbers from \lstinline{0} to the constant \lstinline{LIMIT} (the \lstinline{**} operator stands for exponentiation).
-As it is customary in Node.js, all I/O operations are asynchronous, starting from the \lstinline{open} function which, upon completion, will execute the callback \lstinline!(err, fd) => { ... }!.
-The convention in Node.js is to pass errors (if any) to callbacks as first argument.
-\lstinline{fd} is the file descriptor of the opened file.
+Consider the snippet in \Cref{lst:end}: a HTTP server is created, and the given callback \lstinline|(req, res) => { ... }| defines its behavior, namely, it replies to every request with a response code \lstinline{200} and the content \lstinline{'okay'}.
+The anonymous function will be invoked everytime a request is received from a client.
 
 \begin{figure}[h]
-	\begin{lstlisting}
-		const fs = require('fs');
-		const LIMIT = 2**8;
-		fs.open('tmp.txt', 'w', (err, fd) => {
-			if (!err)
-			for (let i=0; i<LIMIT; i++)
-				fs.write(fd, i+'\n', () => {});
-			fs.close(fd, () => console.log('bye'));
-		});
-	\end{lstlisting}
-	\caption{An example of \emph{incorrect} usage of the Node.js \lstinline{fs} module.}
-	\label{lst:fs}
+\begin{lstlisting}
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.write('okay');
+	// res.end() call missing
+});
+server.listen(80);
+\end{lstlisting}
+\caption{An example of \emph{incorrect} usage of the Node.js \lstinline{http} module.}
+\label{lst:end}
 \end{figure}
 
-The core of the program is a simple loop making a write request (with an empty callback, \lstinline!() => {}!) for each number.
-After that, a request to close the file is generated, and a callback printing \lstinline{'bye'} is provided.
-
-While the code may look fine to someone not familiar with asynchronous I/O and Node.js, it is actually flawed, but it will work up to considerable values of \lstinline{LIMIT}.
-Depending on the Node.js implementation and the hardware resources, the code will fatally crash with some memory error if the number gets too high, though the amount of used memory is expected to be constant.
-
-From the documentation, it turns out that a second write to the same file should only be called \emph{after} the callback of the previous one has been called.
-This constraint however is not checked by the library for performance reasons.
-
-Recalling the event-loop mechanism previously presented, first \emph{all} the asynchronous \lstinline{write} requests will be queued, and only \emph{after} this they will be fulfilled.
-This explains the documented requirement and gives a possible cause for the error: the asynchronous I/O queue will grow linearly with \lstinline{LIMIT}.
-There are two more problems with the code above: first, the numbers can be written in any order, since there is no guarantee about asynchronous operations execution; second, \lstinline{fs.close} should be called after all the write operations are completed and their callbacks are called.
+It is possible for the server to send multiple chunks of data calling \lstinline{write}.
+After that, the documentation \emph{requires} the programmer to call method \lstinline{end} to finalize the response.
+The code above, however, fails to do that, making the client stuck waiting for the end of the response.
+This constraint is not enforced by the library itself, and thus developers have to remember to call the \lstinline{end} method.
 
 Trace expressions can be used to formally specify (and later verify) the requirement.
-Consider for instance the following domain (in this simple case, events and event types coincides):
-$ \eventSet = \{ \opent, \writet, \cbt, \closet \}.$
+Consider for instance the following event domain:
+\[ \eventSet = \bigcup_{\idcb,\idres \in \mathbb{N}} \{\createt(\idcb), \cbt(\idcb, \idres), \writet(\idres), \myend(\idres) \} \]
 
-A trace expression specifying the correct order of operations would then be:
-$$
-\tau = \emptyseq \orop (\opent \prefixop \cbt \prefixop \tau')\qquad
-\tau' = (\writet \prefixop \cbt \prefixop \tau') \orop (\closet \prefixop \cbt \prefixop \emptyseq)
-$$
-Note that the recursive occurrence of \(\tau'\) is guarded by a \(\writet\) and a \(\cbt\), thus forcing them to be alternating.
+The four events above encodes calls to \lstinline{http.createServer}, the callback, \lstinline{res.write} and \lstinline{res.end}, respectively.
+Every relevant objects has an associated unique identifier, both the callbacks and the response objects: this is needed in order to correctly match them.
 
-The code snippet we discussed would not satisfy the trace expression \emph{as soon as the second write is called}, thus it will not be necessary to reach some system-dependent high number of requests for the bug to be detected.
+We define event types to be event terms over a set of variables \vars used as placeholders for request identifiers (the match will simply compute the appropriate substitution):
+\[ \vars = \{ \avar{id_1}, \avar{id_2}, \dotsc \}\qquad
+\mathcal{ET} = \bigcup_{\xv,\xv' \in \vars} \{\createt(\xv), \cbt(\xv, \xv'), \writet(\xv), \myend(\xv) \} \]
 
-Assuming the monitor can match asynchronous requests and their callbacks (for instance by generating a unique identifier for each request), a more precise specification would also be able to check that the correct callbacks are called.
-Then events will include this new information:
-$\eventSet = \bigcup_{\id \in \mathbb{N}} \{\opent(\id), \writet(\id), \closet(\id), \cbt(\id) \}.$
+Finally, the parametric trace expressions formalizing the expected trace of events follows:
+\begin{align*}
+	\tau &= \var{\idcb{}}{\createt(\idcb{}) \prefixop \tau_{cb}}\\
+	\tau_{cb} &= \var{\idres{}}{\cbt(\idcb, \idres) \prefixop (\tau_w \shuffleop \tau_{cb})}\\
+	\tau_w &= (\writet(\idres) \prefixop \tau_w) \orop (\myend(\idres) \prefixop \epsilon)
+\end{align*}
 
-This time, however, parametric runtime verification is needed, and variables and event types are required.
-We define event types to be event terms over a set of variables \(\vars\) used as placeholders for request identifiers (the \(\mtch\) will simply compute the appropriate substitution):
-$$
-\vars = \{ \avar{id_1}, \avar{id_2}, \dotsc \}\qquad
-\mathcal{ET} = \bigcup_{\xv \in \vars} \{\opent(\xv), \writet(\xv), \closet(\xv), \cbt(\xv) \}
-$$
+The trace must start with a \(\createt\) event, which also allows to store the identity of the the callback.
+Then, once the callback is actually invoked, the identifier of the response object is known and it can later be used to match against subsequent \lstinline|write| and \lstinline|end| calls.
 
-Finally, the parametric trace expression is given (\(\tau\), \(\tau_w\) and \(\tau_c\) deal with opening, writing to and closing the file, respectively):
-$$
-\begin{array}{l}
-\tau = \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop \cbt(\avar{id_1}) \prefixop \tau_w}\qquad
-\tau_c = \var{id_3}{\closet(\avar{id_3}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}\\
-\tau_w = \var{id_2}{\writet(\avar{id_2}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c
-\end{array}
-$$
-Note that different variable names are only used for the sake of clarity, even if using the same variable in every binder would work since trace expression semantics correctly handles the shadowing of variables in nested scopes.
+The use of the shuffle operator is crucial: it allows different requests to be handled concurrently, as this can happen when asynchronous computation is performed.
 
-Identifiers are crucial to match asynchronous operations with their callbacks: after event \(\opent(\avar{id}_i)\) occurs, meaning an asynchronous call to \lstinline|open| has been made and a callback for it has been registered, event \(\cbt(\avar{id}_i)\) will occur when \emph{that} callback will be executed.
-
-The trace expressions above are limited to a single file.
-If monitoring a collection of concurrently modified files is required, more parameters are necessary, since the monitor needs to track functions arguments\footnote{For the sake of brevity, from now on we will omit the explicit definition of the employed event domains.} in order to retrieve file descriptors:
-%(from this point, event and event types will not be explicitly written anymore):
-$$
-\begin{array}{l}
-\tau = \emptyseq \orop \var{id_1}{\opent(\avar{id_1}) \prefixop (\tau' \shuffleop \tau)}\qquad
-\tau_w = \var{id_2}{\writet(\avar{id_2}, \avar{fd}) \prefixop \cbt(\avar{id_2}) \prefixop \tau_w} \orop \tau_c\\
-\tau' = \var{fd}{\cbt(\avar{id_1}, \avar{fd}) \prefixop \tau_w}\qquad
-\tau_c = \var{id_3}{\closet(\avar{id_3}, \avar{fd}) \prefixop \cbt(\avar{id_3}) \prefixop \emptyseq}
-\end{array}
-$$
-The shuffle operator allows to concurrently monitor the use of the opened file as well as other files.
-
-\subsection{Web Requests}
+\subsection{Web Requests Length}
 \label{sec:web-req}
 Recalling the web server presented in \Cref{lst:http}, let us consider the (buggy) web client in \Cref{lst:client}, where seven bytes of data are sent (\lstinline{'hey!'}, \lstinline{'bye'}) but ten are declared in the \lstinline{'content-length'} field.
+\lstinline{http.request} is an asynchronous operation that schedules the callback \lstinline!res => { ... }! for execution upon receivement of response.
+Such callback will simply print the content of the message.
 
 \begin{figure}[h]
 \begin{lstlisting}
@@ -113,11 +78,9 @@ However, it will not be called since the server will be waiting for more data, a
 
 The \lstinline{'content-length'} is \emph{not} checked by the Node.js runtime against the actual length of the content, as it is clearly stated in the documentation.
 Trace expressions can be used again to specify the correct behavior.
-
 The monitor needs to observe the creation of the \lstinline{ClientRequest} object returned by function \lstinline{http.request} as well as the use of its methods \lstinline{write} and \lstinline{end}.
-This time the focus is not on the order but rather on the arguments of functions.
 
-The event domain will include all relevant information:
+Consider for instance the following event domain:
 \[ \eventSet = \bigcup_{\begin{array}{rcl}\data&\in&\mathbb{B}^*\\\cl,\id &\in& \mathbb{N}\end{array}} \{ \req(\id,\cl), \writet(\id, \data), \myend(\id, \data) \} \]
 All operations are associated with a unique request identifier (at the Node.js level, this corresponds to the \lstinline{ClientRequest} object), furthermore the request is associated with the declared \lstinline{'content-length'} \(\cl\), while \(\writet\) (and \(\myend\)) are associated with \(\data\),
 the sequence of bytes being sent.
@@ -162,6 +125,8 @@ The event types above have the following semantics:
 \item \(\writet(\avar{id}, \avar{cl}, \avar{cl'})\): \lstinline{write} method has been invoked on request \(\avar{id}\), with \(\avar{cl}\) bytes still to send, and after the invocation the amount of missing data is \(\avar{cl'}\);
 \item \(\myend(\avar{id}, \avar{cl})\): \lstinline{end} has been invoked on request \(\avar{id}\), and the last \(\avar{cl}\) bytes are sent (besides finishing the request, \lstinline{end} can also send a final chunk of data).
 \end{itemize}
+
+Note that recursive occurrences are guarded by \(\writet\), thus forcing them to be alternating.
 
 The shuffle operator, together with the unique identifier of each request, allows monitoring of multiple concurrent requests.
 This is similar to the previous example on files.
