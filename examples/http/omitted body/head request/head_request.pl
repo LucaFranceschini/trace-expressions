@@ -1,26 +1,16 @@
-:- module(spec,[trace_expression/2, match/3]).
-
-:- discontiguous match/3.
-:- discontiguous event/2.
+:- module(spec,[trace_expression/2, match/2]).
 
 :- use_module(node(func_match)).
 
-match(head_request,json(O), filter) :- func_pre_name(json(O) , 'end').
-event(head_request, json(O)).
+match(Json, filter) :- func_pre_name(Json , 'end').
 
-match(head_request,json(O), filter) :- func_post_name(json(O) , 'http.request').
-event(head_request, json(O)).
+match(Json, filter) :- func_post_name(Json , 'http.request').
 
-match(head_request,json(O), request(ReqId)) :- func_post(json(O) , 'http.request' , [json(Options)|_] , _ , ReqId) , member(method = 'HEAD' , Options).
-event(head_request, json(O)).
+match(Json, request(ReqId)) :- func_post(Json , 'http.request' , [json(Options)|_] , _ , ReqId) , member(method = 'HEAD' , Options).
 
-match(head_request,json(O), endWithoutData(ReqId)) :- func_pre(json(O) , 'end' , _ , [] , ReqId).
-event(head_request, json(O)).
+match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , _ , ReqId).
 
-match(head_request,json(O), endWithoutData(ReqId)) :- func_pre(json(O) , 'end' , _ , [MaybeChunk|_] , ReqId) , not(string_chars(MaybeChunk , _)).
-event(head_request, json(O)).
-
+match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [MaybeChunk|_] , ReqId) , not(string_chars(MaybeChunk , _)).
 
 trace_expression('head_request', Main) :-
-Main = (filter >> var( ReqId, (request(ReqId) :((((endWithoutData(ReqId) :epsilon)) | Main))))),
-numbervars(Main, 0, _).
+Main = filter>>T, T = var( reqId, (request(var(reqId)) :((((endWithoutData(var(reqId)) :eps)) | T)))).
