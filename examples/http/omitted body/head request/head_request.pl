@@ -8,9 +8,11 @@ match(Json, filter) :- func_post_name(Json , 'http.request').
 
 match(Json, request(ReqId)) :- func_post(Json , 'http.request' , [json(Options)|_] , _ , ReqId) , member(method = 'HEAD' , Options).
 
-match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , _ , ReqId).
+match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [] , ReqId).
 
-match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [MaybeChunk|_] , ReqId) , not(string_chars(MaybeChunk , _)).
+match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [@null] , ReqId).
+
+%%match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [MaybeChunk|_] , ReqId) , not(string_chars(MaybeChunk , _)).
 
 trace_expression('head_request', Main) :-
 Main = filter>>T, T = var( reqId, (request(var(reqId)) :((((endWithoutData(var(reqId)) :eps)) | T)))).
