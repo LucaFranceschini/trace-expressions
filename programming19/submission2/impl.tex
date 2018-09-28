@@ -1,6 +1,21 @@
 \section{Implementation}
 \label{sec:impl}
-We have chosen to implement a monitoring system for Node.js based on \emph{code instrumentation}.
+We have implemented a monitoring system for Node.js consisting of two main components, as depicted in \Cref{fig:arch}.
+
+\begin{figure}
+\centering\includegraphics[width=.7\textwidth]{fig/diagram}
+\caption{Monitoring architecture for Node.js exploiting SWI-Prolog server with an HTTP interface.}
+\label{fig:arch}
+\end{figure}
+
+One has been developed in JavaScript and is responsible for emitting through \emph{code instrumentation} all relevant events that have to be monitored
+at runtime, while the other consists of an HTTP server written in SWI-Prolog which receives all monitored events as requests in
+JSON format, and checks them against a specification defined by imported Prolog components corresponding to the used event domain and trace
+expression. Implementation through an HTTP server allows high decoupling of the monitored system from the monitor, thus
+favoring interoperability, and runtime verification of distributed systems.
+
+%% Further details on the approach and the implementation with Jalangi2 can be found in the related paper \cite{TowardsIoT17}.
+
 The core idea is to modify the original source code of the program to be monitored in a way that allows observation of relevant events.
 Once an event is observed, the monitor can verify it against the specification, eventually acting in case of erroneous behavior.
 
@@ -34,13 +49,6 @@ We are currently looking at proxy-based alternative approaches based on reflecti
 
 The current implementation of trace expression semantics is coded in SWI-Prolog, since logic programming is a natural fit for inference rules and transition systems, and cyclic terms are supported by the \texttt{coinduction} library \cite{CoLP06}.
 
-Our monitoring system has two main parts.
-On one hand, an instrumented Node.js program is executed, and the additional code observes relevant events.
-On the other hand, a Prolog server encoding the trace expression specification is running and validating events.
-These two parts communicate through a HTTP interface, and events are exchanged in the JSON format.
-The architecture is represented in \Cref{fig:arch}.
-Further details on the approach and the implementation with Jalangi2 can be found in the related paper \cite{TowardsIoT17}.
-
 Though JSON is a natural fit for JavaScript objects serialization, some important aspects need to be handled.
 Objects containing circular references, for instance, are quite common in Node.js modules, but they cannot be encoded in JSON, and the JavaScript standard library serialization (\lstinline|JSON.stringify|) throws an error on such objects.
 Furthermore, JavaScript supports getters, which are special functions invoked when a property is accessed.
@@ -68,10 +76,4 @@ which are relevant for the verification.
 %% This work is a preliminary step towards runtime verification of Internet of Things applications,
 %% both because Node.js is emerging as a standard framework for IoT development, and the implementation through an HTTP
 %% server offers a natural support to verification of distributed systems, where (instrumented) devices can send events to a monitoring server.
-
-\begin{figure}
-\centering\includegraphics[width=.7\textwidth]{fig/diagram}
-\caption{Monitoring architecture for Node.js exploiting SWI-Prolog server with an HTTP interface.}
-\label{fig:arch}
-\end{figure}
 

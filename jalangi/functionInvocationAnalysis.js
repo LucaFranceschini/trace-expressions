@@ -24,7 +24,6 @@
  * @author  Koushik Sen
  *
  */
-
 (function (sandbox) {
     /**
      * <p>
@@ -99,6 +98,9 @@
      * @class
      */
     function MyAnalysis() {
+	// to deal with --initParam (Davide)
+	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post) 
+	
 	// test for async comunication (Davide)
 	const cp = require('child_process')
 	const sender=cp.fork(__dirname + '/send_to_monitor.js')

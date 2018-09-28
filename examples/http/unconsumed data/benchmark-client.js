@@ -17,20 +17,26 @@ let time0
 let requests=0
 
 /* ignores server response */ 
-function request(){
-    let req=http.request(options)
+function request(i){
+    let req=http.request(options, res => {
+	console.log(`STATUS #${i}: ${res.statusCode}`);
+	res.on('data', chunk => {});
+	res.on('end', () => {
+	    console.log(`No more data in response #${i}.`);
+	});
+    })
     req.end(() => {
 	requests++
 	if(requests<max_requests)
-	    setTimeout(request,0)
+	    setTimeout(()=>request(i+1),0)
 	else {
 	    let time=(Date.now()-time0)/1000
 	    console.log(`Requests: ${requests} Time (sec):${time} RPS: ${max_requests/time}`)
 	    process.exit()
 	}
     })
-    req.on('error', e => console.error(e.message))
+    req.on('error', e => console.error(`problem with request #${i}: ${e.message}`))
 }
 
 time0=Date.now()
-request()
+request(1)
