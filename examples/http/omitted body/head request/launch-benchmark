@@ -1,6 +1,6 @@
 #! /bin/bash
 DIR=../../../..
-gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/omitted\ body/head\ request/head_request.pl log.txt"
+gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/omitted\ body/head\ request/head_request.pl"
 for i in `seq 1 10`
 do 
     sleep 5
