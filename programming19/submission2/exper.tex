@@ -2,14 +2,12 @@
 \label{sec:exps}
 
 In this section we report on our preliminary experiments conducted with the prototype tool
-whose implementation has been described in \Cref{sec:impl}. All these experiments can be
-easily reproduced by downloading our project at \url{http://www.disi.unige.it/person/AnconaD/\toolName}.
+whose implementation has been described in \Cref{sec:impl}. All these experiments can be reproduced by downloading our project at \url{http://www.disi.unige.it/person/AnconaD/\toolName}.
 
 Since one of the main use of Node.js is the development of Web applications,
 we have focused on runtime verification of code based on the \lstinline{http} module.
 
-First, the documentation of the module\footnote{Available at \url{https://nodejs.org/api/http.html}.} has been inspected  
-with the purpose of mining specifications of the features provided by \lstinline{http}.
+First, the documentation of the module\footnote{Available at \url{https://nodejs.org/api/http.html}.} has been inspected with the purpose of mining specifications of the features provided by \lstinline{http}.
 Several of them can be easily translated in corresponding trace expressions
 that have been employed in our tool to automatically monitor correct use of the \lstinline{http}
 module by client code.
@@ -28,7 +26,7 @@ Then, at a second stage, the tool has been experimented with real and widely use
 To this aim, the Web application framework Express\footnote{See \url{https://expressjs.com/}.} has been
 selected for our test: it offers a large number of HTTP utility methods and middleware functions for more rapid, efficient
 and robust development of HTTP APIs, and, for these reasons, several popular Node.js frameworks and Node.js Web applications
-are built on top of it. 
+are built on top of it.
 
 \subsection{Mining Specifications from the \lstinline{http} Module Documentation}\label{sec:spec-minining}
 
@@ -63,19 +61,14 @@ In the second case, the trace expression which is used for checking the correct 
 Besides the two properties discussed above, the following four additional specifications have been mined from
 the documentation and expressed with corresponding trace expressions:
 \begin{itemize}
-\item \textbf{omitted body}: depending on the request received by the client or the response sent by the server, there are cases when the response must not
-  contain a body, hence
-  a server which tries to include a body in such situations does not behave correctly. The different cases require
-  different treatments and trace expressions, as follows:
-  \begin{itemize}
-  \item \textbf{HEAD request}: when the method of the request sent by the client is HEAD;
-  \item \textbf{204 response}: when the response of the server has status code 204 (no content);
-  \item \textbf{304 response}: when the method of the request sent by the client is a conditional GET and access is allowed, and the response
-    server has status code 304 (not modified) because the requested document has not been modified.
-  \end{itemize}
-\item \textbf{write head}: the method \lstinline{writeHead} to write the head of a server response must only be called once on a message and it must happen before
-  the method \lstinline{end} is called to signal to the server that the response is complete. If this rule is not followed, then
-  a default header, most likely different from the intended one, is written in the response.
+	\item \textbf{omitted body}: depending on the request received by the client or the response sent by the server, there are cases when the response must not contain a body, hence a server which tries to include a body in such situations does not behave correctly. The different cases require different treatments and trace expressions, as follows:
+	\begin{itemize}
+	  \item \textbf{HEAD request}: when the method of the request sent by the client is HEAD;
+		\[ \tau = \var{\id}{\req(\id) \prefixop ((\mathit{endWithoutData}(\id) \prefixop \epsilon) \shuffleop \tau)} \]
+	  \item \textbf{204 response}: when the response of the server has status code 204 (no content);
+	  \item \textbf{304 response}: when the method of the request sent by the client is a conditional GET and access is allowed, and the response server has status code 304 (not modified) because the requested document has not been modified.
+	\end{itemize}
+	\item \textbf{write head}: the method \lstinline{writeHead} to write the head of a server response must only be called once on a message and it must happen before the method \lstinline{end} is called to signal to the server that the response is complete. If this rule is not followed, then a default header, most likely different from the intended one, is written in the response.
 \end{itemize}
 While some of the mined specifications directly depend from the specific implementation of \lstinline{http}, others
 are more related to the specification of the HTTP protocol; indeed, other trace expressions could be mined by looking at the
@@ -88,7 +81,7 @@ The tool has been tested with the trace expressions of the specifications presen
 runtime verification of simple servers/clients implemented in Node.js.
 For all specifications both correct and incorrect code has been developed, to verify the absence of both false negatives and positives.
 
-Consider for instance the last specification presented in \Cref{sec:spec-minining}: 
+Consider for instance the last specification presented in \Cref{sec:spec-minining}:
 the header of a server response must be written before calling the \lstinline{end} method which finalizes the response.
 
 A very simple server verifying the specification is the following one:
@@ -161,7 +154,7 @@ request enters the middleware to when the headers are written out to the client.
 The  \lstinline{serve-static} middleware serves files from within a given root directory (in this case, the same directory
 from which the server has been launched), while \lstinline{serve-index} serves an index (with displayed icons in this case)
 of the directory of the server based off the URL value of the request. In practice, the server allows inspection of the directory
-from which it has been launched, included all its subdirectories, and downloading of all files rooted at it. 
+from which it has been launched, included all its subdirectories, and downloading of all files rooted at it.
 
 Finally, the last call \lstinline{app.get} deals with the case when no directory or file could be found.
 The tool has been tested with the server above, and a Node.js client sending requests with random  paths based on its root directory at the frequency of three requests per second.
