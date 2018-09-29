@@ -21,21 +21,29 @@ favor interoperability, and runtime verification of distributed systems.
 We have employed \emph{Jalangi2} \cite{jalangi}, a mature tool supporting instrumentation with 
 % gia' linkato nelle prime pagine
 %\footnote{\url{https://github.com/Samsung/jalangi2}} \cite{jalangi}
-arbitrary code which can be placed before any main JavaScript operation: access to fields, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a field access.
+arbitrary code which can be inserted right before or after any main JavaScript operation: access to properties, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a property access.
 The tool allows for state-of-the-art performance in the context of code instrumentation for dynamic analysis.
 To the best of our knowledge, the most similar tool is Linvail \cite{linvail}, though its performance are reported to be worst by an order of magnitude (w.r.t.\ the overhead).
 
-Thanks to these features it is possible to determine when asynchronous calls and their callbacks are executed, as well as matching them.
-However, implementing a prototype for Node.js runtime verification is not trivial; the instrumentation we had to implement
-consists of more than 350 SLOC distributed over five files, and was required to address the following issues:
+Despite the flexibility of Jalangi2, instrumenting code to determine when asynchronous calls and their callbacks are executed and to send the corresponding events in form of an HTTP request was a challenging task, that required to develop more than 450 SLOC of non trivial JavaScript code, to tackle
+several issues, among which the following ones are the most significant:
+
 \begin{itemize}
-\item Anonymous functions are extremely common in JavaScript, thus function names are not a reliable way to identify them.
-\item Matching asynchronous functions with their callback needs some bookkeeping: the same asynchronous function can be used multiple times with different arguments and callbacks, and vice versa.
-In order to deal with this problem, our prototype dynamically wraps callbacks \emph{at runtime} and generate a unique identifier for each one of them.
-\item The prototype only tracks (i.e., instrument) the program, but does not directly interact with the Node.js runtime.
-Since the execution goes back and forth between the event loop and the program, tracking the flow is not easy.
-Still, our prototype is able to track all the calls, taking into account either the call site (when calling library functions) or the the instrumented body of the function being called (when callbacks are executed by the event loop).
-Some non-trivial bookkeeping is needed in order to implement this, in order to avoid producing duplicate events when both information are available, that is, when the program is directly calling one of its functions.
+\item Anonymous and arrow functions are extremely common in JavaScript and Node.js applications, and the information about their name
+  provided by Jalangi2 for function calls is completely  useless, hence we had to implement from scratch a reliable mechanism to identify them.
+\item Jalangi2 does not provide any mechanism for coupling asynchronous function calls with their callbacks, a feature which is
+  necessary to allow RV to detect undesired non-deterministic behavior due to the invalid use of asynchronous operations, as shown in
+  \Cref{sec:examples}. %% the same asynchronous function can be used multiple times with different arguments and callbacks, and vice versa.
+To this aim, the instrumentation we have implemented dynamically wraps callbacks \emph{at runtime} and generate a unique identifier for each one of them.
+\item Jalangi2 allows insertion of instrumented code for function calls at four different sites: before and after a function call (caller site), 
+  before the execution of a function body starts, and after the execution of a function body completes (callee site). Since
+  events are tracked through code instrumentation, all four kinds of sites are useful; in particular, for library functions that cannot be
+  instrumented (either because they are not implemented in JavaScript, or because this would imply a severe performance penalty)  the caller sites
+  are used when calls to library functions have to be monitored, while the callee sites are useful to track calls to callbacks that are passed to
+  library functions.
+
+  This flexibility comes at a cost when monitoring functions of the program to be analyzed, since their bodies are subject to instrumentation; in this case the inserted code both at the caller and callee site is executed, and, hence, two duplicate events would be generated as HTTP client requests, and sent to the monitoring Prolog server; to this aim,
+  the instrumentation we have implemented to support RV keeps track of all kinds of function calls, to avoid such a duplication.
 \item Many different patterns arise in Node.js programming, and they need complex code instrumentation.
 For instance, the file system module functions expect a file descriptor as an argument, while HTTP requests are handled through methods invoked on objects encoding the requests.
 Jalangi2 partially solves this problem by exposing all relevant metadata, including the function to be called, the target object (in case of method invocation), the arguments and the return value.
