@@ -3,26 +3,25 @@
 We have implemented a monitoring system for Node.js consisting of two main components, as depicted in \Cref{fig:arch}.
 
 \begin{figure}
-\centering\includegraphics[width=.7\textwidth]{fig/diagram}
+\centering\includegraphics[width=.8\textwidth]{fig/architecture}
 \caption{Monitoring architecture for Node.js exploiting SWI-Prolog server with an HTTP interface.}
 \label{fig:arch}
 \end{figure}
 
-One has been developed in JavaScript and is responsible for emitting through \emph{code instrumentation} all relevant events that have to be monitored
-at runtime, while the other consists of an HTTP server written in SWI-Prolog which receives all monitored events as requests in
-JSON format, and checks them against a specification defined by imported Prolog components corresponding to the used event domain and trace
-expression. Implementation through an HTTP server allows high decoupling of the monitored system from the monitor, thus
-favoring interoperability, and runtime verification of distributed systems.
+The component on the left-hand-side has been developed in JavaScript and is responsible for emitting through \emph{code instrumentation} all relevant events that have to be monitored
+at runtime, while the other on the right-hand-side consists of an HTTP server, written in SWI-Prolog, which receives from the instrumented code all monitored events in form of HTTP requests in JSON format, and checks them against a specification consisting of Prolog components defining the used event domain and trace expression; in case the server detects an error because the received event does not meet the specification, it sends back details about the failure in response to the client. Implementation through an HTTP server allows decoupling of the monitored system from the monitor, and
+favor interoperability, and runtime verification of distributed systems.
 
 %% Further details on the approach and the implementation with Jalangi2 can be found in the related paper \cite{TowardsIoT17}.
 
-The core idea is to modify the original source code of the program to be monitored in a way that allows observation of relevant events.
-Once an event is observed, the monitor can verify it against the specification, eventually acting in case of erroneous behavior.
+%% The core idea is to modify the original source code of the program to be monitored in a way that allows observation of relevant events.
+%% Once an event is observed, the monitor can verify it against the specification, eventually acting in case of erroneous behavior.
 
-The tool we have employed is \emph{Jalangi2} \cite{jalangi}.
+\subsection*{Instrumentation}
+We have employed \emph{Jalangi2} \cite{jalangi}, a mature tool supporting instrumentation with 
 % gia' linkato nelle prime pagine
 %\footnote{\url{https://github.com/Samsung/jalangi2}} \cite{jalangi}
-It allows addition of arbitrary code before and after basically every JavaScript operation: access to fields, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a field access.
+arbitrary code which can be placed before any main JavaScript operation: access to fields, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a field access.
 The tool allows for state-of-the-art performance in the context of code instrumentation for dynamic analysis.
 To the best of our knowledge, the most similar tool is Linvail \cite{linvail}, though its performance are reported to be worst by an order of magnitude (w.r.t.\ the overhead).
 
