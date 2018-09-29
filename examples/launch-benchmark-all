@@ -4,6 +4,6 @@ IFS=$'\n'
 for d in `find . -name $BENCH -printf "%h\n"`
 do
     cd $d
-    ./$BENCH 1
+    ./$BENCH 100000
     cd -
 done
