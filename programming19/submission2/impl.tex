@@ -35,14 +35,14 @@ several issues, among which the following ones are the most significant:
   necessary to allow RV to detect undesired non-deterministic behavior due to the invalid use of asynchronous operations, as shown in
   \Cref{sec:examples}. %% the same asynchronous function can be used multiple times with different arguments and callbacks, and vice versa.
 To this aim, the instrumentation we have implemented dynamically wraps callbacks \emph{at runtime} and generate a unique identifier for each one of them.
-\item Jalangi2 allows insertion of instrumented code for function calls at four different sites: before and after a function call (caller site), 
-  before the execution of a function body starts, and after the execution of a function body completes (callee site). Since
-  events are tracked through code instrumentation, all four kinds of sites are useful; in particular, for library functions that cannot be
-  instrumented (either because they are not implemented in JavaScript, or because this would imply a severe performance penalty)  the caller sites
+\item Jalangi2 allows insertion of instrumented code for function calls at four different sites: before and after a function call (caller sites), 
+  before the execution of a function body starts, and after the execution of a function body completes (callee sites). Since
+  events are tracked through code instrumentation, all four kinds of sites are useful for library functions that cannot be
+  instrumented (either because they are not implemented in JavaScript, or because this would imply a severe performance penalty):  the caller sites
   are used when calls to library functions have to be monitored, while the callee sites are useful to track calls to callbacks that are passed to
   library functions.
 
-  This flexibility comes at a cost when monitoring functions of the program to be analyzed, since their bodies are subject to instrumentation; in this case the inserted code both at the caller and callee site is executed, and, hence, two duplicate events would be generated as HTTP client requests, and sent to the monitoring Prolog server; to this aim,
+  This flexibility comes at a cost when monitoring functions of the program to be analyzed; since their bodies are subject to instrumentation, two duplicate events would be generated as HTTP client requests sent to the monitoring Prolog server. To this aim,
   the instrumentation we have implemented to support RV keeps track of all kinds of function calls, to avoid such a duplication.
 \item Many different patterns arise in Node.js programming, and they need complex code instrumentation.
 For instance, the file system module functions expect a file descriptor as an argument, while HTTP requests are handled through methods invoked on objects encoding the requests.
