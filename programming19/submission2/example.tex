@@ -12,8 +12,7 @@ const http = require('http');
 const server = http.createServer((req, res) => {
   res.writeHead(200);
   res.write('okay');
-	// res.end() call missing
-});
+}); // res.end() call missing
 server.listen(80);
 \end{lstlisting}
 \caption{An example of \emph{incorrect} usage of the Node.js \lstinline{http} module.}
@@ -37,11 +36,11 @@ We define event types to be event terms over a set of variables \vars used as pl
 \mathcal{ET} = \bigcup_{\xv,\xv' \in \vars} \{\createt(\xv), \cbt(\xv, \xv'), \writet(\xv), \myend(\xv) \} \]
 
 Finally, the parametric trace expressions formalizing the expected trace of events follows:
-\begin{align*}
-	\tau &= \var{\idcb{}}{\createt(\idcb{}) \prefixop \tau_{cb}}\\
-	\tau_{cb} &= \var{\idres{}}{\cbt(\idcb, \idres) \prefixop (\tau_w \shuffleop \tau_{cb})}\\
-	\tau_w &= (\writet(\idres) \prefixop \tau_w) \orop (\myend(\idres) \prefixop \epsilon)
-\end{align*}
+\begin{gather*}
+	\tau = \var{\idcb{}}{\createt(\idcb{}) \prefixop \tau_{cb}} \qquad\qquad
+	\tau_{cb} = \var{\idres{}}{\cbt(\idcb, \idres) \prefixop (\tau_w \shuffleop \tau_{cb})}\\
+	\tau_w = (\writet(\idres) \prefixop \tau_w) \orop (\myend(\idres) \prefixop \epsilon)
+\end{gather*}
 
 The trace must start with a \(\createt\) event, which also allows to store the identity of the the callback.
 Then, once the callback is actually invoked, the identifier of the response object is known and it can later be used to match against subsequent \lstinline|write| and \lstinline|end| calls.
@@ -59,13 +58,8 @@ Such callback will simply print the content of the message.
 const http = require('http');
 const options = {
 	method: 'POST',
-	headers: {
-		'content-length': 10  // BUG! size too high
-	}
-};
-const req = http.request(options, res => {
-	res.on('data', console.log);
-});
+	headers: { 'content-length': 10 } };  // BUG! size too high
+const req = http.request(options, res => res.on('data', console.log));
 req.write('hey!');
 req.end('bye');
 \end{lstlisting}
@@ -134,11 +128,13 @@ This is similar to the previous example on files.
 Variables \(\avar{cl}\) and \(\avar{cl'}\) are swapped between \(\tau_w\) and \(\tau_w'\), as two variables are needed to keep track of the number of bytes left before and after each write.
 
 Here the \(\mtch\) function plays a crucial role and it is worth showing, since in this case event types $\writet$ and $\myend$ are not a trivial abstraction over events:
+\small
 \begin{align*}
 \mtch(\req(\id, \cl), \req(\avar{id}, \avar{cl})) &= \{ \avar{id} \mapsto \id, \avar{cl} \mapsto \cl \}\\
-\mtch(\writet(\id, \data), \writet(\id', \cl, \avar{cl'})) &= \{ \avar{cl'} \mapsto \cl-\size(\data) \} \mbox{ iff $\begin{array}[t]{l}\id=\id',\\ \size(\data)\leq\cl\end{array}$} \\
-\mtch(\myend(\id, \data), \myend(\id', \cl)) &= \emptyset \mbox{ iff $\id=\id',\, \size(\data)=\cl$}
+\mtch(\writet(\id, \data), \writet(\id', \cl, \avar{cl'})) &= \{ \avar{cl'} \mapsto \cl-\size(\data) \} \quad \mathrm{iff}\;\; \id=\id' \land \size(\data)\leq\cl \\
+\mtch(\myend(\id, \data), \myend(\id', \cl)) &= \emptyset \quad \mathrm{iff}\;\; \id=\id' \land \size(\data)=\cl
 \end{align*}
+\normalsize
 
 At the beginning, both variables \(\avar{id}\) and \(\avar{cl}\) are free and their values are discovered when event \(\req\) occurs.
 On the other end, upon writing, the current amount of data that still has to be sent is known, but the updated one has to be computed based on the
