@@ -38,16 +38,29 @@ To this aim, the instrumentation we have implemented dynamically wraps callbacks
 \item Jalangi2 allows insertion of instrumented code for function calls at four different sites: before and after a function call (caller sites), 
   before the execution of a function body starts, and after the execution of a function body completes (callee sites). Since
   events are tracked through code instrumentation, all four kinds of sites are useful for library functions that cannot be
-  instrumented (either because they are not implemented in JavaScript, or because this would imply a severe performance penalty):  the caller sites
+  instrumented (either because they are not implemented in JavaScript, or because instrumentation would imply a severe performance penalty):  the caller sites
   are used when calls to library functions have to be monitored, while the callee sites are useful to track calls to callbacks that are passed to
   library functions.
 
-  This flexibility comes at a cost when monitoring functions of the program to be analyzed; since their bodies are subject to instrumentation, two duplicate events would be generated as HTTP client requests sent to the monitoring Prolog server. To this aim,
-  the instrumentation we have implemented to support RV keeps track of all kinds of function calls, to avoid such a duplication.
-\item Many different patterns arise in Node.js programming, and they need complex code instrumentation.
-For instance, the file system module functions expect a file descriptor as an argument, while HTTP requests are handled through methods invoked on objects encoding the requests.
-Jalangi2 partially solves this problem by exposing all relevant metadata, including the function to be called, the target object (in case of method invocation), the arguments and the return value.
-Still, our prototype needs to store information about the target object in order to track subsequent method calls on the same object.
+  This flexibility comes at a cost when monitoring functions whose source code is available because they are part of the very same program under analysis; in this case two duplicate events would be generated as HTTP client requests sent to the monitoring Prolog server. To this aim,
+  the instrumentation we have implemented keeps track of all kinds of function calls, to avoid such duplications.
+  
+\item In case of method calls, it is useful to identify the target object on which the method has been called, to keep track of the correct
+  flow of methods that can be safely invoked on a specific object; Jalangi2 solves this problem only partially,
+  because it exposes  the target objects of method calls as mere JavaScript values, without information on the identity of the objects.
+  Since the information carried by events are converted into JSON format before sending them to the monitoring server, the identity of objects are lost 
+  in such a conversion. Our implementation uses a weak map to keep track of object identities and to generate events containing a unique identifier
+  for target objects of method calls; a weak map is employed to avoid issues with garbage collection.
+
+\item Though JSON is a natural fit for JavaScript objects serialization, some important aspects needed to be handled.
+Objects containing circular references, for instance, are quite common in Node.js modules, but they cannot be encoded in JSON, and the JavaScript standard library serialization (\lstinline|JSON.stringify|) throws an error on such objects.
+Furthermore, JavaScript supports getters, which are special functions invoked when a property is accessed.
+During experiments with the \lstinline{http} module, we found that some modules add getter functions to objects before their code can actually be
+correctly executed; unfortunately, the standard serialization offered by \lstinline|JSON.stringify| invokes getters during stringification, hence
+JSON conversion  breaks if an object contains a getter performing some illegal operation. 
+For these reasons, we have  adapted the JSON serialization process by providing a suitable replacer\footnote{See the code at \url{https://github.com/LucaFranceschini/trace-expressions/blob/master/jalangi/stringify-trunc.js}} able to correctly deal
+with cyclic objects and getters.
+
 \end{itemize}
 Note that even if we strongly rely on Jalangi2, these issues need to be faced with any code instrumentation framework when applied to Node.js code, because of the very nature of the framework and of JavaScript itself.
 
@@ -56,11 +69,6 @@ We are currently looking at proxy-based alternative approaches based on reflecti
 
 The current implementation of trace expression semantics is coded in SWI-Prolog, since logic programming is a natural fit for inference rules and transition systems, and cyclic terms are supported by the \texttt{coinduction} library \cite{CoLP06}.
 
-Though JSON is a natural fit for JavaScript objects serialization, some important aspects need to be handled.
-Objects containing circular references, for instance, are quite common in Node.js modules, but they cannot be encoded in JSON, and the JavaScript standard library serialization (\lstinline|JSON.stringify|) throws an error on such objects.
-Furthermore, JavaScript supports getters, which are special functions invoked when a property is accessed.
-During experiments, we found that some modules set getter functions before their code can actually be correctly executed, and this again breaks standard serialization since \lstinline|JSON.stringify| invokes getters during stringification.
-For these reasons, we had to modify the JSON serialization process for it to work in real Node.js scenarios, detecting and handling circular references and getters as special cases.
 
 Another challenge consisted in avoiding the performance penalties we detected with the first version of the
 instrumenting code: the file explorer server employed in our benchmarks (see Section~\ref{sec:exps}) could serve no more than
