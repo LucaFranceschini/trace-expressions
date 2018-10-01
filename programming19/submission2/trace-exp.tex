@@ -8,8 +8,7 @@ Global types, and thus trace expressions, derive from the notion of behavioral t
 Later on, with the introduction of the notion of event type, trace expressions have become system and language agnostic, so that they can be exploited for runtime verification in several different contexts.
 
 
-We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing} and have been expressly devised for easing specification of complex properties to be efficiently monitored at runtime; they support parametric verification \cite{AnconaFM17} and an implementation in Prolog is available (see \cite{TowardsIoT17} for more details).
-Furthermore they are syntactically regular terms \cite{Courcelle83}, which naturally support recursion and specifications of (possibly) non-terminating systems, and which can be directly translated into cyclic terms in Prolog.
+We chose trace expressions as a specification formalism for different reasons: they are quite expressive \cite{ancona2016comparing} and have been expressly devised for easing specification of complex properties to be efficiently monitored at runtime; they support parametric verification \cite{AnconaFM17} and an implementation is available (see \cite{TowardsIoT17} for more details).
 Trace expressions differ from type-based approaches, as session types \cite{sessiontypes}, in their focus on runtime verification rather than static checking, as their goal is to allow efficient online monitoring.
 Just like trace expressions specify the behavior of the program as a whole, global session types have been proposed as well \cite{globalst,Vasconcelos11}.
 A more thorough comparison between these two different approaches is left for future work.
@@ -131,12 +130,3 @@ The top-level rule (main) expects the computed substitution to be empty.
 This corresponds to the fact that valid trace expressions, when considered as a whole, are supposed not to have free variables.
 However, when a variable is introduced by a binder, it will be substituted in the trace expression (rule (var-t)), and removed from the computed substitution.
 Finally, (var-f) handles the case in which a parametric trace expression accepts an event but the matching does not instantiate a variable (for instance, because its value will only be discovered observing further events).
-
-Trace expressions semantics has been implemented in SWI-Prolog.
-The logic programming paradigm is well suited for the implementation of inference system, since inference rules can be translated almost directly to logic clauses.
-Furthermore SWI-Prolog offers native support to cyclic terms, therefore recursive trace expressions can be easily encoded.
-Support for programming with cyclic terms is based on coinductive logic programming \cite{CoLP06}, which is supported by the SWI-Prolog library \texttt{coinduction}.
-
-We recall that, in order to use (regular) coinduction in Prolog, the occurrence check is removed (so that terms can be circular) and a cycle detection mechanism is employed such that, when a previously encountered goal is found again\footnote{Actually, it is only required for the two goals to unify.} during a derivation, it is considered proved and no more steps are needed.
-This way, cyclic terms are handled without getting into infinite loops.
-For more information about coinductive logic programming, see \cite{colp}.
