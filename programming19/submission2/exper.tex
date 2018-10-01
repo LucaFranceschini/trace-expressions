@@ -42,39 +42,35 @@ objects are internally created with this constructor and returned from \lstinlin
 \end{figure}
 The highlighted sentences reveal two possible issues:
 \begin{itemize}
-	\item \textbf{unconsumed data}: in case the client defines a handler for the server response, data from the response must be actually consumed (through \lstinline|res.on('data', ...)|), otherwise a memory leak will occur;
-	\begin{lstlisting}[language=javascript]
+	\item \textbf{Unconsumed data}: in case the client defines a handler for the server response, data from the response must be actually consumed (through \lstinline|res.on('data', ...)|), otherwise a memory leak will occur;
+	\begin{lstlisting}[belowskip=-3em]
 const req = http.request(options, res => {
-	// BUG! no data read, and 'end' will never happen
-	// res.on('data', chunk => {...});
+	// res.on('data', chunk => {...}); BUG! with no data read, 'end' will never be triggered
 	res.on('end', () => console.log('response received'));
 });
 req.end();
 	\end{lstlisting}
-	\item \textbf{content length}: unchecked length of the body of a request/response can block the communication, or data can be lost, as already shown in \Cref{sec:web-req}.
-\end{itemize}
-In the first case, the correct behavior can be captured by the following trace expression $\tau$ defined as follows (\(\eventSet\) is the event domain in use):
-\begin{align*}
-	\eventSet &= \bigcup_{
-			\substack{
-				\mathit{obj} \in \mathbb{N}\\
-				\mathit{label} \in \{ \mathit{data}, \mathit{end} \}
+	The correct behavior can be captured by the following trace expression $\tau$ defined as follows (\(\eventSet\) is the event domain in use):
+	\begin{align*}
+		\eventSet &= \bigcup_{
+				\substack{
+					\mathit{obj} \in \mathbb{N}\\
+					\mathit{label} \in \{ \mathit{data}, \mathit{end} \}
+				}
 			}
-		}
-		\{ \ont(\mathit{obj}, \mathit{label}) \} \\
-	\tau &= \var{res}{\ont(\avar{res}, \mathit{data}) \prefixop ((\ont(\avar{res}, \mathit{end}) \prefixop \emptyseq) \shuffleop \tau)}
-\end{align*}
-
-Variable \(\avar{res}\) corresponds to the identifier of the specific response, whereas event type \(\ont\) capture the handling of events \lstinline{'data'} and \lstinline{'end'}, as shown in the code above.
-Like in previous examples, combination of shuffle and recursion is essential to be able to deal with an arbitrary number of different responses which can be received by a client.
-
-In the second case, the trace expression which is used for checking the correct behavior of code dealing with
-\lstinline{http.ClientRequest} objects has already been presented in \Cref{sec:web-req}.
+			\{ \ont(\mathit{obj}, \mathit{label}) \} \\
+		\tau &= \var{res}{\ont(\avar{res}, \mathit{data}) \prefixop ((\ont(\avar{res}, \mathit{end}) \prefixop \emptyseq) \shuffleop \tau)}
+	\end{align*}
+	Variable \(\avar{res}\) corresponds to the identifier of the specific response, whereas event type \(\ont\) capture the handling of events \lstinline{'data'} and \lstinline{'end'}, as shown in the code above.
+	Like in previous examples, combination of shuffle and recursion is essential to be able to deal with an arbitrary number of different responses which can be received by a client.
+	\item \textbf{Content length}: unchecked length of the body of a request/response can block the communication, or data can be lost, as already shown in \Cref{sec:web-req}.
+	The same section already contains the relevant trace expression specification.
+\end{itemize}
 
 Besides the two properties discussed above, the following four additional specifications have been mined from
 the documentation and expressed with corresponding trace expressions:
 \begin{itemize}
-	\item \textbf{omitted body}: depending on the request received by the client or the response sent by the server, there are cases when the HTTP message must not contain a body, hence a server which tries to include a body in such situations does not behave correctly. The different cases require different treatments and trace expressions, as follows:
+	\item \textbf{Omitted body}: depending on the request received by the client or the response sent by the server, there are cases when the HTTP message must not contain a body, hence a server which tries to include a body in such situations does not behave correctly. The different cases require different treatments and trace expressions, as follows:
 	\begin{itemize}
 	  \item \textbf{HEAD request}. The method of the request sent by the client is HEAD:
 		\begin{lstlisting}[belowskip=-3em]
@@ -100,8 +96,8 @@ const server = http.createServer((req, res) => {
 		\end{lstlisting}
 		Whenever a 204 status code is set for a response, no content is expected; however, if the status code is set to a different value, the specification allows to send data:
 		\begin{align*}
-			\tau &= \var{\avar{cb}}{\mathit{createServer}(\avar{cb}) \prefixop \tau_{\mathit{cb}}}\\
-			\tau_{\mathit{cb}} &= \var{ \avar{res} }{ \cbt(\avar{cb}, \avar{res}) \prefixop (\tau_{\mathit{res}} \shuffleop \tau_{\mathit{cb}}) }\\
+			\tau &= \var{\avar{cb}}{\mathit{createServer}(\avar{cb}) \prefixop \tau_{\mathit{cb}}} \qquad
+			\tau_{\mathit{cb}} = \var{ \avar{res} }{ \cbt(\avar{cb}, \avar{res}) \prefixop (\tau_{\mathit{res}} \shuffleop \tau_{\mathit{cb}}) }\\
 			\tau_{\mathit{res}} &= (\mathit{writeHead}(\avar{res}, 204) \prefixop \myend(\avar{res}, 0) \prefixop \epsilon) \orop (\mathit{writeHeadNot}(\avar{res}, 204) \prefixop \tau_w) \orop \tau_w\\
 			\tau_w &= (\writet(\avar{res}) \prefixop \tau_w) \orop \var{n}{\myend(\avar{res}, \avar{n}) \prefixop \epsilon}
 %			\tau &= \var{id}{\mathit{createServer}(\id) \prefixop \tau'}\\
@@ -114,13 +110,13 @@ const server = http.createServer((req, res) => {
 		The method of the request sent by the client is a conditional GET and access is allowed, and the response server has status code 304 (not modified) because the requested document has not been modified.
 		The specification for this use case is entirely similar to the previous one, only the status code needs to be changed.
 	\end{itemize}
-	\item \textbf{Write head}: the method \lstinline{writeHead} allows to add an header to a server response.
+	\item \textbf{Header write}: the method \lstinline{writeHead} allows to add an header to a server response.
 	It must only be called once on a message and it must happen before the method \lstinline{end} is called in order to signal to the server that the response is complete.
 	If this rule is not followed, then a default header, possibly different from the intended one, is used in the response.
 	\begin{align*}
-		\tau &= \var{\avar{cb}}{\mathit{createServer}(\avar{cb}) \prefixop \tau_{\mathit{cb}}}\\
+		\tau &= \var{\avar{cb}}{\mathit{createServer}(\avar{cb}) \prefixop \tau_{\mathit{cb}}} &
 		\tau_{\mathit{cb}} &= \var{ \avar{res} }{ \cbt(\avar{cb}, \avar{res}) \prefixop (\tau_{\mathit{res}} \shuffleop \tau_{\mathit{cb}}) }\\
-		\tau_{\mathit{res}} &= \var{s}{\mathit{writeHead}(\avar{res}, \avar{s}) \prefixop \tau_{\mathit{end}}} \orop \tau_{\mathit{end}}\\
+		\tau_{\mathit{res}} &= \var{s}{\mathit{writeHead}(\avar{res}, \avar{s}) \prefixop \tau_{\mathit{end}}} \orop \tau_{\mathit{end}} &
 		\tau_{\mathit{end}} &= \myend(\avar{res}) \prefixop \epsilon
 	\end{align*}
 \end{itemize}
