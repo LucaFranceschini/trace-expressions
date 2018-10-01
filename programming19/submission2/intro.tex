@@ -1,6 +1,5 @@
 \section{Introduction}
 \emph{Node.js} is an increasingly popular runtime environment that supports server-side programming in JavaScript.
-
 At its core, it is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, non-deterministically scheduling the request for later execution.
 Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always runs on a single thread.
 This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge numbers of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with multi-threading and parallelism.
@@ -32,9 +31,9 @@ furthermore, they support \emph{parametric} verification, a key feature to incre
 In this work we show how trace expressions can be successfully used to support RV of Node.js applications, a topic that has not
 been fully investigated yet;  to this aim, from the documentation of Node.js we have mined the main constraints that have
 to be met to correctly use the functions exported by a module, and translated into trace expressions to allow RV of
-such constraints. 
+such constraints.
 
-A corresponding prototype
+A corresponding prototype%
 %\footnote{The implementation and a script for running all tests reported in this paper are available at \url{https://github.com/LucaFranceschini/trace-expressions}.}
 \footnote{Implementations and test at \url{https://github.com/LucaFranceschini/trace-expressions}.}
 has been developed based on the Jalangi2\footnote{\url{https://github.com/Samsung/jalangi2}.}
@@ -46,13 +45,13 @@ all examples shown in this paper refer to a unique event domain consisting of ca
 from asynchronous functions and their corresponding callbacks. Hence, a unique instrumentation
 was required to automatically monitor and verify different properties, each specified by a particular trace expression.
 SWI-Prolog is the underlying language for supporting parametric
-trace expressions and implementing the inference engine for their verification. 
+trace expressions and implementing the inference engine for their verification.
 
 The tool offers a simple HTTP interface based on JSON to allow RV of
 distributed and heterogeneous components.
 %; in this way, the tool is ready to support RV in the context of the Internet of Things.
 %
-To test the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used 
+To test the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used
 in Node.js, to mine specifications expressible with trace expressions, with the aim of dynamically verifying
 the correct use of \lstinline{http} in Node.js code.
 Preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
