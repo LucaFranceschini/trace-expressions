@@ -63,8 +63,7 @@ with cyclic objects and getters.
 
 \item Another challenge consists in efficient handling of HTTP requests that have to be sent to the 
   monitoring server. Module \lstinline{http} of Node.js offers a quite simple interface for that, through the  function
-  \lstinline{http.request} which is able to send requests in a quite efficient way. To ensure good performances, such an operation is
-  asynchronous, hence, as shown in \Cref{sec:examples}, it does not guarantee that events sent in form of http requests are delivered in the  
+  \lstinline{http.request} and the \lstinline{end} method, to send requests in a quite efficient way. To ensure good performances, the \lstinline{end} method is asynchronous, hence, as shown in \Cref{sec:node}, it does not guarantee that events sent in form of HTTP requests are delivered in the  
   desired order, unless a proper callback is employed; however, ensuring that events are sent in the correct order is important to guarantee correctness of RV. As a preliminary solution, we have conducted some experiments with the
   synchronous version of \lstinline{http.request} provided by \lstinline{npm}; unfortunately, we have discovered that with such a solution
   the file explorer server employed in our benchmarks (see Section~\ref{sec:exps}) could serve no more than
