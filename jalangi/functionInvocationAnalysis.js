@@ -99,7 +99,8 @@
      */
     function MyAnalysis() {
 	// to deal with --initParam (Davide)
-	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post) 
+	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post); 
+	if(J$.initParams.names) J$.initParams.names=JSON.parse(J$.initParams.names); 
 	
 	// test for async comunication (Davide)
 	const cp = require('child_process')
