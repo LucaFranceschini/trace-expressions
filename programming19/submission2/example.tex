@@ -81,7 +81,7 @@ Trace expressions can be used again to specify the correct behavior.
 The monitor needs to observe the creation of the \lstinline{ClientRequest} object returned by function \lstinline{http.request} as well as the use of its methods \lstinline{write} and \lstinline{end}.
 
 Consider for instance the following event domain:
-\[ \eventSet = \bigcup_{\begin{array}{rcl}\data&\in&\mathbb{B}^*\\\cl,\id &\in& \mathbb{N}\end{array}} \{ \req(\id,\cl), \writet(\id, \data), \myend(\id, \data) \} \]
+\[ \eventSet = \bigcup_{\substack{\avar{data} \in \mathbb{B}^* \\ \avar{cl},\id \in \mathbb{N}}} \{ \req(\id,\avar{cl}), \writet(\id, \avar{data}), \myend(\id, \avar{data}) \} \]
 All operations are associated with a unique request identifier (at the Node.js level, this corresponds to the \lstinline{ClientRequest} object), furthermore the request is associated with the declared \lstinline{'content-length'} \(\cl\), while \(\writet\) (and \(\myend\)) are associated with \(\data\),
 the sequence of bytes being sent.
 

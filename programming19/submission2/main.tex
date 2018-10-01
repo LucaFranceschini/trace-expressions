@@ -9,6 +9,7 @@
 
 \addbibresource{main.bib}
 
+\usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage[inline]{enumitem} % for inline lists
 
@@ -97,7 +98,7 @@
 \maketitle
 
 % Please always include the abstract.
-% The abstract MUST be written according to the directives stated in 
+% The abstract MUST be written according to the directives stated in
 % http://programming-journal.org/submission/
 % Failure to adhere to the abstract directives may result in the paper
 % being returned to the authors.
@@ -107,11 +108,11 @@ rapid development of lightweight servers in JavaScript; more recently,
 it has been successfully employed to support programming for the Internet of Things.
 While the asynchronous, single-thread execution model on which Node.js is based turns out to be an effective way to
 efficiently handle big volumes of data and requests, it also makes quite challenging to ensure the correct behavior
-of code heavily based on nested callbacks which are executed asynchronously. 
+of code heavily based on nested callbacks which are executed asynchronously.
 To this aim, runtime verification can be a valuable support to tackle such a complex task, and
 to complement other software verification techniques based on static analysis or testing.
-Furthermore, runtime verification of Node.js can be fruitfully exploited for ensuring the correctness of Internet of Things systems, a challenge 
-which has been barely explored so far. 
+Furthermore, runtime verification of Node.js can be fruitfully exploited for ensuring the correctness of Internet of Things systems, a challenge
+which has been barely explored so far.
 
 Trace expressions have been initially devised as a formalism for runtime verification of protocol-compliance
 adopted in widespread multiagent system platforms.
@@ -126,7 +127,7 @@ The implementation is based on the Jalangi2 framework for JavaScript code instru
 dynamically trace events, and on SWI-Prolog for supporting trace expressions and the inference engine for their verification.
 The tool offers a simple HTTP interface based on JSON to allow runtime verification of distributed and heterogeneous components.
 
-Preliminary benchmarks with the popular http module and the Express framework show that the tool is able to support runtime verification of real Node.js code. 
+Preliminary benchmarks with the popular http module and the Express framework show that the tool is able to support runtime verification of real Node.js code.
 \end{abstract}
 
 \input{intro}
@@ -149,4 +150,3 @@ Preliminary benchmarks with the popular http module and the Express framework sh
 %%\bibliography{main}
 
 \end{document}
-
