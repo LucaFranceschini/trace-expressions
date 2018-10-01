@@ -61,32 +61,49 @@ JSON conversion  breaks if an object contains a getter performing some illegal o
 For these reasons, we have  adapted the JSON serialization process by providing a suitable replacer\footnote{See the code at \url{https://github.com/LucaFranceschini/trace-expressions/blob/master/jalangi/stringify-trunc.js}} able to correctly deal
 with cyclic objects and getters.
 
+\item Another challenge consists in efficient handling of HTTP requests that have to be sent to the 
+  monitoring server. Module \lstinline{http} of Node.js offers a quite simple interface for that, through the  function
+  \lstinline{http.request} which is able to send requests in a quite efficient way. To ensure good performances, such an operation is
+  asynchronous, hence, as shown in \Cref{sec:examples}, it does not guarantee that events sent in form of http requests are delivered in the  
+  desired order, unless a proper callback is employed; however, ensuring that events are sent in the correct order is important to guarantee correctness of RV. As a preliminary solution, we have conducted some experiments with the
+  synchronous version of \lstinline{http.request} provided by \lstinline{npm}; unfortunately, we have discovered that with such a solution
+  the file explorer server employed in our benchmarks (see Section~\ref{sec:exps}) could serve no more than
+  three requests per second when monitored. That was an unacceptable result even when limiting RV to the development stage
+  for debugging and testing purposes.
+
+  To solve such a problem, the instrumented code creates a child process with \lstinline{child_process.fork} and
+  sends the detected events to it through the established IPC channel, by calling the synchronous function \lstinline{subprocess.send};
+  the child process sends all received events to the monitoring server by using the \lstinline{http.request} function and by guaranteeing
+  that requests are issued in the desired deterministic order, by passing to \lstinline{http.request} a proper callback.
 \end{itemize}
-Note that even if we strongly rely on Jalangi2, these issues need to be faced with any code instrumentation framework when applied to Node.js code, because of the very nature of the framework and of JavaScript itself.
 
-Our prototype implementation enriches the capabilities of Jalangi by supporting these additional features for Node.js monitoring.
-We are currently looking at proxy-based alternative approaches based on reflection rather than instrumentation, since proxies \cite{proxy} are now natively supported by JavaScript.
+%% Note that even if we strongly rely on Jalangi2, these issues need to be faced with any code instrumentation framework when applied to Node.js code, because of the very nature of the framework and of JavaScript itself.
 
-The current implementation of trace expression semantics is coded in SWI-Prolog, since logic programming is a natural fit for inference rules and transition systems, and cyclic terms are supported by the \texttt{coinduction} library \cite{CoLP06}.
+%% Our prototype implementation enriches the capabilities of Jalangi by supporting these additional features for Node.js monitoring.
+%% We are currently looking at proxy-based alternative approaches based on reflection rather than instrumentation, since proxies \cite{proxy} are now natively supported by JavaScript.
 
+\subsection*{Monitoring server}
 
-Another challenge consisted in avoiding the performance penalties we detected with the first version of the
-instrumenting code: the file explorer server employed in our benchmarks (see Section~\ref{sec:exps}) could serve no more than
-three requests per second when monitored; that was an unacceptable result even when limiting
-the use of runtime verification to the development stage for debugging and testing purposes.
+The monitoring server is implemented in SWI-Prolog and depends on a Prolog module responsible for
+the semantics of trace expressions.
 
-A first practical way to obtain a speed up of the monitored application consisted in
-avoiding the monitored application to directly synchronize with the monitoring Prolog server;
-synchronous communication guarantees that the monitor always receives events in the correct order,
-but has a negative effect on performances. To avoid this problem, we let the instrumented code
-to asynchronously interact with a child process by sending to it all relevant events. Synchronous
-communication with the Prolog  monitor is managed by the child process.
+The logic programming paradigm is well suited for the implementation of inference systems, since inference rules can be translated
+almost directly to logic clauses.
+Furthermore, SWI-Prolog offers native support to cyclic terms (a.k.a. regular terms \cite{Courcelle83}) by preventing occurs check during unification;
+in this way, recursive trace expressions can be directly encoded with cyclic terms without introducing an explicit construct to deal with recursive
+definitions.
+Cyclic  terms can be suitably manipulated with the \lstinline{coinduction}\footnote{\url{http://www.swi-prolog.org/pldoc/doc/_SWI_/library/coinduction.pl}.}
+module, provided by the SWI-Prolog library to allow simpler definitions of predicates defined on cyclic terms;
+such a module employs a cycle detection mechanism which avoids solving a goal which unifies with a goal that has been previously solved
+for the same derivation. In this way, predicates on cyclic terms can be defined coinductively and goals with coinductive predicates
+can be solved without infinite loops. The  \lstinline{coinduction} module provides an implementation for
+coinductive logic programming \cite{colp}.
 
-Another useful optimization consisted in reducing the network traffic 
-between the monitored application and the monitor; while
-the first version of the instrumentation was designed to send
-all detected events, the optimization version sends only those events 
-which are relevant for the verification.
+%% Another useful optimization consisted in reducing the network traffic 
+%% between the monitored application and the monitor; while
+%% the first version of the instrumentation was designed to send
+%% all detected events, the optimization version sends only those events 
+%% which are relevant for the verification.
 
 %% This work is a preliminary step towards runtime verification of Internet of Things applications,
 %% both because Node.js is emerging as a standard framework for IoT development, and the implementation through an HTTP
