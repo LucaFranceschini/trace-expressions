@@ -2,7 +2,7 @@
 for i in `seq 1 10`
 do node transpiled/server.js &
 sleep 5
-node benchmark-client.js $1 >> results-original.txt
+node benchmark-client.js $1 | grep -e 'Requests.*$' >> results-original.txt
 pkill node   
 sleep 5
 done
