@@ -132,29 +132,27 @@ For all specifications both correct and incorrect code has been developed, to ve
 
 Consider for instance the last specification presented in \Cref{sec:spec-minining}:
 the header of a server response must be written before calling the \lstinline{end} method which finalizes the response.
-
 A very simple server verifying the specification is the following one:
 \begin{lstlisting}
 const http = require('http');
 const server = http.createServer((req, res) => {
-	res.writeHead(200); // preparing response...
+	res.writeHead(200);
 	res.end(() => console.log('response sent'));
 });
 server.listen(80);
 \end{lstlisting}
 
 As expected, in this case the tool does not report any anomalous behavior.
-However, if we modify the code above as follows
-\begin{lstlisting}
-const http = require('http');
-const server = http.createServer((req, res) => {;
-	res.end(() => console.log('response sent'));
-	res.writeHead(204); // BUG! writing header after calling end() method
-});
-server.listen(80);
-\end{lstlisting}
-and monitor the server with our tool, then we get an error message associated with the following event, corresponding
-to a call to \lstinline{writeHead}:
+However, if we modify the code above swapping the two instructions inside the callback
+%\begin{lstlisting}
+%const http = require('http');
+%const server = http.createServer((req, res) => {;
+%	res.end(() => console.log('response sent'));
+%	res.writeHead(204); // BUG! writing header after calling end() method
+%});
+%server.listen(80);
+%\end{lstlisting}
+and monitor the server with our tool, then we get an error message associated with the following event, corresponding to a call to \lstinline{writeHead}:
 \begin{lstlisting}
 { event: 'func_pre', name: 'writeHead', id: 12, res: undefined, args: [ 204 ], targetId: 10, resultId: undefined }
 \end{lstlisting}

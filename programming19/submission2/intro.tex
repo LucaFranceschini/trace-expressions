@@ -1,5 +1,5 @@
 \section{Introduction}
-\emph{Node.js} is an increasingly popular runtime environment that supports server-side programming in JavaScript.
+\emph{Node.js} is an increasingly popular\footnote{Most popular languages and frameworks on \url{https://insights.stackoverflow.com/survey/2018}.} runtime environment that supports server-side programming in JavaScript.
 At its core, it is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, non-deterministically scheduling the request for later execution.
 Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always runs on a single thread.
 This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge numbers of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with multi-threading and parallelism.

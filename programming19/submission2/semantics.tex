@@ -1,5 +1,5 @@
 \begin{gather*}
-%%%% implicit substitution version, local substitution (i.e. substitution is output only) 
+%%%% implicit substitution version, local substitution (i.e. substitution is output only)
 \Rule{main}
 {\tau\extrans{\ev}\tau';\emptyset}
 {\tau\trans{\ev}\tau'}
@@ -16,7 +16,7 @@
 {\tau_1\extrans{\ev}\tau'_1;\subs_1\quad\tau_2\extrans{\ev}\tau'_2;\subs_2}
 {\tau_1\andop\tau_2\extrans{\ev}\tau'_1\andop\tau'_2;\subs}
 {\subs=\subs_1\subsMerge\subs_2}
-\\[3ex]
+\\[1ex]
 \Rule{or-l}
 {\tau_1\extrans{\ev}\tau'_1;\subs}
 {\tau_1\orop\tau_2\extrans{\ev}\tau'_1;\subs}
@@ -31,7 +31,7 @@
 {\tau_1\extrans{\ev}\tau'_1;\subs}
 {\tau_1\shuffleop\tau_2\extrans{\ev}\tau'_1\shuffleop\tau_2;\subs}
 {}
-\\[3ex]
+\\[1ex]
 \Rule{cat-l}
 {\tau_1\extrans{\ev}\tau'_1;\subs}
 {\tau_1\catop\tau_2\extrans{\ev}\tau'_1\catop\tau_2;\subs}
@@ -46,7 +46,7 @@
 {\tau_2\extrans{\ev}\tau'_2;\subs}
 {\tau_1\shuffleop\tau_2\extrans{\ev}\tau_1\shuffleop\tau'_2;\subs}
 {}
-\\[3ex]
+\\[1ex]
 \Rule{var-t}
 {\tau\extrans{\ev}\tau';\subs}
 {\var{\xv}{\tau}\extrans{\ev}\subs\tau';\restrict{\subs}{\xv}}
@@ -56,7 +56,7 @@
 {\tau\extrans{\ev}\tau';\subs}
 {\var{\xv}{\tau}\extrans{\ev}\var{\xv}{\tau'};\subs}
 {\xv\not\in\dom(\subs)}
-\\[3ex]
+\\[1ex]
 \Rule{filter-t}
 {\tau\extrans{\ev}\tau';\subs}
 {\eventTy \filterop \tau \extrans{\ev} \eventTy \filterop \tau';\subs}
@@ -66,7 +66,7 @@
 {}
 {\eventTy \filterop \tau \extrans{\ev} \eventTy \filterop \tau}
 {\not\exists\subs=\mtch(\ev,\eventTy)}
-\\[3ex]
+\\[1ex]
 \Rule{$\isEmpty$-empty}
 {}
 {\isEmpty(\emptyseq)}
@@ -76,7 +76,7 @@
 {\isEmpty(\tau)}
 {\isEmpty(\var{\xv}{\tau})}
 {}
-\\[3ex]
+\\[1ex]
 \Rule{$\isEmpty$-or-l}
 {\isEmpty(\tau_1)}
 {\isEmpty(\tau_1\orop\tau_2)}
