@@ -19,7 +19,7 @@
 
 \begin{document}
 
-\title{Parametric Runtime Verification of Node.js Applications with Trace Expressions}
+\title{Parametric Runtime Verification of Node.js Web Applications with Trace Expressions}
 \subtitle{}% optional
 \titlerunning{Parametric Runtime Verification of Node.js Applications with Trace Expressions} %optional, in case that the title is too long; the running title should fit into the top page column
 
@@ -120,14 +120,14 @@ Key features of trace expressions are their support for parametricity, which all
 depending on values that can be known only at runtime when events are traced,
 and their independence from a particular language and system, obtained through the notion of event domain and type.
 
-In this work we show how trace expressions can be employed in the context of runtime verification for Node.js applications to specify the expected behavior,
-and we present the implementation of a corresponding prototype tool allowing automatic monitoring of the correct use
-of the features offered by widespread Node.js libraries, as \lstinline{http}.
+In this work we show how trace expressions can be employed in the context of runtime verification for Node.js Web applications to specify the expected behavior,
+and we present the implementation of a tool allowing automatic monitoring of the correct use
+of the features offered by the widespread Node.js library \lstinline{http}.
 The implementation is based on the Jalangi2 framework for JavaScript code instrumentation, required to
 dynamically trace events, and on SWI-Prolog for supporting trace expressions and the inference engine for their verification.
 The tool offers a simple HTTP interface based on JSON to allow runtime verification of distributed and heterogeneous components.
 
-Preliminary benchmarks with the popular http module and the Express framework show that the tool is able to support runtime verification of real Node.js code.
+Benchmarks with the popular http module and the Express framework show that the tool is able to support runtime verification of real Node.js code.
 \end{abstract}
 
 \input{intro}
