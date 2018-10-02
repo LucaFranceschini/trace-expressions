@@ -1,8 +1,7 @@
 \section{Trace Expressions}
 \label{sec:trace}
 Trace expressions were initially developed in the context of multi-agent systems as ``global types'' \cite{AnconaDM12}.
-The aim was to check compliance of autonomous agents against a given interaction protocol definable by means of an expressive
-formalism \cite{AnconaBFMT14, BriolaMA14}.
+The aim was to check compliance of autonomous agents against a given interaction protocol defined by an expressive formalism \cite{AnconaBFMT14, BriolaMA14}.
 Global types, and thus trace expressions, derive from the notion of behavioral type \cite{AnconaBB0CDGGGH16}.
 
 Later on, with the introduction of the notion of event type, trace expressions have become system and language agnostic, so that they can be exploited for runtime verification in several different contexts.
@@ -45,7 +44,7 @@ Given an event \(\ev\) and an event type \(\eventTy\), \(\mtch(\ev, \eventTy) = 
 
 In the rest of the paper, we consider different examples of event domains and, thus, event type languages.
 We do not expect considerable expressivity is needed in this step, and as long as matching and substitution functions are defined, all properties still hold.
-Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply. In practice, here, even types are mapped into Prolog terms, and its semantics is defined by Prolog clauses. 
+Since we will use standard inductive terms over some (implicitly given) signature and a (enumerable) set of variables, the usual definition of substitution apply. In practice, here, even types are mapped into Prolog terms, and its semantics is defined by Prolog clauses.
 
 Considering again the previous files event domain (\ref{eq:filedomain}), a sensible event type matching all write operations would be \(\writet(\xv)\), where \(\xv\) is a variable.
 A sensible definition of matching would lead to the following: $\mtch(\writet(42), \writet(\xv)) = \{ \xv \mapsto 42 \}$
@@ -57,9 +56,9 @@ Finally, a \emph{trace expression} \(\tau\) identifies a set of traces correspon
 \begin{itemize}
 	\item $\emptyseq$ (\emph{empty trace}): the singleton set $\{\emptyseq\}$ containing  the empty event trace $\emptyseq$;
 	\item $\eventTy\prefixop\tau$ (\emph{prefix}): the set of all traces whose first event $\ev$ matches the event type $\eventTy$, and the remaining part is a trace of $\tau$;
-	\item $\tau_1\catop\tau_2$ (\emph{concatenation}): the set of all traces obtained by concatenating the traces of $\tau_1$ with those of $\tau_2$; 
+	\item $\tau_1\catop\tau_2$ (\emph{concatenation}): the set of all traces obtained by concatenating the traces of $\tau_1$ with those of $\tau_2$;
 	\item $\tau_1\andop \tau_2$ (\emph{intersection}): the intersection of the traces of $\tau_1$ and $\tau_2$;
-	\item $\tau_1\orop \tau_2$ (\emph{union}): the union of the traces of $\tau_1$ and $\tau_2$; 
+	\item $\tau_1\orop \tau_2$ (\emph{union}): the union of the traces of $\tau_1$ and $\tau_2$;
 	\item $\tau_1\shuffleop \tau_2$ (\emph{shuffle}, a.k.a. \emph{interleaving}): the set obtained by shuffling the traces of $\tau_1$ with the traces of $\tau_2$;
 	\item $\var{x}{\tau}$ (\emph{binder}): it binds the free occurrences of $\xv$ in $\tau$;
 	\item $\eventTy\filterop\tau$ (\emph{filter}):
@@ -77,7 +76,7 @@ In the first line, \(\opent\) is forced to be the first operation, if any.
 After that, in \(\tau'\), either there will be write operations or the file will be closed and no more writes will be allowed.
 
 %% Not all operators will be used in this document, but they all can be useful in different contexts.
-%% See \cite{ancona2016comparing} for a complete technical presentation of trace expressions with more examples. 
+%% See \cite{ancona2016comparing} for a complete technical presentation of trace expressions with more examples.
 
 \paragraph{Parametric Trace Expressions}
 The trace expression above can only verify the correct use of a single file descriptor, but with variables and binders \cite{AnconaFM17} it is possible to write a \emph{parametric} specification that solves the problem for any number of files:
