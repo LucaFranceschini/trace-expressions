@@ -28,10 +28,10 @@ In Node.js, %%connection to databases, HTTP requests, access to the file system 
 I/O intensive operations are by default \emph{asynchronous}: operations are only scheduled, and the program proceeds without waiting for their completion.
 Computations needed to be executed after completion of I/O operations are handled with \emph{callbacks}: when an asynchronous function is invoked, a callback is passed and registered, and then invoked on the results of the operation.
 
-The core of Node.js execution model is based on the notion of \emph{event loop}: Asynchronous requests are processed from a simple loop,
+The core of Node.js execution model is based on the notion of \emph{event loop}: asynchronous requests are processed from a simple loop,
 and the corresponding I/O intensive operations are scheduled for execution together with their callbacks.
 The event loop is run after the whole current Node.js script is evaluated.
-The idea of an event loop was popularized a long time before Node.js came in the E programming language \cite{eventloop}.
+The idea of an event loop was proposed long before Node.js in the E programming language \cite{eventloop}.
 
 The use of asynchronous functions requires care since I/O operations requested in the same event loop are scheduled non deterministically;
 if one wants to be sure that request $r_2$ is scheduled only after request $r_1$ has been completed, then
@@ -39,7 +39,7 @@ $r_2$ must be necessarily registered in the callback passed to the function call
 
 \begin{figure}
 \begin{minipage}{.5\linewidth}
-\begin{lstlisting}
+\begin{lstlisting}[belowskip=-3em]
 const http = require('http');
 for (let i = 1; i <= MAX; i++) {
  const req = http.request({port:'80', method:'POST'});
@@ -48,7 +48,7 @@ for (let i = 1; i <= MAX; i++) {
 \end{lstlisting}
 \end{minipage}
 \begin{minipage}{.5\linewidth}
-\begin{lstlisting}
+\begin{lstlisting}[belowskip=-3em]
 const http = require('http');
 function request(i) {
  if (i <= MAX) {

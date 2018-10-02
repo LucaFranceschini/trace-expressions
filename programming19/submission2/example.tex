@@ -49,7 +49,8 @@ The use of the shuffle operator is crucial: it allows different requests to be h
 
 \subsection{Web Requests Length}
 \label{sec:web-req}
-Recalling the web server presented in \Cref{lst:http}, let us consider the (buggy) web client in \Cref{lst:client}, where seven bytes of data are sent (\lstinline{'hey!'}, \lstinline{'bye'}) but ten are declared in the \lstinline{'content-length'} field.
+%Recalling the web server presented in \Cref{lst:http},
+Let us consider the (buggy) web client in \Cref{lst:client}, where seven bytes of data are sent (\lstinline{'hey!'}, \lstinline{'bye'}) but ten are declared in the \lstinline{'content-length'} field.
 \lstinline{http.request} is an asynchronous operation that schedules the callback \lstinline!res => { ... }! for execution upon receivement of response.
 Such callback will simply print the content of the message.
 
