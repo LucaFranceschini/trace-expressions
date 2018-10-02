@@ -17,8 +17,8 @@ favor interoperability, and runtime verification of distributed systems.
 %% The core idea is to modify the original source code of the program to be monitored in a way that allows observation of relevant events.
 %% Once an event is observed, the monitor can verify it against the specification, eventually acting in case of erroneous behavior.
 
-\subsection*{Instrumentation}
-We have employed \emph{Jalangi2} \cite{jalangi}, a mature tool supporting instrumentation with 
+\subsection{Instrumentation}
+We have employed \emph{Jalangi2} \cite{jalangi}, a mature tool supporting instrumentation with
 % gia' linkato nelle prime pagine
 %\footnote{\url{https://github.com/Samsung/jalangi2}} \cite{jalangi}
 arbitrary code which can be inserted right before or after any main JavaScript operation: access to properties, declarations, functions and methods invocation, among others. Jalangi2 also gives access to information about the operation itself, as the arguments of a function call or the target object of a property access.
@@ -35,7 +35,7 @@ several issues, among which the following ones are the most significant:
   necessary to allow RV to detect undesired non-deterministic behavior due to the invalid use of asynchronous operations, as shown in
   \Cref{sec:examples}. %% the same asynchronous function can be used multiple times with different arguments and callbacks, and vice versa.
 To this aim, the instrumentation we have implemented dynamically wraps callbacks \emph{at runtime} and generate a unique identifier for each one of them.
-\item Jalangi2 allows insertion of instrumented code for function calls at four different sites: before and after a function call (caller sites), 
+\item Jalangi2 allows insertion of instrumented code for function calls at four different sites: before and after a function call (caller sites),
   before the execution of a function body starts, and after the execution of a function body completes (callee sites). Since
   events are tracked through code instrumentation, all four kinds of sites are useful for library functions that cannot be
   instrumented (either because they are not implemented in JavaScript, or because instrumentation would imply a severe performance penalty):  the caller sites
@@ -44,11 +44,11 @@ To this aim, the instrumentation we have implemented dynamically wraps callbacks
 
   This flexibility comes at a cost when monitoring functions whose source code is available because they are part of the very same program under analysis; in this case two duplicate events would be generated as HTTP client requests sent to the monitoring Prolog server. To this aim,
   the instrumentation we have implemented keeps track of all kinds of function calls, to avoid such duplications.
-  
+
 \item In case of method calls, it is useful to identify the target object on which the method has been called, to keep track of the correct
   flow of methods that can be safely invoked on a specific object; Jalangi2 solves this problem only partially,
   because it exposes  the target objects of method calls as mere JavaScript values, without information on the identity of the objects.
-  Since the information carried by events are converted into JSON format before sending them to the monitoring server, the identity of objects are lost 
+  Since the information carried by events are converted into JSON format before sending them to the monitoring server, the identity of objects are lost
   in such a conversion. Our implementation uses a weak map to keep track of object identities and to generate events containing a unique identifier
   for target objects of method calls; a weak map is employed to avoid issues with garbage collection.
 
@@ -57,13 +57,13 @@ Objects containing circular references, for instance, are quite common in Node.j
 Furthermore, JavaScript supports getters, which are special functions invoked when a property is accessed.
 During experiments with the \lstinline{http} module, we found that some modules add getter functions to objects before their code can actually be
 correctly executed; unfortunately, the standard serialization offered by \lstinline|JSON.stringify| invokes getters during stringification, hence
-JSON conversion  breaks if an object contains a getter performing some illegal operation. 
+JSON conversion  breaks if an object contains a getter performing some illegal operation.
 For these reasons, we have  adapted the JSON serialization process by providing a suitable replacer\footnote{See the code at \url{https://github.com/LucaFranceschini/trace-expressions/blob/master/jalangi/stringify-trunc.js}} able to correctly deal
 with cyclic objects and getters.
 
-\item Another challenge consists in efficient handling of HTTP requests that have to be sent to the 
+\item Another challenge consists in efficient handling of HTTP requests that have to be sent to the
   monitoring server. Module \lstinline{http} of Node.js offers a quite simple interface for that, through the  function
-  \lstinline{http.request} and the \lstinline{end} method, to send requests in a quite efficient way. To ensure good performances, the \lstinline{end} method is asynchronous, hence, as shown in \Cref{sec:node}, it does not guarantee that events sent in form of HTTP requests are delivered in the  
+  \lstinline{http.request} and the \lstinline{end} method, to send requests in a quite efficient way. To ensure good performances, the \lstinline{end} method is asynchronous, hence, as shown in \Cref{sec:node}, it does not guarantee that events sent in form of HTTP requests are delivered in the
   desired order, unless a proper callback is employed; however, ensuring that events are sent in the correct order is important to guarantee correctness of RV. As a preliminary solution, we have conducted some experiments with the
   synchronous version of \lstinline{http.request} provided by \lstinline{npm}; unfortunately, we have discovered that with such a solution
   the file explorer server employed in our benchmarks (see Section~\ref{sec:exps}) could serve no more than
@@ -81,7 +81,7 @@ with cyclic objects and getters.
 %% Our prototype implementation enriches the capabilities of Jalangi by supporting these additional features for Node.js monitoring.
 %% We are currently looking at proxy-based alternative approaches based on reflection rather than instrumentation, since proxies \cite{proxy} are now natively supported by JavaScript.
 
-\subsection*{Monitoring server}
+\subsection{Monitoring server}
 
 The monitoring server is implemented in SWI-Prolog and depends on a Prolog module responsible for
 the semantics of trace expressions.
@@ -98,13 +98,12 @@ for the same derivation. In this way, predicates on cyclic terms can be defined 
 can be solved without infinite loops. The  \lstinline{coinduction} module provides an implementation for
 coinductive logic programming \cite{colp}.
 
-%% Another useful optimization consisted in reducing the network traffic 
+%% Another useful optimization consisted in reducing the network traffic
 %% between the monitored application and the monitor; while
 %% the first version of the instrumentation was designed to send
-%% all detected events, the optimization version sends only those events 
+%% all detected events, the optimization version sends only those events
 %% which are relevant for the verification.
 
 %% This work is a preliminary step towards runtime verification of Internet of Things applications,
 %% both because Node.js is emerging as a standard framework for IoT development, and the implementation through an HTTP
 %% server offers a natural support to verification of distributed systems, where (instrumented) devices can send events to a monitoring server.
-
