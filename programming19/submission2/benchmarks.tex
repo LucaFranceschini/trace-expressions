@@ -75,17 +75,10 @@ The benchmarks show that the overhead of runtime verification is mainly due to c
   \caption{Benchmark results.}
   \label{table}
 \end{table}
-<<<<<<< HEAD
 \vspace{-1em}
 Table~\ref{table} shows the results of our experiments.
-For each benchmark we have measured the average number of served requests per second (RPS)
-with a client running on the same machine a loop sending requests to the server without waiting to collect its response;
-=======
-For each benchmark we have measured the average number of served requests per second (RPS)
-with clients running on the same machine a loop sending requests to the server without waiting to collect its response;
->>>>>>> 61432a05b098f6947cb8d2006de963ebfbebd531
-all measurements have been obtained as the average over ten different runs, each consisting
-of a loop of 100K requests.
+For each benchmark we have measured the average number of served requests per second (RPS) with clients running on the same machine a loop sending requests to the server without waiting to collect its response;
+all measurements have been obtained as the average over ten different runs, each consisting of a loop of 100K requests.
 
 All benchmarks consist of a pair of communicating Node.js server and client programs, where, depending on the specific
 monitored property, either the server or the client has been monitored. Express benchmarks have been monitored only on the server side.
@@ -96,13 +89,5 @@ for the other examples we have measured a modest overhead (below 29\%); we conje
 for these benchmarks is due to the higher number of events that have to be monitored.
 
 For the Express file explorer presented in Section~\ref{sec:express}, the benchmarking client keeps sending GET requests
-<<<<<<< HEAD
-with randomly generated paths; in this case the overhead is more significant (77 \%), but still the overall performance
-is acceptable: the server could operate at the rate of more than 350 RPS, while the system had to monitor more than 1.5 million events.
-Such a result shows that the optimizations introduced in our prototype implementation allowed us
-to get a 120x speed boost, and that runtime monitoring can be effectively employed for testing servers implemented with Express.
-=======
-with randomly generated paths; in this case the overall performance of the monitored server
-is still acceptable, since it is able to operate at the rate of around 444 RPS; such a result shows that runtime monitoring can be effectively
+with randomly generated paths; in this case the overall performance of the monitored server is still acceptable, since it is able to operate at the rate of around 444 RPS; such a result shows that runtime monitoring can be effectively
 employed for testing servers implemented with Express.
->>>>>>> 61432a05b098f6947cb8d2006de963ebfbebd531
