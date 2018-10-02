@@ -1,22 +1,21 @@
 \section{Experiments}
 \label{sec:exps}
 
-In this section we report on the experiments conducted with the prototype tool
-whose implementation has been described in \Cref{sec:impl}. All code required for reproducing such experiments are available
+In this section we report on the experiments conducted with the implementation described in \Cref{sec:impl}.
+All code required for reproducing such experiments are available
 at \url{https://github.com/LucaFranceschini/trace-expressions}. %%%\url{http://www.disi.unige.it/person/AnconaD/\toolName}.
 
-Since one of the main use of Node.js is the development of Web applications,
-we have focused on runtime verification of code based on the \lstinline{http} module.
-
+As introduced in \Cref{sec:examples}, we have experimented RV  of Node.js code based on the \lstinline{http} module.
 First, the documentation of the module\footnote{Available at \url{https://nodejs.org/api/http.html}.} has been inspected with the purpose of mining specifications of the features provided by \lstinline{http}.
 Several of them can be easily translated in corresponding trace expressions
 that have been employed in our tool to automatically monitor correct use of the \lstinline{http}
 module by client code.
 
 Six constraints that are not enforced by the library have been identified on the use of the functions exported by \lstinline{http};
-correspondingly, six trace expressions have been derived to
+correspondingly, the monitoring server has been fed with six Prolog specifications to
 dynamically check such constraints and detect the related bugs.
-In each trace expression we use the filter operator to restrict the event domain to functions that are relevant for the specification.
+For each specification the instrumentation has been configured to send to the monitoring server only
+the relevant events.
 
 The tool has been tested in two different ways.
 At a first stage, simple server and client Node.js applications based on \lstinline{http} have been developed,

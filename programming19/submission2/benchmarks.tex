@@ -18,50 +18,61 @@ Table~\ref{table} shows the results of our experiments.
     \textbf{Monitored} &
     \textbf{Overhead} \\
     \hline
-    \multicolumn{4}{|c|}{HTTP module}\\
+    \multicolumn{4}{|c|}{HTTP module, server-side}\\
     \hline
-    Content length & 
-    698 RPS &
-    705 RPS &
-    -1 \% \\
-
-    Omitted body (HEAD request)&
-    710 RPS &
-    481 RPS &
-    48 \% \\
 
     Omitted body (204 response)&
-    721 RPS &
-    671 RPS &
-    7 \% \\
+    716 RPS &
+    660 RPS &
+    8 \% \\
 
     Omitted body (304 response)&
-    721 RPS &
-    671 RPS &
-    7 \% \\
-
-    Unconsumed data &
-     767 RPS &
-     598 RPS &
-     28 \% \\
+    714 RPS &
+    659 RPS &
+    8 \% \\
 
     Write head &
-    709 RPS &
-    482 RPS &
-    47 \% \\
+    708 RPS &
+    596 RPS &
+    19 \% \\
+
+    Response end &
+    768 RPS &
+    717 RPS &
+    7 \% \\
+
     \hline
 
-    \multicolumn{4}{|c|}{Express}\\
+    \multicolumn{4}{|c|}{HTTP module, client-side}\\
+    \hline
+
+    Content length & 
+    697 RPS &
+    541 RPS &
+    29 \% \\
+
+    Omitted body (HEAD request)&
+    706 RPS &
+    552 RPS &
+    28 \% \\
+
+    Unconsumed data &
+     780 RPS &
+     633 RPS &
+     23 \% \\
+
+     \hline
+    \multicolumn{4}{|c|}{Express, server-side}\\
     \hline
     Hello world & 
-    769 RPS &
-    779 RPS &
-    -1 \% \\
+    767 RPS &
+    744 RPS &
+    3 \% \\
 
     File explorer &
-    646 RPS &
-    365 RPS &
-    77 \%\\
+    563 RPS &
+    444 RPS &
+    27 \%\\
 
     \hline
   \end{tabular}
