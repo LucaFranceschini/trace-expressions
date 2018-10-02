@@ -1,17 +1,18 @@
 \section{Introduction}
 \emph{Node.js} is an increasingly popular\footnote{Most popular languages and frameworks on \url{https://insights.stackoverflow.com/survey/2018}.} runtime environment that supports server-side programming in JavaScript.
-At its core, it is based on an asynchronous model of computation: I/O requests are non-blocking and they immediately return to the caller, non-deterministically scheduling the request for later execution.
-Furthermore, while I/O operations can be parallelized by the underlying system, the JavaScript code always runs on a single thread.
-This asynchronous, single-thread execution model turned out to be an effective way to handle big volumes of data and huge numbers of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with multi-threading and parallelism.
-
-
+At its core, it is based on an asynchronous model of computation:
+%I/O requests are non-blocking and they immediately return to the caller, non-deterministically scheduling the request for later execution.
+I/O operations can be parallelized by the underlying system, but the JavaScript code always runs on a single thread.
+This execution model turned out to be an effective way to handle big volumes of data and huge numbers of (simultaneous) requests \cite{Nodejs10,NodejsPerformance14}, thus making Node.js a suitable choice to implement efficient servers without explicitly dealing with multi-threading and parallelism.
+%
+%
 %Besides, the huge package ecosystem promotes code reuse and fast development.
 %Finally, Node.js recently gained popularity in the Internet of Things community as well.
 %
 %From a software engineering point of view however, Node.js has its downsides and pitfalls and poses serious challenges.
-
+%
 On the other hand, asynchronous programming heavily relies on the notion of callback, which can lead to many levels of nested blocks and obfuscate the actual execution flow, making the code hard both to read and to debug.
-In reaction to an asynchronous request, a callback function is executed on the result of the corresponding operation when available.
+%In reaction to an asynchronous request, a callback function is executed on the result of the corresponding operation when available.
 This, together with the non-deterministic scheduling of requests, and the dynamic nature of JavaScript itself, are challenges to ensure correct program behavior with traditional approaches like static/formal verification techniques and testing.
 
 \emph{Runtime verification} (RV) \cite{rv} is a software analysis approach in which a running system is observed by monitors that perceive relevant events and use their associated information to verify them against a given formal specification of the expected behavior.
