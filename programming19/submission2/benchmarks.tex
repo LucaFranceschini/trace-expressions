@@ -1,12 +1,10 @@
 \subsection{Benchmarks}
 All tests presented in Section~\ref{sec:spec-minining} have been employed as benchmarks for performance evaluation
 of our prototype on an Intel(R) Core(TM) i7-6500U CPU at 2.50GHz with a 16GB RAM, running SWI-Prolog 7.2.3 and Node.js v10.0.0 on
-Linux kernel 4.14.40.
-In particular, we have measured how much the performances of all implemented servers are affected by runtime monitoring;
-only correct implementations have been considered, to be able to overload servers with arbitrary numbers of requests.
-The benchmarks have shown that the overhead of runtime verification is mainly due to code instrumentation, rather than the particular monitored
-specification (picked among those considered in Section~\ref{sec:spec-minining}), therefore all measurements have been conducted while verifying the same trace expression, namely,
-the one corresponding to the specification \textbf{omitted body (204 response)}.
+Linux kernel 4.14.69.
+In particular, we have measured how much the performances of all implemented servers and clients are affected by runtime monitoring;
+only correct implementations have been considered, to be able to run RV for arbitrary numbers of requests.
+The benchmarks show that the overhead of runtime verification is mainly due to code instrumentation, while the Prolog specifications of the monitored properties (as defined in \Cref{sec:spec-minining}) have a lower impact.
 
 \begin{table}[ht]
   \begin{tabular}{|l|l|l|l|}
@@ -77,21 +75,34 @@ the one corresponding to the specification \textbf{omitted body (204 response)}.
   \caption{Benchmark results.}
   \label{table}
 \end{table}
+<<<<<<< HEAD
 \vspace{-1em}
 Table~\ref{table} shows the results of our experiments.
 For each benchmark we have measured the average number of served requests per second (RPS)
 with a client running on the same machine a loop sending requests to the server without waiting to collect its response;
+=======
+For each benchmark we have measured the average number of served requests per second (RPS)
+with clients running on the same machine a loop sending requests to the server without waiting to collect its response;
+>>>>>>> 61432a05b098f6947cb8d2006de963ebfbebd531
 all measurements have been obtained as the average over ten different runs, each consisting
 of a loop of 100K requests.
 
-The second column (Original) displays the values concerning the original server, while the third one
-(Monitored) reports the measurements for the same server under monitoring, interacting with the same client as in the measurements displayed in the ``Original'' column.
-For several cases (content length, omitted body -- 204/304 response, hello world) the overhead is negligible;
-for other servers directly implemented with the \lstinline{http} module (omitted body -- head request, unconsumed data and write head)
-we registered a modest overhead (below 50\%)
+All benchmarks consist of a pair of communicating Node.js server and client programs, where, depending on the specific
+monitored property, either the server or the client has been monitored. Express benchmarks have been monitored only on the server side.
+The second column (Original) displays the values concerning the original benchmark, while the third one
+(Monitored) reports the measurements for the same benchmark under monitoring.
+Except for the HTTP module client-side and the file explorer benchmarks the measured overhead is negligible;
+for the other examples we have measured a modest overhead (below 29\%); we conjecture that the larger overhead
+for these benchmarks is due to the higher number of events that have to be monitored.
 
 For the Express file explorer presented in Section~\ref{sec:express}, the benchmarking client keeps sending GET requests
+<<<<<<< HEAD
 with randomly generated paths; in this case the overhead is more significant (77 \%), but still the overall performance
 is acceptable: the server could operate at the rate of more than 350 RPS, while the system had to monitor more than 1.5 million events.
 Such a result shows that the optimizations introduced in our prototype implementation allowed us
 to get a 120x speed boost, and that runtime monitoring can be effectively employed for testing servers implemented with Express.
+=======
+with randomly generated paths; in this case the overall performance of the monitored server
+is still acceptable, since it is able to operate at the rate of around 444 RPS; such a result shows that runtime monitoring can be effectively
+employed for testing servers implemented with Express.
+>>>>>>> 61432a05b098f6947cb8d2006de963ebfbebd531
