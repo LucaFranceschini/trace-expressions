@@ -1,8 +1,8 @@
 \section{Conclusion}
 \label{sec:conclu}
 
-We have presented the implementation of a prototype tool able to support
-parametric runtime verification of Node.js applications in a distributed environment.
+We have presented the implementation of a tool able to support
+parametric runtime verification of Node.js Web applications.
 
 The tool is based on parametric trace expressions, and exploits Jalangi2 for tracing events via code instrumentation, and SWI-Prolog to
 implement trace expressions.
@@ -10,12 +10,12 @@ implement trace expressions.
 Experiments have been conducted on \lstinline{http}, one of the most popular standard Node.js modules,
 by mining from its documentation several specifications later expressed with trace expressions.
 
-The mined specifications have been dynamically verified with the tool on several simple examples of HTTP servers and clients,
+The mined specifications have been dynamically verified with the tool on several examples of HTTP servers and clients,
 and with more interesting examples based on Express; these last tests required code instrumentation of the Express components
-built on top \lstinline{http} for a total of almost 1K of SLOC, and have shown that the prototype tool is able to support
-runtime verification of real Node.js code; the benchmarks show that the implemented optmizations allow a 120x speed boost for the more
-complex Express example.
-To our knowledge, no other currently available tool allows parametric runtime verification of Node.js applications in a distributed environment.
+built on top \lstinline{http} for a total of almost 1K of SLOC, and have shown that the tool is able to support
+runtime verification of real Node.js code; the benchmarks show that the implemented optmizations allow to monitor
+an Express server able to operate at the rate of around 444 RPS.
+To our knowledge, no other currently available tool allows parametric runtime verification of Node.js Web applications.
 
 Although the reported experiments are promising, a considerable amount of work is still required for making our research prototype a tool usable in practice.
 Future work include exploiting our remote server to monitor distributed system, which is the main reason why we keep the Prolog server separated from the original program.

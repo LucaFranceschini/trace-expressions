@@ -29,12 +29,12 @@ Though trace expressions were initially devised to verify protocol-compliance in
 used as a more general specification formalism \cite{ParametricJava17, TowardsIoT17} thanks to their independence from the monitored system and underlying programming language, obtained through the abstraction of event type.
 Furthermore, they support \emph{parametric} verification, a key feature to increase the expressive power of the formalism and, hence, allow RV of complex properties whose specification may depend on the actual values associated with events at runtime.
 
-In this work we show how trace expressions can be successfully used to support RV of Node.js applications, a topic that has not
-been fully investigated yet;  to this aim, from the documentation of Node.js we have mined the main constraints that have
-to be met to correctly use the functions exported by a module, and translated into trace expressions to allow RV of
+In this work we show how trace expressions can be successfully used to support RV of Node.js Web applications, a topic that has not
+been investigated yet;  to this aim, from the documentation of Node.js we have mined the main constraints that have
+to be met to correctly use the functions exported by the module \lstinline{http}, and translated into trace expressions to allow RV of
 such constraints.
 
-A corresponding prototype%
+A corresponding tool%
 %\footnote{The implementation and a script for running all tests reported in this paper are available at \url{https://github.com/LucaFranceschini/trace-expressions}.}
 \footnote{Implementations and test at \url{https://github.com/LucaFranceschini/trace-expressions}.}
 has been developed based on the Jalangi2\footnote{\url{https://github.com/Samsung/jalangi2}.}
@@ -52,19 +52,18 @@ The tool offers a simple HTTP interface based on JSON to allow RV of
 distributed and heterogeneous components.
 %; in this way, the tool is ready to support RV in the context of the Internet of Things.
 %
-To test the tool, we have inspected the documentation of the standard \lstinline{http} module, one of the most frequently used
-in Node.js, to mine specifications expressible with trace expressions, with the aim of dynamically verifying
+We have conducted experiments with the tool to  dynamically verify
 the correct use of \lstinline{http} in Node.js code.
-Preliminary tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
+Tests with Express, one of the most popular framework for web applications built on \lstinline{http}, show
 that our prototype tool is able to support RV of real Node.js code.
 
 The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summarized as follows:
 \begin{enumerate*}[label=(\alph*)]
-	\item we present a more complete set of examples, including HTTP interactions and the Express framework;
-	\item we enhance our implementation in order to keep track of target objects in method invocations (necessary for monitoring HTTP interactions) and to deal with cyclic objects;
-	\item we optimize our system by filtering events that are not relevant for the verified specification to avoid sending useless requests to the monitoring server, and by making the communication between the monitored program and the monitor asynchronous.
+\item we present a new set of specifications to dynamically verify Node.js Web applications based on the \lstinline{http} module and
+  the Express framework;
+\item we have improved our tool by introducing several optimizations to overcome some previous limitations, and obtain significantly better performances; all main details of such improvements have been described;
           %% to fit the Node.js execution model without suspending the execution of the program every time an event is observed.
-	\item we measure our performance with benchmarks.
+\item all example specifications have been tested with several benchmarks consisting of pairs of server and client Node.js programs, and the corresponding performances have been measured.
 \end{enumerate*}
 %More details can be found in the following subsections.
 
@@ -73,8 +72,8 @@ The novel contributions w.r.t. our previous work \cite{TowardsIoT17} can be summ
 \Cref{sec:node,sec:rv,sec:trace} give the necessary background and state of the art on Node.js, RV and trace expressions, respectively.
 %\Cref{sec:node} motivates the choice of Node.js, and together with \Cref{sec:trace} they give the necessary background about Node.js and trace expressions.
 %\Cref{sec:rv} is a study of the state of the art for RV techniques, while
-\Cref{sec:examples} shows how the approach can help to detect bugs in Node.js programs with motivating examples.
+\Cref{sec:examples} shows how the approach can help to detect bugs in Node.js Web applications with motivating examples.
 \Cref{sec:impl} presents the implementation of our framework for RV of Node.js based on trace expressions.
-\Cref{sec:exps} reports on some preliminary experiments conducted with Node.js programs based on the standard module
+\Cref{sec:exps} reports on experiments conducted with Node.js programs based on the standard module
 \lstinline{http} and the widely adopted framework Express.
 Finally, \Cref{sec:conclu} draws conclusions and discusses future research directions.
