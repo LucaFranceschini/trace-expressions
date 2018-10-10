@@ -6,19 +6,11 @@
 
 % low-level JSON parsing
 
-parse_json_pre(json(O), Event, Name, Id, Args, TargetId) :-
-	member(event=Event, O),
-	member(name=Name, O),
-	member(id=Id, O),
-	member(args=Args, O),
-	member(targetId=TargetId, O).
+%% Remark: Json.<key> could be used, but it throws an existence error when <key> cannot be found, while JSon.get(<key>) fails silently
+%% see http://www.swi-prolog.org/pldoc/man?section=bidicts
+parse_json_pre(Json, Json.get(event), Json.get(name), Json.get(id), Json.get(args), Json.get(targetId)).
 
-parse_json_post(json(O), Event, Name, Args, Res, ResultId) :-
-	member(event=Event, O),
-	member(name=Name, O),
-	member(args=Args, O),
-	member(res=Res, O),
-	member(resultId=ResultId, O).
+parse_json_post(Json, Json.get(event), Json.get(name), Json.get(args), Json.get(res), Json.get(resultId)).
 
 
 % high-level predicates for event types implementation
