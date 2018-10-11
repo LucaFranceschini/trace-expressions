@@ -47,10 +47,10 @@ manage_event(WebSocket) :-
     ws_receive(WebSocket, Msg), %% uses string as default format 
     (Msg.opcode==close ->
 	     true;
-	 open_string(Msg.data,S),
 	       nb_getval(state,TE1),
 	       log(TE1,Msg.data),
-	       (next(TE1,S,TE2) -> nb_setval(state,TE2);true),
+	       (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}';Reply='{"error":true}'),
+	       ws_send(WebSocket,string(Reply)),
 	       manage_event(WebSocket)).
 
 exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
