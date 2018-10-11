@@ -3,7 +3,7 @@
 :- use_module(library(coinduction)).
 :- coinductive apply_sub_trace_exp/3.
 
-:- use_module(library(http/json)). 
+:- use_module(library(http/json)).  %% only needed to patch the json dicts bug
 
 /*******************************************************************************************/
 /*                              PARAMETRIC TRACE EXPRESSIONS                                                   */
