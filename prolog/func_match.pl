@@ -3,12 +3,18 @@
 	func_post/5, func_post_name/2, func_post_names/2,
 	cb_pre/5, cb_pre/1, cb_post/5
 ]).
-
+    
 % low-level JSON parsing
+
+%% ISSUES WITH JSON DICTS, THE CLAUSES BELOW DO NOT WORK AS EXPECTED %%
 
 %% Remark: Json.<key> could be used, but it throws an existence error when <key> cannot be found, while JSon.get(<key>) fails silently
 %% see http://www.swi-prolog.org/pldoc/man?section=bidicts
+
 parse_json_pre(Json, Json.get(event), Json.get(name), Json.get(id), Json.get(args), Json.get(targetId)).
+
+%% equivalent clause with debugging showing the bug %%
+%% parse_json_pre(Json,E, N,I,A,T) :- writeln('parse_json_pre'),JE=Json.get(event),writeln(E),writeln(JE),JE=E,writeln('done'),N=Json.get(name), I=Json.get(id), A=Json.get(args), T=Json.get(targetId).
 
 parse_json_post(Json, Json.get(event), Json.get(name), Json.get(args), Json.get(res), Json.get(resultId)).
 

@@ -31,14 +31,26 @@ server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]). %%
 
 log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, ''),flush_output(Stream);true. %% optional logging of server activity
 
+%% DOES NOT WORK BECAUSE OF ISSUE WITH JSON DICTS %%
+%% manage_event(WebSocket) :-
+%%     ws_receive(WebSocket, Msg, [format(json)]), 
+%%     (Msg.opcode==close ->
+%% 	     true;
+%% 	 E=Msg.data,
+%% 	       nb_getval(state,TE1),
+%% 	       log(TE1,E),
+%% 	       (next(TE1,E,TE2) -> nb_setval(state,TE2);true),
+%% 	       manage_event(WebSocket)).
+
+%% patched version
 manage_event(WebSocket) :-
-    ws_receive(WebSocket, Msg, [format(json)]), 
+    ws_receive(WebSocket, Msg), %% uses string as default format 
     (Msg.opcode==close ->
 	     true;
-	 E=Msg.data,
+	 open_string(Msg.data,S),
 	       nb_getval(state,TE1),
-	       log(TE1,E),
-	       (next(TE1,E,TE2) -> nb_setval(state,TE2);true),
+	       log(TE1,Msg.data),
+	       (next(TE1,S,TE2) -> nb_setval(state,TE2);true),
 	       manage_event(WebSocket)).
 
 exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
