@@ -103,10 +103,57 @@
 	if(J$.initParams.names) J$.initParams.names=JSON.parse(J$.initParams.names); 
 	
 	// test for async comunication (Davide)
-	const cp = require('child_process')
-	const sender=cp.fork(__dirname + '/send_to_monitor.js')
-	
+	// const cp = require('child_process')
+	// const sender=cp.fork(__dirname + '/send_to_monitor.js')
 	// end test
+
+	// websocket setting (Davide 2018-10-12)
+	const WebSocket = require('ws');
+	const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
+	ws.ready = false; // socket initially not ready for sending an event
+	ws.queue=[]; // event queue
+	const log = true; // logs event queue length
+
+	const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
+	
+	ws.sendEvent =
+	    function(data){
+		this.ready=false;
+		this.send(stringify(data),onReady);
+	    }
+
+	ws.newEvent =
+	    function (data){
+		if(this.ready && queue.length===0)
+		    send(data);
+		else{
+		    queue.push(data);
+		    if(log && queue.length % MAX===0)
+			console.log(`queue: ${queue.length}`);
+		}
+	    }
+
+	function onReady(){
+	    ready=true; 
+	    if(queue.length>0)
+		ws.sendEvent(queue.shift());
+	}
+
+	ws.on('open', onReady);
+	ws.on('message',data=>()); // do nothing for the moment
+	// possible more elaborated action
+	// ws.on('message',data=>{
+	//     try{
+	// 	if(JSON.parse(data).error)
+	// 	    console.error('Illegal event detected');
+	//     }
+	//     catch(e){
+	// 	console.error('Fatal error: illegal JSON data sent by the monitor');
+	//     }
+	// });
+	// end websocket setting
+
+
 	
         const util = require('util');
         
@@ -179,7 +226,8 @@
         		metadata.targetId = objectIds.get(target);
         	}
         	
-            return instr.before(metadata,sender);
+	    //            return instr.before(metadata,sender);
+            return instr.before(metadata,ws); // uses websocket ws (Davide 2018-10-12)
         }
         
         function afterFunction(metadata) {
@@ -194,7 +242,8 @@
         		metadata.resultId = objectIds.get(result)
         	}
         	
-            return instr.after(metadata,sender);
+	    // return instr.after(metadata,sender);
+            return instr.after(metadata,ws); // uses websocket ws (Davide 2018-10-12)
         }
         
         
