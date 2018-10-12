@@ -50,7 +50,8 @@ manage_event(WebSocket) :-
 	       nb_getval(state,TE1),
 	       log(TE1,Msg.data),
 	       (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}';Reply='{"error":true}'),
-	       ws_send(WebSocket,string(Reply)),
+	       %% ws_send(WebSocket,string(Reply)),
+	       writeln(Reply),
 	       manage_event(WebSocket)).
 
 exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
