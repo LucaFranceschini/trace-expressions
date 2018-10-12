@@ -107,40 +107,56 @@
 	// const sender=cp.fork(__dirname + '/send_to_monitor.js')
 	// end test
 
-	// websocket setting (Davide 2018-10-12)
+	// DA: Oct 12, 2018 websocket setting 
 	const WebSocket = require('ws');
 	const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
 	ws.ready = false; // socket initially not ready for sending an event
 	ws.queue=[]; // event queue
-	const log = true; // logs event queue length
-
+	ws.log = true; // if set, logs event queue length
+        ws.STEP = 1000; // only STEP*k queue sizes are logged 
+	    
 	const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
 	
-	ws.sendEvent =
+	ws.sendEvent = // prepares and sends data to monitor with websocket
 	    function(data){
 		this.ready=false;
-		this.send(stringify(data),onReady);
+		const body = {
+		    event: data.event,
+		    name: data.functionName,
+		    id: data.callId,
+		    res: data.result,
+		    args: Object.values(data.arguments),  // make it an array
+		    targetId: data.targetId,
+		    resultId: data.resultId
+		};
+		this.send(stringify(body,{depth:5}),onReady);
 	    }
 
-	ws.newEvent =
+	ws.newEvent = // manages newly detected event
 	    function (data){
-		if(this.ready && queue.length===0)
-		    send(data);
+		if(this.ready && this.queue.length===0)
+		    this.sendEvent(data);
 		else{
-		    queue.push(data);
-		    if(log && queue.length % MAX===0)
-			console.log(`queue: ${queue.length}`);
+		    this.queue.push(data);
+		    this.log();
 		}
 	    }
 
-	function onReady(){
-	    ready=true; 
-	    if(queue.length>0)
-		ws.sendEvent(queue.shift());
-	}
+	ws.log = // logs queue size if required
+	    function(){
+		if(this.log && this.queue.length % this.STEP===0)
+		    console.log(`queue: ${this.queue.length}`);
+	    }
 
-	ws.on('open', onReady);
-	ws.on('message',data=>()); // do nothing for the moment
+	ws.onReady() = // callback to execute when the websocket connection is ready
+	    function (){
+		this.ready=true; 
+		if(this.queue.length>0)
+		    this.sendEvent(this.queue.shift());
+	    }
+
+	ws.on('open', onReady.bind(ws));
+	ws.on('message',data=>()); // do nothing for the moment in reaction to monitor's reply
 	// possible more elaborated action
 	// ws.on('message',data=>{
 	//     try{
