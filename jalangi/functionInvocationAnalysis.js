@@ -129,7 +129,7 @@
 		    targetId: data.targetId,
 		    resultId: data.resultId
 		};
-		this.send(stringify(body,{depth:5}),onReady);
+		this.send(stringify(body,{depth:5}),()=>ws.onReady());
 	    }
 
 	ws.newEvent = // manages newly detected event
@@ -148,15 +148,15 @@
 		    console.log(`queue: ${this.queue.length}`);
 	    }
 
-	ws.onReady() = // callback to execute when the websocket connection is ready
+	ws.onReady = // callback to execute when the websocket connection is ready
 	    function (){
 		this.ready=true; 
 		if(this.queue.length>0)
 		    this.sendEvent(this.queue.shift());
 	    }
 
-	ws.on('open', onReady.bind(ws));
-	ws.on('message',data=>()); // do nothing for the moment in reaction to monitor's reply
+	ws.on('open', ()=>ws.onReady());
+	ws.on('message',data=>{}); // do nothing for the moment in reaction to monitor's reply
 	// possible more elaborated action
 	// ws.on('message',data=>{
 	//     try{
