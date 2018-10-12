@@ -113,13 +113,12 @@
 	ws.ready = false; // socket initially not ready for sending an event
 	ws.queue=[]; // event queue
 	ws.log = true; // if set, logs event queue length
-        ws.STEP = 1; // only STEP*k queue sizes are logged 
+        ws.STEP = 100; // only STEP*k queue sizes are logged 
 	    
 	const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
 	
 	ws.newEvent = // manages newly detected event
 	function (data){
-	    console.log(`new event`);
 	    if(this.ready && this.queue.length===0)
 		this.sendEvent(data);
 	    else{
@@ -130,7 +129,6 @@
 
 	ws.sendEvent = // prepares and sends data to monitor with websocket
 	function(data){
-	    console.log(`preparing to send`);
 	    this.ready=false;
 	    const body = {
 		event: data.event,
@@ -152,16 +150,14 @@
 
 	ws.onReady = // callback to execute when the websocket connection is ready
 	function (){
-	    console.log(`ready`);
-	    this.log();
 	    this.ready=true; 
 	    if(this.queue.length>0)
 		this.sendEvent(this.queue.shift());
 	}
 
-	ws.on('error',err=>console.error(`error`));
+	ws.on('error',err=>console.error(`error: ${err.message}`));
 	ws.on('open', ()=>ws.onReady());
-	ws.on('message',console.log); // do nothing for the moment in reaction to monitor's reply
+	ws.on('message',()=>{}); // do nothing for the moment in reaction to monitor's reply
 	// possible more elaborated action
 	// ws.on('message',data=>{
 	//     try{

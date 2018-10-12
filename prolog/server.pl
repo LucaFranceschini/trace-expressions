@@ -44,16 +44,17 @@ log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace express
 
 %% patched version
 manage_event(WebSocket) :-
-    ws_receive(WebSocket, Msg), %% uses string as default format 
+    ws_receive(WebSocket, Msg), %% uses string as default format, format(json) does not work properly, dict implementation not stable 
     (Msg.opcode==close ->
-	     true;
-	       nb_getval(state,TE1),
-	       log(TE1,Msg.data),
-	       (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}';Reply='{"error":true}'),
-	       %% ws_send(WebSocket,string(Reply)),
-	       writeln(Reply),
-	       manage_event(WebSocket)).
-
+     true;
+     nb_getval(state,TE1),
+     log(TE1,Msg.data),
+     (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
+     %% next line: more detailed information computed in case an error occurs
+     %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
+     ws_send(WebSocket,text(Reply)),
+     manage_event(WebSocket)).
+		
 exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
 exception(undefined_global_variable, log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,write,Stream);Stream=null),nb_setval(log, Stream).
 
