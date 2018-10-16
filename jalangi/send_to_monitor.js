@@ -1,49 +1,55 @@
-const http=require('http')
-const cp = require('child_process')
-const log = true // logs queue length
-      
-const queue=[]
-
-const options = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'}
+const WebSocket = require('ws');
+const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
+ws.ready = false; // socket initially not ready for sending an event
+ws.queue=[]; // event queue
+ws.log = true; // if set, logs event queue length
+ws.STEP = 100; // only STEP*k queue sizes are logged 
+	    
+const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
+	
+ws.newEvent = // manages newly detected event
+function (data){
+    if(this.ready && this.queue.length===0)
+	this.sendEvent(data);
+    else{
+	this.queue.push(data);
+	this.log();
+    }
 }
 
-function log_queue(){
-	       if(log && queue.length && queue.length % 1000 === 0) console.log(`queue length:${queue.length}`)
+ws.sendEvent = // sends data to monitor with websocket
+function(data){
+    this.ready=false;
+    this.send(data,()=>ws.onReady());
+}
+	
+ws.log = // logs queue size if required
+function(){
+    if(this.log && this.queue.length % this.STEP===0)
+	console.log(`queue: ${this.queue.length}`);
 }
 
-function http_request(data,port,callback){
-    options.port=port
-    options.headers['Content-Length']=Buffer.byteLength(data)
-    const req = http.request(options, res => {
-	/* let res_data=''
-	   res.on('data', chunk => res_data+=chunk)
-	   res.on('end', () => callback(null,res_data)) */
-	queue.shift()
-	log_queue()
-	if(queue.length>0)
-	    http_request(queue[0],port,callback)
-    })
-    req.on('error', err => {callback(err)})
-    req.on('connect',()=>console.log('connect'))
-    req.end(data)
+ws.onReady = // callback to execute when the websocket connection is ready
+function (){
+    this.ready=true; 
+    if(this.queue.length>0)
+	this.sendEvent(this.queue.shift());
 }
 
-function handle_response(err,data){
-  if(err) {
-    console.log(data)
-    console.error(err.message)
-  } /*else
-    console.log(JSON.parse(data))*/
-}
+ws.on('error',err=>console.error(`error: ${err.message}`));
+ws.on('open', ()=>ws.onReady());
+ws.on('message',()=>{}); // do nothing for the moment in reaction to monitor's reply
+// possible more elaborated action
+// ws.on('message',data=>{
+//     try{
+// 	if(JSON.parse(data).error)
+// 	    console.error('Illegal event detected');
+//     }
+//     catch(e){
+// 	console.error('Fatal error: illegal JSON data sent by the monitor');
+//     }
+// });
+// end websocket setting
 
-const port = 8081
 
-process.on('message',data => 
-	   {
-	       queue.push(data)
-	       log_queue()
-	       if(queue.length===1)
-		   http_request(data,port,handle_response)
-	   })
+process.on('message',data => ws.newEvent(data)); 
