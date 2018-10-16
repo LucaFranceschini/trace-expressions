@@ -103,74 +103,10 @@
 	if(J$.initParams.names) J$.initParams.names=JSON.parse(J$.initParams.names); 
 	
 	// test for async comunication (Davide)
-	// const cp = require('child_process')
-	// const sender=cp.fork(__dirname + '/send_to_monitor.js')
+	const cp = require('child_process')
+	const sender=cp.fork(__dirname + '/send_to_monitor.js')
+	
 	// end test
-
-	// DA: Oct 12, 2018 websocket setting 
-	const WebSocket = require('ws');
-	const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
-	ws.ready = false; // socket initially not ready for sending an event
-	ws.queue=[]; // event queue
-	ws.log = true; // if set, logs event queue length
-        ws.STEP = 100; // only STEP*k queue sizes are logged 
-	    
-	const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
-	
-	ws.newEvent = // manages newly detected event
-	function (data){
-	    if(this.ready && this.queue.length===0)
-		this.sendEvent(data);
-	    else{
-		this.queue.push(data);
-		this.log();
-	    }
-	}
-
-	ws.sendEvent = // prepares and sends data to monitor with websocket
-	function(data){
-	    this.ready=false;
-	    const body = {
-		event: data.event,
-		name: data.functionName,
-		id: data.callId,
-		res: data.result,
-		args: Object.values(data.arguments),  // make it an array
-		targetId: data.targetId,
-		resultId: data.resultId
-	    };
-	    this.send(stringify(body,{depth:5}),()=>ws.onReady());
-	}
-	
-	ws.log = // logs queue size if required
-	    function(){
-		if(this.log && this.queue.length % this.STEP===0)
-		    console.log(`queue: ${this.queue.length}`);
-	    }
-
-	ws.onReady = // callback to execute when the websocket connection is ready
-	function (){
-	    this.ready=true; 
-	    if(this.queue.length>0)
-		this.sendEvent(this.queue.shift());
-	}
-
-	ws.on('error',err=>console.error(`error: ${err.message}`));
-	ws.on('open', ()=>ws.onReady());
-	ws.on('message',()=>{}); // do nothing for the moment in reaction to monitor's reply
-	// possible more elaborated action
-	// ws.on('message',data=>{
-	//     try{
-	// 	if(JSON.parse(data).error)
-	// 	    console.error('Illegal event detected');
-	//     }
-	//     catch(e){
-	// 	console.error('Fatal error: illegal JSON data sent by the monitor');
-	//     }
-	// });
-	// end websocket setting
-
-
 	
         const util = require('util');
         
@@ -243,8 +179,7 @@
         		metadata.targetId = objectIds.get(target);
         	}
         	
-	    //            return instr.before(metadata,sender);
-            return instr.before(metadata,ws); // uses websocket ws (Davide 2018-10-12)
+            return instr.before(metadata,sender);
         }
         
         function afterFunction(metadata) {
@@ -259,8 +194,7 @@
         		metadata.resultId = objectIds.get(result)
         	}
         	
-	    // return instr.after(metadata,sender);
-            return instr.after(metadata,ws); // uses websocket ws (Davide 2018-10-12)
+            return instr.after(metadata,sender);
         }
         
         

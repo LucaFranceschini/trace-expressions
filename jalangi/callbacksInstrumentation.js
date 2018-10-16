@@ -23,7 +23,7 @@ function monitoredName(data) { // DA: Oct 1, 2018, optimization to monitor funct
     return data.event.startsWith('cb') || !J$.initParams.names || J$.initParams.names.includes(data.functionName);
 }
 
-function beforeFunction(data,ws) { // DA: Oct 12, 2018 added websocket  
+function beforeFunction(data,sender) { // added sender to test async communication (Davide)
 	/*if (!functions.includes(data.functionObject))
 		return data*/
 
@@ -58,7 +58,7 @@ function beforeFunction(data,ws) { // DA: Oct 12, 2018 added websocket
 		data.event = 'func_pre';
 
     if(monitoredName(data)) // DA: Oct 1, 2018, optimization to monitor names with initParams.names
-	ws.newEvent(data); // DA: Oct 12, 2018, uses websocket 
+	monitor.sendEvent(data,sender); // added sender to test async communication (Davide)
 	
 	return data;
 }
@@ -67,7 +67,7 @@ function isInSupportedModule(data) {
 	return supportedModules.some((m, i, a) => data.functionName.startsWith(m));
 }
 
-function afterFunction(data,ws) { // DA: Oct 12, 2018 added websocket  
+function afterFunction(data,sender) { // added sender to test async communication (Davide)
     //	check if it is a callback
     if(J$.initParams.func_post){
     	if (data.functionObject._jalangi_callId) {
@@ -77,7 +77,7 @@ function afterFunction(data,ws) { // DA: Oct 12, 2018 added websocket
     	else
     	    data.event = 'func_post';	
 	if(monitoredName(data)) // DA: Oct 1, 2018, optimization to monitor names with initParams.names
-	    ws.newEvent(data); // DA: Oct 12, 2018, uses websocket 
+	    monitor.sendEvent(data,sender); // added sender to test async communication (Davide)
     }	
 	return data;
 }
