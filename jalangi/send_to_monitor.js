@@ -53,3 +53,6 @@ ws.on('message',()=>{}); // do nothing for the moment in reaction to monitor's r
 
 
 process.on('message',data => ws.newEvent(data)); 
+/* the following line is necessary when the client is instrumented; in that case the child is still connected with
+the Prolog server and hence it does not terminate */ 
+process.on('disconnect',()=>process.exit(0)); 
