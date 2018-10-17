@@ -1,7 +1,7 @@
 const http=require('http')
 const cp = require('child_process')
 const log = true // logs queue length
-      
+const STEP=1000 // step for queue logging, the larger, the lower frequency      
 const queue=[]
 
 const options = {
@@ -10,7 +10,7 @@ const options = {
 }
 
 function log_queue(){
-	       if(log && queue.length && queue.length % 1000 === 0) console.log(`queue length:${queue.length}`)
+	       if(log && queue.length && queue.length % STEP === 0) console.log(`queue length:${queue.length}`)
 }
 
 function http_request(data,port,callback){
