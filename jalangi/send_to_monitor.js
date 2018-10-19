@@ -38,7 +38,7 @@ function (){
 
 ws.on('error',err=>console.error(`error: ${err.message}`));
 ws.on('open', ()=>ws.onReady());
-ws.on('message',()=>{}); // do nothing for the moment in reaction to monitor's reply
+ws.on('message',data=>{}); // do nothing for the moment in reaction to monitor's reply
 // possible more elaborated action
 // ws.on('message',data=>{
 //     try{
