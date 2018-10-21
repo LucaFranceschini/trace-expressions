@@ -1,13 +1,13 @@
 #! /bin/bash
 DIR=../../..
-gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/response\ end/response_end.pl"
 for i in `seq 1 10`
 do 
-sleep 5
-node $DIR/node_modules/jalangi2/src/js/commands/direct.js --initParam names:[\"http.createServer\",\"write\",\"writeHead\",\"end\"] --analysis $DIR/jalangi/functionInvocationAnalysis.js transpiled/simple_server-ecma5.js &
-sleep 5
-node benchmark-client.js $1 >> results-monitored.txt
-pkill node
-sleep 5
+    gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/response\ end/response_end.pl"
+    sleep 5
+    node $DIR/node_modules/jalangi2/src/js/commands/direct.js --initParam names:[\"http.createServer\",\"write\",\"writeHead\",\"end\"] --analysis $DIR/jalangi/functionInvocationAnalysis.js transpiled/simple_server-ecma5.js &
+    sleep 5
+    node benchmark-client.js $1 >> results-monitored.txt
+    pkill node
+    sleep 5
+    pkill swipl
 done
-pkill swipl
