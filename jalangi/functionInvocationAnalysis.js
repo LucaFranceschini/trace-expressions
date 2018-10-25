@@ -98,6 +98,8 @@
      * @class
      */
     function MyAnalysis() {
+	//
+	const methodNames=[]; // DA: stack of method names, possible fix to trace method calls instead of using lastMethodName 
 	// to deal with --initParam (Davide)
 	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post);
 	J$.initParams.names=J$.initParams.names||'[]';
@@ -144,12 +146,6 @@
         
         // last function for which invokeFunPre has been called
         let lastInvoked;
-        
-        /*
-        Set when a property is accessed as part of a method call.
-        Unset when invoking the function.
-        */
-        let lastMethodName;
         
         for (const moduleName of supportedModules)
         	readModule(moduleName);
@@ -251,14 +247,13 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.pop() || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
             
             stack.push(PRE);
             lastInvoked = f;
-            lastMethodName = undefined;
             
             return {f: metadata.functionObject,
                     base: metadata.target,
@@ -326,7 +321,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.pop() || f.name || anonymous
             };
             
             metadata = afterFunction(metadata);
@@ -452,8 +447,7 @@
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
             if (isMethodCall)
-                lastMethodName = offset;
-            
+		methodNames.push(offset);
             return {result: val};
         };
 
@@ -578,7 +572,7 @@
 		              functionObject: f,
 		              target: dis,
 		              arguments: args,
-                  functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                  functionName: functionNames.get(f) || f.name || anonymous
 		          };
 		          lastEnterData = metadata;
 		          
