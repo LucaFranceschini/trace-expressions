@@ -319,6 +319,7 @@
             };
             metadata = afterFunction(metadata);
             trackFunctionExit.pop();
+	    lastInvoked = null;
             return {result: metadata.result};
         };
 
@@ -573,7 +574,6 @@
             	
               trackFunctionExit.push(true);
             }
-            trackFunctionExit.push(false);
             lastInvoked = null;
         };
 
