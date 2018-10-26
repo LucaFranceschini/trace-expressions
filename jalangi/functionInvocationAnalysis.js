@@ -99,7 +99,7 @@
      */
     function MyAnalysis() {
 	//
-	const methodNames=[]; // DA: stack of method names, possible fix to trace method calls instead of using lastMethodName 
+	const methodNames=new WeakMap(); // DA: 2-levels weak map associating targets and functions to method names; possible fix to trace method calls instead of using lastMethodName 
 	// to deal with --initParam (Davide)
 	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post);
 	J$.initParams.names=J$.initParams.names||'[]';
@@ -137,13 +137,9 @@
         // functionExit does not have the function metadata
         let lastEnterData;
         
-        // stack of events 'invokeFunPre' and 'functionEnter'
-        const stack = [],
-              PRE = false,
-              ENTER = true;
-        function stackTop() { return isStackEmpty() ? undefined : stack[stack.length-1]; }
-        function isStackEmpty() { return stack.length === 0; };
-        
+        // stacks that keeps track of function exits that have to be tracked
+        const trackFunctionExit = [];
+        trackFunctionExit.top=function(){return this[this.length-1];};
         // last function for which invokeFunPre has been called
         let lastInvoked;
         
@@ -247,12 +243,10 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.pop() || f.name || anonymous // DA: duplicated below, better using a function
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
-            
-            stack.push(PRE);
             lastInvoked = f;
             
             return {f: metadata.functionObject,
@@ -321,14 +315,10 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.pop() || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous
             };
-            
             metadata = afterFunction(metadata);
-            
-            stack.pop();
-            last = null;
-            
+            trackFunctionExit.pop();
             return {result: metadata.result};
         };
 
@@ -446,8 +436,11 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-            if (isMethodCall)
-		methodNames.push(offset);
+            if (isMethodCall){ 
+		if(!methodNames.has(base))
+		    methodNames.set(base,new WeakMap());
+		methodNames.get(base).set(val,offset);
+	    }
             return {result: val};
         };
 
@@ -578,9 +571,9 @@
 		          
             	beforeFunction(metadata);
             	
-              stack.push(ENTER);
+              trackFunctionExit.push(true);
             }
-            
+            trackFunctionExit.push(false);
             lastInvoked = null;
         };
 
@@ -600,17 +593,14 @@
          * symbolic execution.
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            if (stackTop() === ENTER) {
+	    if (trackFunctionExit.top()) {
+		trackFunctionExit.pop()
                 lastEnterData.returnValue = returnVal;
-                lastEnterData.wrappedException = wrappedExceptionVal;
-                
+                lastEnterData.wrappedException = wrappedExceptionVal;                
                 lastEnterData = afterFunction(lastEnterData);
-                
-                stack.pop();
-            
-						    return {returnVal: lastEnterData.returnValue,
-						            wrappedExceptionVal: lastEnterData.wrappedException,
-						            isBacktrack: false};
+		return {returnVal: lastEnterData.returnValue,
+			wrappedExceptionVal: lastEnterData.wrappedException,
+			isBacktrack: false};
             }
             
             return {returnVal: returnVal,
