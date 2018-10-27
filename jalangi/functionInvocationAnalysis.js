@@ -139,7 +139,7 @@
         
         // stacks that keeps track of function exits that have to be tracked
         const trackFunctionExit = [];
-        trackFunctionExit.top=function(){return this[this.length-1];};
+
         // last function for which invokeFunPre has been called
         let lastInvoked;
         
