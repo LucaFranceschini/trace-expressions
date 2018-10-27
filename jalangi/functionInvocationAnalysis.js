@@ -98,79 +98,18 @@
      * @class
      */
     function MyAnalysis() {
+	//
+	const methodNames=new WeakMap(); // DA: 2-levels weak map associating targets and functions to method names; possible fix to trace method calls instead of using lastMethodName 
 	// to deal with --initParam (Davide)
-	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post); 
-	if(J$.initParams.names) J$.initParams.names=JSON.parse(J$.initParams.names); 
+	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post);
+	J$.initParams.names=J$.initParams.names||'[]';
+	J$.initParams.names=JSON.parse(J$.initParams.names); 
 	
 	// test for async comunication (Davide)
-	// const cp = require('child_process')
-	// const sender=cp.fork(__dirname + '/send_to_monitor.js')
+	const cp = require('child_process')
+	const sender=cp.fork(__dirname + '/send_to_monitor.js')
+	
 	// end test
-
-	// DA: Oct 12, 2018 websocket setting 
-	const WebSocket = require('ws');
-	const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
-	ws.ready = false; // socket initially not ready for sending an event
-	ws.queue=[]; // event queue
-	ws.log = true; // if set, logs event queue length
-        ws.STEP = 1000; // only STEP*k queue sizes are logged 
-	    
-	const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
-	
-	ws.newEvent = // manages newly detected event
-	function (data){
-	    if(this.ready && this.queue.length===0)
-		this.sendEvent(data);
-	    else{
-		this.queue.push(data);
-		this.log();
-	    }
-	}
-
-	ws.sendEvent = // prepares and sends data to monitor with websocket
-	function(data){
-	    this.ready=false;
-	    const body = {
-		event: data.event,
-		name: data.functionName,
-		id: data.callId,
-		res: data.result,
-		args: Object.values(data.arguments),  // make it an array
-		targetId: data.targetId,
-		resultId: data.resultId
-	    };
-	    this.send(stringify(body,{depth:5}),()=>ws.onReady());
-	}
-	
-	ws.log = // logs queue size if required
-	    function(){
-		if(this.log && this.queue.length % this.STEP===0)
-		    console.log(`queue: ${this.queue.length}`);
-	    }
-
-	ws.onReady = // callback to execute when the websocket connection is ready
-	function (){
-	    this.ready=true; 
-	    if(this.queue.length>0)
-		this.sendEvent(this.queue.shift());
-	}
-
-	ws.on('error',err=>console.error(`error: ${err.message}`));
-	ws.on('open', ()=>ws.onReady());
-	ws.on('message',()=>{}); // do nothing for the moment in reaction to monitor's reply
-	// possible more elaborated action
-	// ws.on('message',data=>{
-	//     try{
-	// 	if(JSON.parse(data).error)
-	// 	    console.error('Illegal event detected');
-	//     }
-	//     catch(e){
-	// 	console.error('Fatal error: illegal JSON data sent by the monitor');
-	//     }
-	// });
-	// end websocket setting
-
-
 	
         const util = require('util');
         
@@ -198,21 +137,11 @@
         // functionExit does not have the function metadata
         let lastEnterData;
         
-        // stack of events 'invokeFunPre' and 'functionEnter'
-        const stack = [],
-              PRE = false,
-              ENTER = true;
-        function stackTop() { return isStackEmpty() ? undefined : stack[stack.length-1]; }
-        function isStackEmpty() { return stack.length === 0; };
-        
+        // stacks that keeps track of function exits that have to be tracked
+        const trackFunctionExit = [];
+        trackFunctionExit.top=function(){return this[this.length-1];};
         // last function for which invokeFunPre has been called
         let lastInvoked;
-        
-        /*
-        Set when a property is accessed as part of a method call.
-        Unset when invoking the function.
-        */
-        let lastMethodName;
         
         for (const moduleName of supportedModules)
         	readModule(moduleName);
@@ -243,8 +172,7 @@
         		metadata.targetId = objectIds.get(target);
         	}
         	
-	    //            return instr.before(metadata,sender);
-            return instr.before(metadata,ws); // uses websocket ws (Davide 2018-10-12)
+            return instr.before(metadata,sender);
         }
         
         function afterFunction(metadata) {
@@ -259,8 +187,7 @@
         		metadata.resultId = objectIds.get(result)
         	}
         	
-	    // return instr.after(metadata,sender);
-            return instr.after(metadata,ws); // uses websocket ws (Davide 2018-10-12)
+            return instr.after(metadata,sender);
         }
         
         
@@ -316,14 +243,11 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
-            
-            stack.push(PRE);
             lastInvoked = f;
-            lastMethodName = undefined;
             
             return {f: metadata.functionObject,
                     base: metadata.target,
@@ -391,14 +315,10 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous
             };
-            
             metadata = afterFunction(metadata);
-            
-            stack.pop();
-            last = null;
-            
+	    lastInvoked = null;
             return {result: metadata.result};
         };
 
@@ -516,9 +436,11 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-            if (isMethodCall)
-                lastMethodName = offset;
-            
+            if (isMethodCall){ 
+		if(!methodNames.has(base))
+		    methodNames.set(base,new WeakMap());
+		methodNames.get(base).set(val,offset);
+	    }
             return {result: val};
         };
 
@@ -636,23 +558,23 @@
          * @returns {undefined} - Any return value is ignored
          */
         this.functionEnter = function (iid, f, dis, args) {
-            if (lastInvoked !== f) {
-		          const metadata = {
-            			location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
-		              functionIid: iid,
-		              functionObject: f,
-		              target: dis,
-		              arguments: args,
-                  functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
-		          };
-		          lastEnterData = metadata;
-		          
+            if (lastInvoked === null) {
+		const metadata = {
+            	    location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
+		    functionIid: iid,
+		    functionObject: f,
+		    target: dis,
+		    arguments: args,
+                    functionName: functionNames.get(f) || f.name || anonymous
+		};
+		lastEnterData = metadata;
             	beforeFunction(metadata);
-            	
-              stack.push(ENTER);
+		trackFunctionExit.push(true);
             }
-            
-            lastInvoked = null;
+	    else {
+		lastInvoked = null;
+		trackFunctionExit.push(false);
+	    }
         };
 
         /**
@@ -671,17 +593,13 @@
          * symbolic execution.
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            if (stackTop() === ENTER) {
+	    if (trackFunctionExit.pop()) {
                 lastEnterData.returnValue = returnVal;
-                lastEnterData.wrappedException = wrappedExceptionVal;
-                
+                lastEnterData.wrappedException = wrappedExceptionVal;                
                 lastEnterData = afterFunction(lastEnterData);
-                
-                stack.pop();
-            
-						    return {returnVal: lastEnterData.returnValue,
-						            wrappedExceptionVal: lastEnterData.wrappedException,
-						            isBacktrack: false};
+		return {returnVal: lastEnterData.returnValue,
+			wrappedExceptionVal: lastEnterData.wrappedException,
+			isBacktrack: false};
             }
             
             return {returnVal: returnVal,
