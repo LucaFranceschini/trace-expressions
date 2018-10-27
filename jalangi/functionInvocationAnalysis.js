@@ -318,7 +318,6 @@
                 functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous
             };
             metadata = afterFunction(metadata);
-            trackFunctionExit.pop();
 	    lastInvoked = null;
             return {result: metadata.result};
         };
@@ -559,22 +558,23 @@
          * @returns {undefined} - Any return value is ignored
          */
         this.functionEnter = function (iid, f, dis, args) {
-            if (lastInvoked !== f) {
-		          const metadata = {
-            			location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
-		              functionIid: iid,
-		              functionObject: f,
-		              target: dis,
-		              arguments: args,
-                  functionName: functionNames.get(f) || f.name || anonymous
-		          };
-		          lastEnterData = metadata;
-		          
+            if (lastInvoked === null) {
+		const metadata = {
+            	    location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
+		    functionIid: iid,
+		    functionObject: f,
+		    target: dis,
+		    arguments: args,
+                    functionName: functionNames.get(f) || f.name || anonymous
+		};
+		lastEnterData = metadata;
             	beforeFunction(metadata);
-            	
-              trackFunctionExit.push(true);
+		trackFunctionExit.push(true);
             }
-            lastInvoked = null;
+	    else {
+		lastInvoked = null;
+		trackFunctionExit.push(false);
+	    }
         };
 
         /**
@@ -593,8 +593,7 @@
          * symbolic execution.
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-	    if (trackFunctionExit.top()) {
-		trackFunctionExit.pop()
+	    if (trackFunctionExit.pop()) {
                 lastEnterData.returnValue = returnVal;
                 lastEnterData.wrappedException = wrappedExceptionVal;                
                 lastEnterData = afterFunction(lastEnterData);
