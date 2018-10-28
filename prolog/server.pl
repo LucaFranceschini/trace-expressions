@@ -56,6 +56,6 @@ manage_event(WebSocket) :-
      manage_event(WebSocket)).
 		
 exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
-exception(undefined_global_variable, log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,write,Stream);Stream=null),nb_setval(log, Stream).
+exception(undefined_global_variable, log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,append,Stream);Stream=null),nb_setval(log, Stream).
 
 :- server(8081).
