@@ -42,6 +42,6 @@ manage_request(Request) :-
     (next(TE1,E,TE2)->nb_setval(state,TE2),reply_json(json([error=(@false)]));reply_json(json([error=(@true)]))).
 
 exception(undefined_global_variable,state,retry) :- trace_expression(_, TE), nb_setval(state,TE).
-exception(undefined_global_variable,log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,write,Stream);Stream=null),nb_setval(log, Stream).
+exception(undefined_global_variable,log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,append,Stream);Stream=null),nb_setval(log, Stream).
 
 :- server(8081).
