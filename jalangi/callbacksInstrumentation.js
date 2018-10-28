@@ -6,6 +6,7 @@ exports.before = beforeFunction;
 exports.after = afterFunction;
 
 const supportedModules = ['fs','http'];
+const supportedNames = J$.initParams.names;
 
 //const filteredFunctionNames = ['http.createServer','write','writeHead','end']
 
@@ -19,15 +20,23 @@ for (const k in response) {
 		functions.push(obj)
 }
 
+function isInSupportedModule(data) {
+	return supportedModules.some((m, i, a) => data.functionName.startsWith(m));
+}
+
+function traceCb(data) { // true if the callback needs to be traced
+    return supportedNames.includes(data.functionName) || isInSupportedModule(data); 
+}
+
 function skip(data) { // optimization to monitor functions with names with initParams.names
-    return !data.functionObject._jalangi_callId && J$.initParams.names && !J$.initParams.names.includes(data.functionName);
+    return !data.functionObject._jalangi_callId && !supportedNames.includes(data.functionName);
 }
 
 function beforeFunction(data,ws) { 
     if(skip(data)) // optimization to monitor names with initParams.names
 	return data;
     const args = data.arguments, argc = args.length;
-    if (argc > 0 && typeof args[argc-1] === 'function' && isInSupportedModule(data)) {
+    if (argc > 0 && typeof args[argc-1] === 'function' && traceCb(data)) {
 	const cb = args[argc-1];
 	// wrap the callback and store the call ID
 	function wrapper() {
@@ -45,10 +54,6 @@ function beforeFunction(data,ws) {
 	data.event = 'func_pre';
     ws.newEvent(data);
     return data;
-}
-
-function isInSupportedModule(data) {
-	return supportedModules.some((m, i, a) => data.functionName.startsWith(m));
 }
 
 function afterFunction(data,ws) { 
