@@ -98,9 +98,12 @@
      * @class
      */
     function MyAnalysis() {
+	//
+	const methodNames=new WeakMap(); // DA: 2-levels weak map associating targets and functions to method names; possible fix to trace method calls instead of using lastMethodName 
 	// to deal with --initParam (Davide)
-	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post); 
-	if(J$.initParams.names) J$.initParams.names=JSON.parse(J$.initParams.names); 
+	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post);
+	J$.initParams.names=J$.initParams.names||'[]';
+	J$.initParams.names=JSON.parse(J$.initParams.names); 
 	
 	// test for async comunication (Davide)
 	const cp = require('child_process')
@@ -133,22 +136,12 @@
         
         // functionExit does not have the function metadata
         let lastEnterData;
-        
-        // stack of events 'invokeFunPre' and 'functionEnter'
-        const stack = [],
-              PRE = false,
-              ENTER = true;
-        function stackTop() { return isStackEmpty() ? undefined : stack[stack.length-1]; }
-        function isStackEmpty() { return stack.length === 0; };
-        
+
+        // stacks that keeps track of function exits that have to be tracked
+        const trackFunctionExit = [];
+
         // last function for which invokeFunPre has been called
         let lastInvoked;
-        
-        /*
-        Set when a property is accessed as part of a method call.
-        Unset when invoking the function.
-        */
-        let lastMethodName;
         
         for (const moduleName of supportedModules)
         	readModule(moduleName);
@@ -250,14 +243,11 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
-            
-            stack.push(PRE);
             lastInvoked = f;
-            lastMethodName = undefined;
             
             return {f: metadata.functionObject,
                     base: metadata.target,
@@ -325,14 +315,10 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous
             };
-            
             metadata = afterFunction(metadata);
-            
-            stack.pop();
-            last = null;
-            
+            lastInvoked = null;
             return {result: metadata.result};
         };
 
@@ -450,9 +436,11 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-            if (isMethodCall)
-                lastMethodName = offset;
-            
+	    if (isMethodCall){ 
+		if(!methodNames.has(base))
+		    methodNames.set(base,new WeakMap());
+		methodNames.get(base).set(val,offset);
+	    }
             return {result: val};
         };
 
@@ -570,23 +558,23 @@
          * @returns {undefined} - Any return value is ignored
          */
         this.functionEnter = function (iid, f, dis, args) {
-            if (lastInvoked !== f) {
-		          const metadata = {
-            			location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
-		              functionIid: iid,
-		              functionObject: f,
-		              target: dis,
-		              arguments: args,
-                  functionName: functionNames.get(f) || lastMethodName || f.name || anonymous
-		          };
-		          lastEnterData = metadata;
-		          
+            if (lastInvoked === null) {
+		const metadata = {
+            	    location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
+		    functionIid: iid,
+		    functionObject: f,
+		    target: dis,
+		    arguments: args,
+                    functionName: functionNames.get(f) || f.name || anonymous
+		};
+		lastEnterData = metadata;         
             	beforeFunction(metadata);
-            	
-              stack.push(ENTER);
+            	trackFunctionExit.push(true);
             }
-            
-            lastInvoked = null;
+	    else {
+		lastInvoked = null;
+		trackFunctionExit.push(false);
+	    }
         };
 
         /**
@@ -605,17 +593,13 @@
          * symbolic execution.
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
-            if (stackTop() === ENTER) {
+	    if (trackFunctionExit.pop()) {
                 lastEnterData.returnValue = returnVal;
                 lastEnterData.wrappedException = wrappedExceptionVal;
-                
                 lastEnterData = afterFunction(lastEnterData);
-                
-                stack.pop();
-            
-						    return {returnVal: lastEnterData.returnValue,
-						            wrappedExceptionVal: lastEnterData.wrappedException,
-						            isBacktrack: false};
+		return {returnVal: lastEnterData.returnValue,
+			wrappedExceptionVal: lastEnterData.wrappedException,
+			isBacktrack: false};
             }
             
             return {returnVal: returnVal,
