@@ -14,10 +14,10 @@
 /* Transition rules */
 
 % (main)
-% next(T, E, T1) :- next(T, E, T1, []).
+next(T, E, T1) :- next(T, E, T1, []).
 
-%% patch to avoid bug with json dicts
-next(T, String, T1) :- open_string(String,Stream),json_read_dict(Stream,E,[value_string_as(atom)]), next(T, E, T1, []).
+%% old patch to avoid problems with json dicts, resolved by using value_string_as(atom) option
+%% next(T, String, T1) :- open_string(String,Stream),json_read_dict(Stream,E,[value_string_as(atom)]), next(T, E, T1, []).
 
 % next transition function (parametric version)
 next(ET:T, E, T, S) :- match(E, ET, S).
