@@ -1,0 +1,27 @@
+First callback of end is traced as a cb_post event! This happens ONLY for the first invocation of the callback and ONLY for this git branch
+See the log snippet below
+
+Trace expression:
+@(filter>>S_1,[S_1=var(reqId,request(var(reqId)):var(cbId,end(var(reqId),var(cbId)):end_cb(var(cbId)):S_1))])
+Event: 
+_G2889{args:[_G2877{method:POST,port:8080}],event:func_pre,id:6,name:http.request,targetId:7}
+
+Trace expression:
+@(filter>>S_1,[S_1=var(reqId,request(var(reqId)):var(cbId,end(var(reqId),var(cbId)):end_cb(var(cbId)):S_1))])
+Event: 
+_G6880{args:[_G6868{method:POST,port:8080}],event:func_post,name:http.request,res:_G6800{agent:_G6644{defaultPort:80,freeSockets:_G6618{},keepAlive:false,keepAliveMsecs:1000,maxFreeSockets:256,maxSockets:null,options:_G6573{path:null},protocol:http:,requests:_G6583{},sockets:_G6608{localhost:8080: :[[Object],[Object]]}},chunkedEncoding:false,connection:_G6529{allowHalfOpen:false,connecting:false,parser:_G6517{4:null,incoming:null,maxHeaderPairs:2000,outgoing:[Cycle],socket:[Cycle]},readable:true,server:null,writable:true},finished:true,maxHeadersCount:null,method:POST,output:[],outputCallbacks:[],outputEncodings:[],outputSize:0,parser:_G6782{4:null,incoming:null,maxHeaderPairs:2000,outgoing:[Cycle],socket:_G6750{allowHalfOpen:false,connecting:false,parser:[Cycle],readable:true,server:null,writable:true}},path: (/),res:null,sendDate:false,shouldKeepAlive:false,socket:_G6431{allowHalfOpen:false,connecting:false,parser:_G6419{4:null,incoming:null,maxHeaderPairs:2000,outgoing:[Cycle],socket:[Cycle]},readable:true,server:null,writable:true},timeoutCb:null,upgradeOrConnect:false,useChunkedEncodingByDefault:true,writable:true},resultId:8}
+
+Trace expression:
+@(filter>>var(cbId,end(8,var(cbId)):end_cb(var(cbId)):var(reqId,S_1)),[S_1=request(var(reqId)):var(cbId,end(var(reqId),var(cbId)):end_cb(var(cbId)):var(reqId,S_1))])
+Event: 
+_G7362{args:[1,null],event:func_pre,id:10,name:end,targetId:8}
+
+Trace expression:
+@(filter>> (end_cb(10):var(reqId,request(var(reqId)):var(cbId,S_1))),[S_1=end(var(reqId),var(cbId)):end_cb(var(cbId)):var(reqId,request(var(reqId)):var(cbId,S_1))])
+Event: 
+_G3908{args:[1,null],event:func_post,name:end,res:_G3843{agent:_G3687{defaultPort:80,freeSockets:_G3661{},keepAlive:false,keepAliveMsecs:1000,maxFreeSockets:256,maxSockets:null,options:_G3616{path:null},protocol:http:,requests:_G3626{},sockets:_G3651{localhost:8080: :[[Object],[Object]]}},chunkedEncoding:false,connection:_G3572{allowHalfOpen:false,connecting:false,parser:_G3560{4:null,incoming:null,maxHeaderPairs:2000,outgoing:[Cycle],socket:[Cycle]},readable:true,server:null,writable:true},finished:true,maxHeadersCount:null,method:POST,output:[],outputCallbacks:[],outputEncodings:[],outputSize:0,parser:_G3825{4:null,incoming:null,maxHeaderPairs:2000,outgoing:[Cycle],socket:_G3793{allowHalfOpen:false,connecting:false,parser:[Cycle],readable:true,server:null,writable:true}},path: (/),res:null,sendDate:false,shouldKeepAlive:false,socket:_G3474{allowHalfOpen:false,connecting:false,parser:_G3462{4:null,incoming:null,maxHeaderPairs:2000,outgoing:[Cycle],socket:[Cycle]},readable:true,server:null,writable:true},timeoutCb:null,upgradeOrConnect:false,useChunkedEncodingByDefault:true,writable:true},resultId:8}
+
+Trace expression:
+@(filter>> (end_cb(10):var(reqId,request(var(reqId)):var(cbId,S_1))),[S_1=end(var(reqId),var(cbId)):end_cb(var(cbId)):var(reqId,request(var(reqId)):var(cbId,S_1))])
+Event: 
+_G4272{args:[],event:cb_post,id:10,name:[anonymous],targetId:8}
