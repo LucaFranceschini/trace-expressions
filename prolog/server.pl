@@ -31,31 +31,33 @@ server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]). %%
 
 log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, ''),flush_output(Stream);true. %% optional logging of server activity
 
-%% DOES NOT WORK BECAUSE OF ISSUE WITH JSON DICTS %%
-%% manage_event(WebSocket) :-
-%%     ws_receive(WebSocket, Msg, [format(json)]), 
-%%     (Msg.opcode==close ->
-%% 	     true;
-%% 	 E=Msg.data,
-%% 	       nb_getval(state,TE1),
-%% 	       log(TE1,E),
-%% 	       (next(TE1,E,TE2) -> nb_setval(state,TE2);true),
-%% 	       manage_event(WebSocket)).
-
-%% patched version
 manage_event(WebSocket) :-
-    ws_receive(WebSocket, Msg), %% uses string as default format, format(json) does not work properly, dict implementation not stable 
+    ws_receive(WebSocket, Msg, [format(json),value_string_as(atom)]), %% value_string_as(atom) passed as option to json_read_dict/3
     (Msg.opcode==close ->
-     true;
-     nb_getval(state,TE1),
-     log(TE1,Msg.data),
-     (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
-     %% next line: more detailed information computed in case an error occurs
-     %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
-     ws_send(WebSocket,text(Reply)),
-     manage_event(WebSocket)).
+	     true;
+	 E=Msg.data,
+	       nb_getval(state,TE1),
+	       log(TE1,E),
+	       (next(TE1,E,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
+	       %% next line: more detailed information computed in case an error occurs
+	       %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
+	       ws_send(WebSocket,text(Reply)),
+	       manage_event(WebSocket)).
+
+%% old patched version to avoid problems with json dicts, resolved by using value_string_as(atom) option
+%% manage_event(WebSocket) :-
+%%     ws_receive(WebSocket, Msg), %% uses string as default format, format(json) does not work properly, dict implementation not stable 
+%%     (Msg.opcode==close ->
+%%      true;
+%%      nb_getval(state,TE1),
+%%      log(TE1,Msg.data),
+%%      (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
+%%      %% next line: more detailed information computed in case an error occurs
+%%      %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
+%%      ws_send(WebSocket,text(Reply)),
+%%      manage_event(WebSocket)).
 		
 exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
-exception(undefined_global_variable, log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,write,Stream);Stream=null),nb_setval(log, Stream).
+exception(undefined_global_variable, log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,append,Stream);Stream=null),nb_setval(log, Stream).
 
 :- server(8081).
