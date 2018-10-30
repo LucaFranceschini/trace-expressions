@@ -29,16 +29,23 @@
 
 server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]). %% one worker to guarantee event sequentiality
 
-log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, ''),flush_output(Stream);true. %% optional logging of server activity
-
+log(Log) :-
+    nb_getval(log,Stream), Stream\==null->  %% optional logging of server activity
+	(Log=(TE,E)->
+	     writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E);
+	 writeln(Stream,"Error")),
+	nl(Stream),
+	flush_output(Stream);
+    true.
+		 
 manage_event(WebSocket) :-
     ws_receive(WebSocket, Msg, [format(json),value_string_as(atom)]), %% value_string_as(atom) passed as option to json_read_dict/3
     (Msg.opcode==close ->
 	     true;
 	 E=Msg.data,
 	       nb_getval(state,TE1),
-	       log(TE1,E),
-	       (next(TE1,E,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
+	       log((TE1,E)),
+	       (next(TE1,E,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}',log(error)),
 	       %% next line: more detailed information computed in case an error occurs
 	       %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
 	       ws_send(WebSocket,text(Reply)),
@@ -50,7 +57,7 @@ manage_event(WebSocket) :-
 %%     (Msg.opcode==close ->
 %%      true;
 %%      nb_getval(state,TE1),
-%%      log(TE1,Msg.data),
+%%      log((TE1,Msg.data)),
 %%      (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
 %%      %% next line: more detailed information computed in case an error occurs
 %%      %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
