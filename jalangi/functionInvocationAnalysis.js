@@ -194,7 +194,7 @@
         const functionNames = new Map();
         
         // functionExit does not have the function metadata
-        let lastEnterData;
+        const lastEnterData=[];
         
         // stacks that keeps track of function exits that have to be tracked
         const trackFunctionExit = [];
@@ -628,7 +628,7 @@
 		    arguments: args,
                     functionName: functionNames.get(f) || f.name || anonymous
 		};
-		lastEnterData = metadata;
+		lastEnterData.push(metadata);         
             	beforeFunction(metadata);
             	trackFunctionExit.push(true);
             }
@@ -655,11 +655,12 @@
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
 	    if (trackFunctionExit.pop()) {
-                lastEnterData.returnValue = returnVal;
-                lastEnterData.wrappedException = wrappedExceptionVal;
-                lastEnterData = afterFunction(lastEnterData);
-		return {returnVal: lastEnterData.returnValue,
-			wrappedExceptionVal: lastEnterData.wrappedException,
+		let enterData = lastEnterData.pop();		
+                enterData.returnValue = returnVal;
+                enterData.wrappedException = wrappedExceptionVal;
+                enterData = afterFunction(enterData);
+		return {returnVal: enterData.returnValue,
+			wrappedExceptionVal: enterData.wrappedException,
 			isBacktrack: false};
             }
             
