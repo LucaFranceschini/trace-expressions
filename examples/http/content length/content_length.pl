@@ -15,17 +15,16 @@ match( Json, filter) :- func_pre(Json, 'end', _, _, _).
 
 match( Json, chunk_req(ID)) :-
 	func_post(Json, 'http.request', Args, _, ID),
-	Args = [json(Opts)|_],
-	(member(headers=json(Hs), Opts) ->
-		not(member('content-length'=_, Hs));
+	Args = [Opts|_],
+	(Opts.get(headers)=Hs ->
+		not(Hs.get('content-length')=_);
 		true).
 
 match( Json, req(ID, CL)) :-
 	func_post(Json, 'http.request', Args, _, ID),
-	Args = [json(Opts)|_],
-	member(headers=json(Hs), Opts),
+	Args = [Opts|_],
 	%TODO case-insensitive check
-	member('content-length'=CL, Hs).
+	Opts.get(headers).get('content-length')=CL.
 
 match( Json, write(ID)) :- func_pre(Json, 'write', _, _, ID).
 match( Json, end(ID))   :- func_pre(Json, 'end',   _, _, ID).
