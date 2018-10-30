@@ -159,35 +159,31 @@
         
         
         // unified view over invokeFun/invokeFunPre and functionEnter/functionExit
-        
+
+	function getObjId(val){
+	    if(val===Object(val)){ // is an object
+        	if (!objectIds.has(val))
+        	    objectIds.set(val, uniqueId++);
+		return objectIds.get(val);
+	    }
+	}
+	
         function beforeFunction(metadata) {
         	//console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
         	// add target object ID to metadata, if any
         	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const target = metadata.target;
-        	if (Object(target) === target) {
-        		// only add if it's not already there
-        		if (!objectIds.has(target))
-        			objectIds.set(target, uniqueId++);
-        		
-        		metadata.targetId = objectIds.get(target);
-        	}
-        	
+            metadata.targetId = getObjId(metadata.target);
+	    const argIds=[];
+	    for(let arg of metadata.arguments)
+		argIds.push(getObjId(arg));
+	    metadata.argIds=argIds;
             return instr.before(metadata,sender);
         }
         
         function afterFunction(metadata) {
         	// add returned object ID to metadata, if any
         	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const result = metadata.result;
-        	if (Object(result) === result) {
-        		// only add if it's not already there
-        		if (!objectIds.has(result))
-        			objectIds.set(result, uniqueId++);
-        		
-        		metadata.resultId = objectIds.get(result)
-        	}
-        	
+            metadata.resultId = getObjId(metadata.result);
             return instr.after(metadata,sender);
         }
         
@@ -244,7 +240,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base) && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
+                functionName: functionNames.get(f) || isMethod && methodNames.has(base) && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
@@ -316,7 +312,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base)  && methodNames.get(base).get(f) || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.has(base)  && methodNames.get(base).get(f) || f.name || anonymous
             };
             metadata = afterFunction(metadata);
             lastInvoked = null;
