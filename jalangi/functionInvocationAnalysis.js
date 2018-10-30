@@ -115,7 +115,8 @@
         
         // store names of the following modules
         const supportedModules = ['fs', 'http'];
-        
+        const supportedNames = J$.initParams.names;
+
         // callbacks module (should export beforeFunction and afterFunction)
         const instr = require('./callbacksInstrumentation.js');
         
@@ -243,7 +244,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base) && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
@@ -315,7 +316,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base).get(f) || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.get(base)  && methodNames.get(base).get(f) || f.name || anonymous
             };
             metadata = afterFunction(metadata);
             lastInvoked = null;
@@ -436,7 +437,7 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-	    if (isMethodCall){ 
+	    if (isMethodCall && supportedNames.includes(offset)){ 
 		if(!methodNames.has(base))
 		    methodNames.set(base,new WeakMap());
 		methodNames.get(base).set(val,offset);
