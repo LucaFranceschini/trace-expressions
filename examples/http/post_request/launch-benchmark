@@ -3,7 +3,7 @@ DIR=../../..
 PAUSE=1
 for i in `seq 1 10`
 do
-    gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/post_request/post_request.pl"
+    gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/post_request/post_request.pl $2"
     sleep $PAUSE
     node server.js &    
     sleep $PAUSE
