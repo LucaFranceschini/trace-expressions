@@ -1,7 +1,5 @@
 'use strict';
 
-const monitor = require('./monitor.js');
-
 exports.before = beforeFunction;
 exports.after = afterFunction;
 

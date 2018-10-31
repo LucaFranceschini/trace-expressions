@@ -98,6 +98,8 @@
      * @class
      */
     function MyAnalysis() {
+	const monitor = require('./monitor.js');
+
 	const methodNames=new WeakMap(); // DA: 2-levels weak map associating targets and functions to method names; possible fix to trace method calls instead of using lastMethodName 
 	// to deal with --initParam (Davide)
 	if(J$.initParams.func_post) J$.initParams.func_post=JSON.parse(J$.initParams.func_post);
@@ -112,8 +114,6 @@
 	ws.log = true; // if set, logs event queue length
         ws.STEP = 1000; // only STEP*k queue sizes are logged 
 	    
-	const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
-	
 	ws.newEvent = // manages newly detected event
 	function (data){
 	    if(this.ready && this.queue.length===0)
@@ -127,16 +127,7 @@
 	ws.sendEvent = // prepares and sends data to monitor with websocket
 	function(data){
 	    this.ready=false;
-	    const body = {
-		event: data.event,
-		name: data.functionName,
-		id: data.callId,
-		res: data.result,
-		args: Object.values(data.arguments),  // make it an array
-		targetId: data.targetId,
-		resultId: data.resultId
-	    };
-	    this.send(stringify(body,{depth:5}),()=>ws.onReady());
+	    monitor.sendEvent(data,this);
 	}
 	
 	ws.log = // logs queue size if required
@@ -215,40 +206,34 @@
 								functionNames.set(mod[key], modName+'.'+key);
 				}
         
-        
+
+	function getObjId(val){
+	    if(val===Object(val)){ // is an object
+        	if (!objectIds.has(val))
+        	    objectIds.set(val, uniqueId++);
+		return objectIds.get(val);
+	    }
+	}
+
         // unified view over invokeFun/invokeFunPre and functionEnter/functionExit
         
         function beforeFunction(metadata) {
-        	//console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
-        	// add target object ID to metadata, if any
-        	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const target = metadata.target;
-        	if (Object(target) === target) {
-        		// only add if it's not already there
-        		if (!objectIds.has(target))
-        			objectIds.set(target, uniqueId++);
-        		
-        		metadata.targetId = objectIds.get(target);
-        	}
-        	
-	    //            return instr.before(metadata,sender);
-            return instr.before(metadata,ws); // uses websocket ws (Davide 2018-10-12)
+            //console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
+            // add target object ID to metadata, if any
+            // avoid primitive data, it's useless and they are not supported as WeakMap keys
+	    metadata.targetId = getObjId(metadata.target);
+	    const argIds=[];
+	    for(let arg of metadata.arguments)
+		argIds.push(getObjId(arg));
+	    metadata.argIds=argIds;
+            return instr.before(metadata,ws);
         }
         
         function afterFunction(metadata) {
-        	// add returned object ID to metadata, if any
-        	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const result = metadata.result;
-        	if (Object(result) === result) {
-        		// only add if it's not already there
-        		if (!objectIds.has(result))
-        			objectIds.set(result, uniqueId++);
-        		
-        		metadata.resultId = objectIds.get(result)
-        	}
-        	
-	    // return instr.after(metadata,sender);
-            return instr.after(metadata,ws); // uses websocket ws (Davide 2018-10-12)
+            // add returned object ID to metadata, if any
+            // avoid primitive data, it's useless and they are not supported as WeakMap keys
+            metadata.resultId = getObjId(metadata.result);
+            return instr.after(metadata,ws);
         }
         
         
@@ -304,7 +289,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base)  && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
+                functionName: functionNames.get(f) || isMethod && methodNames.has(base)  && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
@@ -376,7 +361,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base)  && methodNames.get(base).get(f) || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.has(base)  && methodNames.get(base).get(f) || f.name || anonymous
             };
             metadata = afterFunction(metadata);
 	    lastInvoked = null;
@@ -655,7 +640,7 @@
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
 	    if (trackFunctionExit.pop()) {
-		let enterData = lastEnterData.pop();		
+		let enterData = Object.assign({},lastEnterData.pop()); // avoid aliasing, functionEnter metadata might still be on ws.queue		
                 enterData.returnValue = returnVal;
                 enterData.wrappedException = wrappedExceptionVal;
                 enterData = afterFunction(enterData);
