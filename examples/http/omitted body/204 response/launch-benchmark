@@ -1,14 +1,15 @@
 #! /bin/bash
 DIR=../../../..
+PAUSE=1
 for i in `seq 1 10`
 do 
-gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/omitted\ body/204\ response/response204.pl"
-sleep 5
+gnome-terminal -- /bin/bash -c "swipl -p node=$DIR/prolog $DIR/prolog/server.pl  --  $DIR/examples/http/omitted\ body/204\ response/response204.pl $2"
+sleep $PAUSE
 node $DIR/node_modules/jalangi2/src/js/commands/jalangi.js --initParam names:[\"http.createServer\",\"write\",\"writeHead\",\"end\"] --inlineIID --inlineSource --analysis $DIR/jalangi/functionInvocationAnalysis.js transpiled/correctServer.js &
-sleep 5
+sleep $PAUSE
 node benchmark-client.js $1 >> results-monitored.txt
 pkill node
-sleep 5
+sleep $PAUSE
 pkill swipl
 done
 
