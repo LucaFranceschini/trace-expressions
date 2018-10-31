@@ -136,8 +136,8 @@
         const functionNames = new Map();
         
         // functionExit does not have the function metadata
-        let lastEnterData;
-        
+        const lastEnterData=[];
+
         // stacks that keeps track of function exits that have to be tracked
         const trackFunctionExit = [];
 
@@ -159,35 +159,31 @@
         
         
         // unified view over invokeFun/invokeFunPre and functionEnter/functionExit
-        
+
+	function getObjId(val){
+	    if(val===Object(val)){ // is an object
+        	if (!objectIds.has(val))
+        	    objectIds.set(val, uniqueId++);
+		return objectIds.get(val);
+	    }
+	}
+	
         function beforeFunction(metadata) {
         	//console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
         	// add target object ID to metadata, if any
         	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const target = metadata.target;
-        	if (Object(target) === target) {
-        		// only add if it's not already there
-        		if (!objectIds.has(target))
-        			objectIds.set(target, uniqueId++);
-        		
-        		metadata.targetId = objectIds.get(target);
-        	}
-        	
+            metadata.targetId = getObjId(metadata.target);
+	    const argIds=[];
+	    for(let arg of metadata.arguments)
+		argIds.push(getObjId(arg));
+	    metadata.argIds=argIds;
             return instr.before(metadata,sender);
         }
         
         function afterFunction(metadata) {
         	// add returned object ID to metadata, if any
         	// avoid primitive data, it's useless and they are not supported as WeakMap keys
-        	const result = metadata.result;
-        	if (Object(result) === result) {
-        		// only add if it's not already there
-        		if (!objectIds.has(result))
-        			objectIds.set(result, uniqueId++);
-        		
-        		metadata.resultId = objectIds.get(result)
-        	}
-        	
+            metadata.resultId = getObjId(metadata.result);
             return instr.after(metadata,sender);
         }
         
@@ -244,7 +240,7 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base)  && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
+                functionName: functionNames.get(f) || isMethod && methodNames.has(base) && methodNames.get(base).get(f) || f.name || anonymous // DA: duplicated below, better using a function
             };
             
             metadata = beforeFunction(metadata);
@@ -316,10 +312,10 @@
                 isMethod: isMethod,
                 functionIid: functionIid,
                 functionSid: functionSid,
-                functionName: functionNames.get(f) || isMethod && methodNames.get(base)  && methodNames.get(base).get(f) || f.name || anonymous
+                functionName: functionNames.get(f) || isMethod && methodNames.has(base)  && methodNames.get(base).get(f) || f.name || anonymous
             };
             metadata = afterFunction(metadata);
-	    lastInvoked = null;
+            lastInvoked = null;
             return {result: metadata.result};
         };
 
@@ -437,7 +433,7 @@
          * replaced with the value stored in the <tt>result</tt> property of the object.
          */
         this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
-            if (isMethodCall && supportedNames.includes(offset)){ 
+	    if (isMethodCall && supportedNames.includes(offset)){ 
 		if(!methodNames.has(base))
 		    methodNames.set(base,new WeakMap());
 		methodNames.get(base).set(val,offset);
@@ -568,9 +564,9 @@
 		    arguments: args,
                     functionName: functionNames.get(f) || f.name || anonymous
 		};
-		lastEnterData = metadata;
+		lastEnterData.push(metadata);         
             	beforeFunction(metadata);
-		trackFunctionExit.push(true);
+            	trackFunctionExit.push(true);
             }
 	    else {
 		lastInvoked = null;
@@ -595,11 +591,12 @@
          */
         this.functionExit = function (iid, returnVal, wrappedExceptionVal) {
 	    if (trackFunctionExit.pop()) {
-                lastEnterData.returnValue = returnVal;
-                lastEnterData.wrappedException = wrappedExceptionVal;                
-                lastEnterData = afterFunction(lastEnterData);
-		return {returnVal: lastEnterData.returnValue,
-			wrappedExceptionVal: lastEnterData.wrappedException,
+		let enterData = lastEnterData.pop();		
+                enterData.returnValue = returnVal;
+                enterData.wrappedException = wrappedExceptionVal;
+                enterData = afterFunction(enterData);
+		return {returnVal: enterData.returnValue,
+			wrappedExceptionVal: enterData.wrappedException,
 			isBacktrack: false};
             }
             

@@ -6,11 +6,11 @@ match(Json, filter) :- func_pre_name(Json , 'end').
 
 match(Json, filter) :- func_post_name(Json , 'http.request').
 
-match(Json, request(ReqId)) :- func_post(Json , 'http.request' , [json(Options)|_] , _ , ReqId) , member(method = 'HEAD' , Options).
+match(Json, request(ReqId)) :- func_post(Json , 'http.request' , [Options|_] , _ , ReqId) , Options.get(method)=='HEAD'.
 
 match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [] , ReqId).
 
-match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [@null] , ReqId).
+match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [null] , ReqId).
 
 %%match(Json, endWithoutData(ReqId)) :- func_pre(Json , 'end' , _ , [MaybeChunk|_] , ReqId) , not(string_chars(MaybeChunk , _)).
 

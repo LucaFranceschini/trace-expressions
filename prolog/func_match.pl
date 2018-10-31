@@ -1,24 +1,25 @@
 :- module(func_match, [
-	func_pre/5, func_pre_name/2, func_pre_names/2,
+	func_pre/5, func_pre/6, func_pre_name/2, func_pre_names/2,
 	func_post/5, func_post_name/2, func_post_names/2,
-	cb_pre/5, cb_pre/1, cb_post/5
+	cb_pre/5, cb_pre/6, cb_pre/1, cb_post/5
 ]).
-
+    
 % low-level JSON parsing
 
-parse_json_pre(json(O), Event, Name, Id, Args, TargetId) :-
-	member(event=Event, O),
-	member(name=Name, O),
-	member(id=Id, O),
-	member(args=Args, O),
-	member(targetId=TargetId, O).
+%% ISSUES WITH JSON DICTS, THE CLAUSES BELOW DO NOT WORK AS EXPECTED %%
 
-parse_json_post(json(O), Event, Name, Args, Res, ResultId) :-
-	member(event=Event, O),
-	member(name=Name, O),
-	member(args=Args, O),
-	member(res=Res, O),
-	member(resultId=ResultId, O).
+%% Remark: Json.<key> could be used, but it throws an existence error when <key> cannot be found, while JSon.get(<key>) fails silently
+%% see http://www.swi-prolog.org/pldoc/man?section=bidicts
+
+parse_json_pre(Json, Json.get(event), Json.get(name), Json.get(id), Json.get(args), Json.get(targetId)).
+
+%% traces also argument ids 
+parse_json_pre(Json, Json.get(event), Json.get(name), Json.get(id), Json.get(args), Json.get(argIds), Json.get(targetId)).
+
+%% equivalent clause with debugging showing the bug. Resolved, see the Prolog server  %%
+%% parse_json_pre(Json,E, N,I,A,T) :- writeln('parse_json_pre'),JE=Json.get(event),writeln(E),writeln(JE),JE=E,writeln('done'),N=Json.get(name), I=Json.get(id), A=Json.get(args), T=Json.get(targetId).
+
+parse_json_post(Json, Json.get(event), Json.get(name), Json.get(args), Json.get(res), Json.get(resultId)).
 
 
 % high-level predicates for event types implementation
@@ -26,12 +27,18 @@ parse_json_post(json(O), Event, Name, Args, Res, ResultId) :-
 func_pre(Json, Name, Id, Args, TargetId) :-
 	parse_json_pre(Json, func_pre, Name, Id, Args, TargetId).
 
+func_pre(Json, Name, Id, Args, ArgIds, TargetId) :-  %% traces also argument ids 
+	parse_json_pre(Json, func_pre, Name, Id, Args, ArgIds, TargetId).
+
 func_post(Json, Name, Args, Res, ResultId) :-
 	parse_json_post(Json, func_post, Name, Args, Res, ResultId).
 
 cb_pre(Json, Name, Id, Args, TargetId) :-
 	parse_json_pre(Json, cb_pre, Name, Id, Args, TargetId).
 
+cb_pre(Json, Name, Id, Args, ArgIds, TargetId) :- %% traces also argument ids 
+	parse_json_pre(Json, cb_pre, Name, Id, Args, ArgIds, TargetId).
+    
 cb_post(Json, Name, Args,  Res, ResultId) :-
 	parse_json_post(Json, cb_post, Name, Args, Res, ResultId).
 

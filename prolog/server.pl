@@ -1,3 +1,4 @@
+:- use_module(library(http/websocket)).
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_client)).
@@ -7,8 +8,7 @@
 
 :- use_module(trace_expressions_semantics).
 
-:- http_handler(/,manage_request,[]).
-
+:- http_handler(/,http_upgrade_to_websocket(manage_event, []),[]). %%% default options for both the websocket and the http handler 
 
 %% arguments
 %% the server expects a required first argument: the filename containing the specified trace expression
@@ -24,24 +24,47 @@
 %%          logging enabled to file prolog_server_log.txt (optional argument)
 
 % load specification
+
 :- current_prolog_flag(argv, [Spec|_]), use_module(Spec).
 
-server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]).
+server(Port) :- http_server(http_dispatch,[port(localhost:Port),workers(1)]). %% one worker to guarantee event sequentiality
 
-%TODO maybe is better to use the new representation for JSON?
-% see http://www.swi-prolog.org/pldoc/man?section=jsonsupport
+log(Log) :-
+    nb_getval(log,Stream), Stream\==null->  %% optional logging of server activity
+	(Log=(TE,E)->
+	     writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E);
+	 writeln(Stream,"Error")),
+	nl(Stream),
+	flush_output(Stream);
+    true.
+		 
+manage_event(WebSocket) :-
+    ws_receive(WebSocket, Msg, [format(json),value_string_as(atom)]), %% value_string_as(atom) passed as option to json_read_dict/3
+    (Msg.opcode==close ->
+	     true;
+	 E=Msg.data,
+	       nb_getval(state,TE1),
+	       log((TE1,E)),
+	       (next(TE1,E,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}',log(error)),
+	       %% next line: more detailed information computed in case an error occurs
+	       %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
+	       ws_send(WebSocket,text(Reply)),
+	       manage_event(WebSocket)).
 
-%TODO better way than using globals with exceptions?
-
-log(TE,E) :- nb_getval(log,Stream), Stream\==null->writeln(Stream,"Trace expression:"),writeln(Stream,TE),writeln(Stream,"Event: "),writeln(Stream,E),writeln(Stream, ''),flush_output(Stream);true.
-
-manage_request(Request) :-
-    http_read_json(Request, E),
-    nb_getval(state,TE1),
-    log(TE1,E),
-    (next(TE1,E,TE2)->nb_setval(state,TE2),reply_json(json([error=(@false)]));reply_json(json([error=(@true)]))).
-
-exception(undefined_global_variable,state,retry) :- trace_expression(_, TE), nb_setval(state,TE).
-exception(undefined_global_variable,log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,append,Stream);Stream=null),nb_setval(log, Stream).
+%% old patched version to avoid problems with json dicts, resolved by using value_string_as(atom) option
+%% manage_event(WebSocket) :-
+%%     ws_receive(WebSocket, Msg), %% uses string as default format, format(json) does not work properly, dict implementation not stable 
+%%     (Msg.opcode==close ->
+%%      true;
+%%      nb_getval(state,TE1),
+%%      log((TE1,Msg.data)),
+%%      (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; Reply='{"error":true}'),
+%%      %% next line: more detailed information computed in case an error occurs
+%%      %% (next(TE1,Msg.data,TE2) -> nb_setval(state,TE2),Reply='{"error":false}'; term_string(TE1,State),atomics_to_string(['{"error":true, "state":',State,', "event":', Msg.data, '}'], Reply)),
+%%      ws_send(WebSocket,text(Reply)),
+%%      manage_event(WebSocket)).
+		
+exception(undefined_global_variable, state, retry) :- trace_expression(_, TE), nb_setval(state,TE).
+exception(undefined_global_variable, log, retry) :- (current_prolog_flag(argv, [_,LogFile|_])->open(LogFile,append,Stream);Stream=null),nb_setval(log, Stream).
 
 :- server(8081).

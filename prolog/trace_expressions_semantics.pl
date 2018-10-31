@@ -3,6 +3,8 @@
 :- use_module(library(coinduction)).
 :- coinductive apply_sub_trace_exp/3.
 
+:- use_module(library(http/json)).  %% only needed to patch the json dicts bug
+
 /*******************************************************************************************/
 /*                              PARAMETRIC TRACE EXPRESSIONS                                                   */
 /*    Aug 11, 2017: fixed bug with coinduction                                                                   */
@@ -13,6 +15,9 @@
 
 % (main)
 next(T, E, T1) :- next(T, E, T1, []).
+
+%% old patch to avoid problems with json dicts, resolved by using value_string_as(atom) option
+%% next(T, String, T1) :- open_string(String,Stream),json_read_dict(Stream,E,[value_string_as(atom)]), next(T, E, T1, []).
 
 % next transition function (parametric version)
 next(ET:T, E, T, S) :- match(E, ET, S).
@@ -53,10 +58,13 @@ next(ifelse(ET, T1, T2), E, T, S) :- !,
 %% match predicate
     
 %% match(E,ET,S) :- copy_term(ET,FreshET),match(E,FreshET),unifiable(ET,FreshET,S). %% old version
-match(E,ET,Subs) :- copy_term_with_vars(ET,[],FreshET,Subs),match(E,FreshET).
+match(E,ET,Subs) :- copy_term_with_vars(ET,[],FreshET,Subs), match(E,FreshET). %%,write('matching '),write(E),write(' with '),writeln(FreshET),match(E,FreshET),write('matched ').
+%% debugging version
+%% match(E,ET,Subs) :- copy_term_with_vars(ET,FreshET,Subs),write('matching '),write(E),write(' with '),write(FreshET),match(E,FreshET),writeln('matched ').
 
 %% solve predicate
-solve(P,Subs) :- !,copy_term_with_vars(P,[],FreshP,Subs),FreshP.
+%% solve(P,Subs) :- !,copy_term_with_vars(P,[],FreshP,Subs),FreshP.
+solve(P,Subs) :- !,copy_term_with_vars(P,FreshP,Subs),FreshP.
 
 may_halt(eps) :- !.
 may_halt(T1\/T2) :- (may_halt(T1), !; may_halt(T2)).
