@@ -53,10 +53,10 @@ next(ifelse(ET, T1, T2), E, T, S) :- !,
 %% match predicate
     
 %% match(E,ET,S) :- copy_term(ET,FreshET),match(E,FreshET),unifiable(ET,FreshET,S). %% old version
-match(E,ET,Subs) :- copy_term_with_vars(ET,[],FreshET,Subs),match(E,FreshET).
+match(E,ET,Subs) :- copy_term_with_vars(ET,FreshET,Subs),match(E,FreshET).
 
 %% solve predicate
-solve(P,Subs) :- !,copy_term_with_vars(P,[],FreshP,Subs),FreshP.
+solve(P,Subs) :- !,copy_term_with_vars(P,FreshP,Subs),FreshP.
 
 may_halt(eps) :- !.
 may_halt(T1\/T2) :- (may_halt(T1), !; may_halt(T2)).
