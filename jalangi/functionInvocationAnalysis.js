@@ -145,21 +145,18 @@
         let lastInvoked;
         
         for (const moduleName of supportedModules)
-        	readModule(moduleName);
+            readModule(moduleName);
         
         // save module function names
         function readModule(modName) {
             const mod = require(modName);
             
             for (const key in mod)
-							// only save functions if they do not come from the prototype
-							if (mod.hasOwnProperty(key) && typeof mod[key] === 'function')
-								functionNames.set(mod[key], modName+'.'+key);
-				}
+		// only save functions if they do not come from the prototype
+		if (mod.hasOwnProperty(key) && typeof mod[key] === 'function')
+		    functionNames.set(mod[key], modName+'.'+key);
+	}
         
-        
-        // unified view over invokeFun/invokeFunPre and functionEnter/functionExit
-
 	function getObjId(val){
 	    if(val===Object(val)){ // is an object
         	if (!objectIds.has(val))
@@ -167,11 +164,13 @@
 		return objectIds.get(val);
 	    }
 	}
-	
+
+	// unified view over invokeFun/invokeFunPre and functionEnter/functionExit
+
         function beforeFunction(metadata) {
-        	//console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
-        	// add target object ID to metadata, if any
-        	// avoid primitive data, it's useless and they are not supported as WeakMap keys
+            //console.log(`FUNCTION ${metadata.functionName}: ${(metadata.location)}`)
+            // add target object ID to metadata, if any
+            // avoid primitive data, it's useless and they are not supported as WeakMap keys
             metadata.targetId = getObjId(metadata.target);
 	    const argIds=[];
 	    for(let arg of metadata.arguments)
@@ -181,8 +180,8 @@
         }
         
         function afterFunction(metadata) {
-        	// add returned object ID to metadata, if any
-        	// avoid primitive data, it's useless and they are not supported as WeakMap keys
+            // add returned object ID to metadata, if any
+            // avoid primitive data, it's useless and they are not supported as WeakMap keys
             metadata.resultId = getObjId(metadata.result);
             return instr.after(metadata,sender);
         }
@@ -230,7 +229,7 @@
          */
         this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
             let metadata = {
-            		location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
+            	location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
                 callIid: iid,  // instruction identifier
                 callId: uniqueId++,  // unique call identifier to match the callback exactly
                 functionObject: f,
@@ -302,7 +301,7 @@
                 return {result: result};
             
             let metadata = {
-            		location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
+            	location: id = J$.iidToLocation(J$.getGlobalIID(iid)),
                 callIid: iid,
                 functionObject: f,
                 target: base,

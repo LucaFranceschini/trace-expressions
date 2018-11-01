@@ -3,7 +3,7 @@
 exports.sendEvent = trySend;
 
 const queue=[]; // event queue
-
+const depth=4; // truncation depth of stringify
 let ready=true; // ready to send to child
 
 function onReady(){
@@ -36,5 +36,5 @@ function sendEvent(data,sender) { // added sender to test async communication (D
 	
     // serialize and send
     ready=false;
-    sender.send(stringify(body,{depth:5}),onReady());
+    sender.send(stringify(body,{depth:depth}),onReady());
 }
