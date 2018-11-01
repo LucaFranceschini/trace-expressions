@@ -1,6 +1,6 @@
 const http=require('http')
 const cp = require('child_process')
-const log = true // logs queue length
+const log = false // logs queue length
 const STEP=1000 // step for queue logging, the larger, the lower frequency      
 const queue=[]
 

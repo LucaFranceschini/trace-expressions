@@ -3,6 +3,7 @@
 exports.sendEvent = sendEvent;
 
 const stringify = require('./stringify-trunc')
+const depth=4; // truncation depth of stringify
 
 function sendEvent(data,sender) { // added sender to test async communication (Davide)
 	// prepare to sending
@@ -16,5 +17,5 @@ function sendEvent(data,sender) { // added sender to test async communication (D
 	    resultId: data.resultId,
 	    argIds: data.argIds
 	};	
-    sender.send(stringify(body,{depth:5}))
+    sender.send(stringify(body,{depth:depth}))
 }
