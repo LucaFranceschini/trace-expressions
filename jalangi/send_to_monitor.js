@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
 ws.ready = false; // socket initially not ready for sending an event
 ws.queue=[]; // event queue
-ws.log = true; // if set, logs event queue length
+ws.log = false; // if set, logs event queue length
 ws.STEP = 1000; // only STEP*k queue sizes are logged 
 	    
 const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
