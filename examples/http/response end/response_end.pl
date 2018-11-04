@@ -14,7 +14,7 @@ match(Json, write(RespId)) :- func_pre(Json , 'writeHead', _ , _ , RespId). %% w
 
 match(Json, end(RespId)) :- func_pre(Json , 'end', _, _, RespId).
 
-match(Json, cb_start(CbId,RespId)) :- cb_pre(Json , _ , CbId, [ _ , RespId | _ ] , _).
+match(Json, cb_start(CbId,RespId)) :- cb_pre(Json , _ , CbId, _Args, [ _ , RespId | _ ] , _).
 
 trace_expression('response_end', Main) :-
 Main = filter >> var(cbId , createServer(var(cbId)):Start),
