@@ -16,4 +16,4 @@ match(Json, end_cb(CbId)) :- cb_pre(Json, _ , CbId, _ , _).
     
 trace_expression('head_request', filter >> T) :-
     
-    T = var( reqId, request(var(reqId)) : (var( cbId, end(var(reqId),var(cbId)) : (end_cb(var(cbId)) : T)))). 
+    T = var( reqId, request(var(reqId)) : (var( cbId, end(var(reqId),var(cbId)) : (end_cb(var(cbId)) : (eps \/ T))))). 
