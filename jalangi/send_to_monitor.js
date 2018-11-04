@@ -5,8 +5,6 @@ ws.queue=[]; // event queue
 ws.log = false; // if set, logs event queue length
 ws.STEP = 1000; // only STEP*k queue sizes are logged 
 	    
-const stringify = require('./stringify-trunc'); // manage cycles and getters correctly
-	
 ws.newEvent = // manages newly detected event
 function (data){
     if(this.ready && this.queue.length===0)

@@ -2,6 +2,7 @@
 
 exports.sendEvent = trySend;
 
+const stringify = require('./stringify-trunc')
 const queue=[]; // event queue
 const depth=4; // truncation depth of stringify
 let ready=true; // ready to send to child
@@ -11,8 +12,6 @@ function onReady(){
     if(queue.length>0)
 	sendEvent(queue.shift());
 }
-
-const stringify = require('./stringify-trunc')
 
 function trySend(data,sender) {
     if(ready)
