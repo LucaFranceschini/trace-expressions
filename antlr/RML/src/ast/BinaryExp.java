@@ -10,11 +10,11 @@ public abstract class BinaryExp implements Exp {
         this.right = Objects.requireNonNull(right);
     }
 
-    public Exp getLeft() {
+    public Exp left() {
         return left;
     }
 
-    public Exp getRight() {
+    public Exp right() {
         return right;
     }
 }

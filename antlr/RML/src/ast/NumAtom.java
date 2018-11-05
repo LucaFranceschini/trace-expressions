@@ -7,7 +7,7 @@ public final class NumAtom implements Atom {
         this.number = number;
     }
 
-    public int getNumber() {
+    public int number() {
         return number;
     }
 }

@@ -11,11 +11,11 @@ public final class Declaration {
         this.body = Objects.requireNonNull(body);
     }
 
-    public Identifier getIdentifier() {
+    public Identifier identifier() {
         return id;
     }
 
-    public Exp getBody() {
+    public Exp body() {
         return body;
     }
 }

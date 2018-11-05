@@ -12,7 +12,7 @@ public final class Spec {
         this.declarations = List.copyOf(declarations);
     }
 
-    public List<Declaration> getDeclarations() {
+    public List<Declaration> declarations() {
         return declarations;
     }
 }

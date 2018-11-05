@@ -9,7 +9,7 @@ public final class Identifier implements Exp {
         this.name = Objects.requireNonNull(name);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 }

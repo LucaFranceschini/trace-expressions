@@ -18,11 +18,11 @@ public abstract class FuncTerm {
         this(id, Collections.emptyList());
     }
 
-    public Identifier getIdentifier() {
+    public Identifier identifier() {
         return id;
     }
 
-    public List<Atom> getArguments() {
+    public List<Atom> arguments() {
         return args;
     }
 }

@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 
 import static basic.RMLParser.*;
 
+// translate parse tree to AST
+// different visitors/static methods are used to have more precise types and no casts
 public final class SpecBuilder {
-    private SpecBuilder() {
+    private SpecBuilder() { // not supposed to be instatiated
         assert false;
     }
 
