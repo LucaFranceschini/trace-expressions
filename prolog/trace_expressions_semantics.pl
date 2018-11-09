@@ -18,6 +18,10 @@ next(T, E, T1) :- next(T, E, T1, []).
 %% next(T, String, T1) :- open_string(String,Stream),json_read_dict(Stream,E,[value_string_as(atom)]), next(T, E, T1, []).
 
 % next transition function (parametric version)
+next(1,_,1,[]).  %% 1 is the universe of all traces
+
+%% 0 is the empty set of traces, no transion rules
+
 next(ET:T, E, T, S) :- match(E, ET, S).
 
 next(T1\/_, E, T2, S) :- next(T1, E, T2, S),!.
@@ -34,7 +38,7 @@ next(T1/\T2, E, T, S) :- !,next(T1, E, T3, S1),next(T2, E, T4, S2),merge(S1, S2,
 %% version with split (really optimized?) %% important, the cut after apply_sub_trace_exp is essential to avoid divergence in case of failure due to coindcution
 next(var(X, T), E, T3, RetSubs) :- !,next(T, E, T1, Subs1),split(X,Subs1,XSubs,RetSubs),apply_sub_trace_exp(XSubs,T1,T2),!,(XSubs==[]->T3=var(X,T2);T3=T2).
 
-next(ET>>T, E, ET>>T1, S) :- !,match(E, ET, S1) -> next(T, E, T1, S2),merge(S1, S2, S);T1=T,S=[].
+next(ET>>T, E, T2, S) :- !,(match(E, ET, S1) -> next(T, E, T1, S2),merge(S1, S2, S);T1=T,S=[]),filter(ET,T1,T2).
 
 next('?'(ET,T1,T2), E, '?'(ET,T3,T4), S) :- !,match(E,ET,S1) -> next(T1,E,T3,S2),T4=T2,merge(S1, S2, S);next(T2,E,T4,S),T3=T1.   
 
@@ -64,6 +68,7 @@ match(E,ET,Subs) :- copy_term_with_vars(ET,FreshET,Subs), match(E,FreshET). %%,w
 %% solve(P,Subs) :- !,copy_term_with_vars(P,[],FreshP,Subs),FreshP.
 solve(P,Subs) :- !,copy_term_with_vars(P,FreshP,Subs),FreshP.
 
+may_halt(1) :- !.
 may_halt(eps) :- !.
 may_halt(T1\/T2) :- (may_halt(T1), !; may_halt(T2)).
 may_halt(T1|T2) :- !, may_halt(T1), may_halt(T2).
@@ -85,19 +90,33 @@ may_halt(guarded(P,T1,T2)) :- !,solve(P,_)->may_halt(T1);may_halt(T2).
 % may_halt never holds?
     
 %%% optimizations
+fork(0,0,0) :- !.
+fork(0,eps,0) :- !.
+fork(eps,0,0) :- !.
+fork(1,T,T) :- !.
+fork(T,1,T) :- !.
 fork(eps, T, T) :- !.
 fork(T, eps, T) :- !.
 fork((T1l|T1r), T2, (T1l|(T1r|T2))) :- !.
 fork(T1, T2, (T1|T2)).
 
+concat(0, _, 0) :- !.
+concat(1, _, 1) :- !.
 concat(eps, T, T) :- !.
 concat(T, eps, T) :- !.
 concat((T1l*T1r), T2, T1l*(T1r*T2)) :- !.
 concat(T1, T2, T1*T2).
 
 conj(eps/\eps, eps) :- !.
+conj(1,T,T) :- !.
+conj(1,T,T) :- !.
 conj((T1l/\T1r), T2, T1l/\(T1r/\T2)) :- !.
 conj(T1, T2, T1/\T2).
+
+filter(_,1,1) :- !.
+filter(ET,T,ET>>T).
+
+%%% to be done: optimizations for filter/3 corresponding to '?'/3
 
 %%% substitutions
 
@@ -108,6 +127,8 @@ split(X,[A|S],S1,[A|S2]) :- split(X,S,S1,S2).
 
 % substitution application (only singleton or empty substitutions) 
 apply_sub_trace_exp([],T,T).  %% optimization
+apply_sub_trace_exp(_,1,1).
+apply_sub_trace_exp(_,0,0).
 apply_sub_trace_exp(_,eps,eps).
 apply_sub_trace_exp(S, ET1:T1, ET2:T2) :- !,apply_sub_event_type(S,ET1,ET2),apply_sub_trace_exp(S,T1,T2).
 apply_sub_trace_exp(S,T1\/T2,T3\/T4) :- !,apply_sub_trace_exp(S,T1,T3),apply_sub_trace_exp(S,T2,T4).
