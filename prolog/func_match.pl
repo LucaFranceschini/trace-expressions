@@ -1,7 +1,7 @@
 :- module(func_match, [
 	func_pre/5, func_pre/6, func_pre_name/2, func_pre_names/2,
-	func_post/5, func_post_name/2, func_post_names/2,
-	cb_pre/5, cb_pre/6, cb_pre/1, cb_post/5
+	func_post/4, func_post/5, func_post_name/2, func_post_names/2,
+	cb_pre/5, cb_pre/6, cb_pre/1, cb_post/4, cb_post/5
 ]).
     
 % low-level JSON parsing
@@ -21,6 +21,7 @@ parse_json_pre(Json, Json.get(event), Json.get(name), Json.get(id), Json.get(arg
 
 parse_json_post(Json, Json.get(event), Json.get(name), Json.get(args), Json.get(res), Json.get(resultId)).
 
+parse_json_post(Json, Json.get(event), Json.get(name), Json.get(args), Json.get(res)).    
 
 % high-level predicates for event types implementation
 
@@ -30,14 +31,20 @@ func_pre(Json, Name, Id, Args, TargetId) :-
 func_pre(Json, Name, Id, Args, ArgIds, TargetId) :-  %% traces also argument ids 
 	parse_json_pre(Json, func_pre, Name, Id, Args, ArgIds, TargetId).
 
+func_post(Json, Name, Args, Res) :-
+	parse_json_post(Json, func_post, Name, Args, Res).
+
 func_post(Json, Name, Args, Res, ResultId) :-
 	parse_json_post(Json, func_post, Name, Args, Res, ResultId).
-
+    
 cb_pre(Json, Name, Id, Args, TargetId) :-
 	parse_json_pre(Json, cb_pre, Name, Id, Args, TargetId).
 
 cb_pre(Json, Name, Id, Args, ArgIds, TargetId) :- %% traces also argument ids 
 	parse_json_pre(Json, cb_pre, Name, Id, Args, ArgIds, TargetId).
+
+cb_post(Json, Name, Args,  Res) :-
+	parse_json_post(Json, cb_post, Name, Args, Res).
     
 cb_post(Json, Name, Args,  Res, ResultId) :-
 	parse_json_post(Json, cb_post, Name, Args, Res, ResultId).
@@ -47,8 +54,8 @@ cb_post(Json, Name, Args,  Res, ResultId) :-
 
 cb_pre(Json) :- cb_pre(Json, _, _, _, _).
 
-func_pre_name(Json, Name) :- func_pre(Json, Name, _, _, _).
+func_pre_name(Json, Name) :- Json.get(event)==func_pre,Json.get(name)=Name.
 func_pre_names(Json, Names) :- member(Name, Names), func_pre_name(Json, Name).
 
-func_post_name(Json, Name) :- func_post(Json, Name, _, _, _).
+func_post_name(Json, Name) :- Json.get(event)==func_post,Json.get(name)=Name.
 func_post_names(Json, Names) :- member(Name, Names), func_post_name(Json, Name).
