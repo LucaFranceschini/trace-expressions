@@ -1,34 +1,45 @@
+%%% Parametric specification for optimal monitoring  %%% 
+%%% of exclusive access to multiple resources           %%%
+
+%%% Parametricity allows simultaneous access        %%%
+%%% to an arbitrary number of resources                 %%%
+
+%%% Monitoring is optimal for both time and space  %%%
+%%% Time is linear in the size of the trace               %%%
+%%% Space is linear in the maximum number of      %%%
+%%% simultaneously accessed resources                 %%%
+
 :- module(spec,[trace_expression/2, match/2]).
 
 :- use_module(node(func_match)).
 
-match(Json, filter) :- func_pre_name(Json , Name), member(Name,['open','consume','close']).
+match(Json, filter) :- func_pre_names(Json , ['use','release']).
 
-match(Json, filter) :- func_post_name(Json , 'open').
+match(Json, filter) :- func_post_name(Json , 'acquire').
 
-match(Json, open_close) :- func_pre_name(Json , Name), member(Name,['open','close']).
-
-match(Json, open_close) :- func_post_name(Json , 'open').
+match(Json, acquire_release) :- func_post_name(Json , 'acquire').
      
-match(Json, open(ResId)) :- func_post(Json, 'open', _Args, _Res, ResId).
+match(Json, acquire_release) :- func_pre_name(Json , 'release').
 
-match(Json, open) :- match(Json, open(_)).
+match(Json, acquire(ResId)) :- func_post(Json, 'acquire', _Args, _Res, ResId).
 
-match(Json, consume(TargetId)) :- func_pre(Json, 'consume', _Id, _Args, _ArgIds, TargetId).
+match(Json, acquire) :- match(Json, acquire(_)).
 
-match(Json, close(TargetId)) :- func_pre(Json, 'close', _Id, _Args, _ArgIds, TargetId).
+match(Json, use(ResourceId)) :- func_pre(Json, 'use', _Id, _Args, _ArgIds, ResourceId).
 
-match(Json, close) :- match(Json, close(_)).
+match(Json, release(ResourceId)) :- func_pre(Json, 'release', _Id, _Args, _ArgIds, ResourceId).
 
-match(Json, target(ResId)) :- match(Json,open(ResId));match(Json,consume(ResId));match(Json,close(ResId)).
+match(Json, release) :- match(Json, release(_)).
 
-%% this spec enforces that open(resId) cannot follow another open(resId) without a close(resId) in between
-trace_expression('test', filter >> (MainFlow /\ NoOpenTwice)) :-
-    MainFlow = var(resId, open(var(resId)) : (Consume | MainFlow)), 
-    Consume = (close(var(resId)) : eps) \/ (consume(var(resId)) : Consume), 
-    NoOpenTwice = open_close >> OpenCloseFlow,
-    OpenCloseFlow = var(resId, open(var(resId)) : ((target(var(resId))>>(close(var(resId)):1)) /\ (AnyClose*OpenCloseFlow))),
-    AnyClose = eps\/(close:AnyClose).
+match(Json, resource(ResId)) :- match(Json,acquire(ResId));match(Json,use(ResId));match(Json,release(ResId)).
+
+%% this spec enforces that acquire(resId) cannot follow another acquire(resId) without a release(resId) in between
+trace_expression('test', filter >> (MainFlow /\ Exclusion)) :-
+    MainFlow = var(resId, acquire(var(resId)) : (Use | MainFlow)), 
+    Use = (release(var(resId)) : eps) \/ (use(var(resId)) : Use), 
+    Exclusion = acquire_release >> AcquireReleaseFlow,
+    AcquireReleaseFlow = var(resId, acquire(var(resId)) : ((resource(var(resId))>>(release(var(resId)):1)) /\ (AnyRelease*AcquireReleaseFlow))),
+    AnyRelease = eps\/(release:AnyRelease).  %%% this is yet another kind of filter
 
 %% a simple test    
-%% trace_expression(_,T0),next(T0,_{event:func_post,name:open,args:[],res:0,resultId:41},T1),next(T1,_{event:func_post,name:open,args:[],res:0,resultId:42},T2),next(T2,_{event:func_pre,name:close,args:[],argIds:[],id:0,targetId:41},T3),next(T3,_{event:func_post,name:open,args:[],res:0,resultId:41},T4),next(T4,_{event:func_pre,name:close,args:[],argIds:[],id:0,targetId:41},T5),next(T5,_{event:func_pre,name:close,args:[],argIds:[],id:0,targetId:42},T6),next(T6,_{event:func_post,name:open,args:[],res:0,resultId:41},T7),next(T7,_{event:func_pre,name:consume,args:[],argIds:[],id:0,targetId:41},T8),next(T8,_{event:func_post,name:open,args:[],res:0,resultId:42},T9),next(T9,_{event:func_pre,name:close,args:[],argIds:[],id:0,targetId:42},T10),next(T10,_{event:func_pre,name:close,args:[],argIds:[],id:0,targetId:41},T11).
+%% trace_expression(_,T0),next(T0,_{event:func_post,name:acquire,args:[],res:0,resultId:41},T1),next(T1,_{event:func_post,name:acquire,args:[],res:0,resultId:42},T2),next(T2,_{event:func_pre,name:release,args:[],argIds:[],id:0,targetId:41},T3),next(T3,_{event:func_post,name:acquire,args:[],res:0,resultId:41},T4),next(T4,_{event:func_pre,name:release,args:[],argIds:[],id:0,targetId:41},T5),next(T5,_{event:func_pre,name:release,args:[],argIds:[],id:0,targetId:42},T6),next(T6,_{event:func_post,name:acquire,args:[],res:0,resultId:41},T7),next(T7,_{event:func_pre,name:use,args:[],argIds:[],id:0,targetId:41},T8),next(T8,_{event:func_post,name:acquire,args:[],res:0,resultId:42},T9),next(T9,_{event:func_pre,name:release,args:[],argIds:[],id:0,targetId:42},T10),next(T10,_{event:func_pre,name:release,args:[],argIds:[],id:0,targetId:41},T11).
