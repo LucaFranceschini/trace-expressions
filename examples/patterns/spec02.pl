@@ -14,9 +14,9 @@ match(Json, close(TargetId)) :- func_pre(Json, 'close', _Id, _Args, _ArgIds, Tar
 
 match(Json, target(ResId)) :- match(Json,open(ResId));match(Json,consume(ResId));match(Json,close(ResId)).
 
-%% this spec enforces that open can be called more than one time, but only after resId ahs been closed 
+%% this spec enforces that open can be called more than once, but only after resId has been closed 
 trace_expression('test', filter >> Main) :-
-    Main = var(resId, open(var(resId)) : '?'(target(var(resId)),Cons,Main)),
+    Main = var(resId, open(var(resId)) : (target(var(resId))>>Cons;Main)),
     Cons = (close(var(resId)) : (eps\/(open(var(resId)):Cons))) \/ (consume(var(resId)) : Cons). 
 
 %% a simple test    

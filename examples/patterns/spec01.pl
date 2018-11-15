@@ -16,7 +16,7 @@ match(Json, target(ResId)) :- match(Json,open(ResId));match(Json,consume(ResId))
 
 %% this spec enforces that open can never be called twice with the same resId
 trace_expression('test', filter >> Main) :-    
-    Main = var(resId, open(var(resId)) : (Cons | '?'(target(var(resId)),0,Main))), %% 0 always fails, necessary to take into account events for which Cons fails 
+    Main = var(resId, open(var(resId)) : (Cons | (target(var(resId))>>0;Main))), %% 0 always fails, necessary to take into account events for which Cons fails 
     Cons = (close(var(resId)) : eps) \/ (consume(var(resId)) : Cons). 
 
 %% a simple test    
