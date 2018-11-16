@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const ws = new WebSocket('ws://localhost:8081',{perMessageDeflate:false});
 ws.ready = false; // socket initially not ready for sending an event
 ws.queue=[]; // event queue
-ws.log = false; // if set, logs event queue length
+ws.logged = false; // if set, logs event queue length
 ws.STEP = 1000; // only STEP*k queue sizes are logged 
 	    
 ws.newEvent = // manages newly detected event
@@ -23,7 +23,7 @@ function(data){
 	
 ws.log = // logs queue size if required
 function(){
-    if(this.log && this.queue.length % this.STEP===0)
+    if(this.logged && this.queue.length % this.STEP===0)
 	console.log(`queue: ${this.queue.length}`);
 }
 
