@@ -40,7 +40,10 @@ next(var(X, T), E, T3, RetSubs) :- !,next(T, E, T1, Subs1),split(X,Subs1,XSubs,R
 
 next(ET>>T, E, T2, S) :- !,(match(E, ET, S1) -> next(T, E, T1, S2),merge(S1, S2, S);T1=T,S=[]),filter(ET,T1,T2).
 
-next((ET>>T1;T2), E, (ET>>T3;T4), S) :- !,match(E,ET,S1) -> next(T1,E,T3,S2),T4=T2,merge(S1, S2, S);next(T2,E,T4,S),T3=T1.   
+%% beware of this: the new symbol for complete filter is now (_>>_;_)  (old symbol was ?/3)
+%% the new symbol for if-then-else is (_?_;_) (old one was ifelse/3)  
+
+next((ET>>T1;T2), E, T, S) :- !,(match(E,ET,S1) -> next(T1,E,T3,S2),T4=T2,merge(S1, S2, S);next(T2,E,T4,S),T3=T1),filter(ET,T3,T4,T).   
 
 %% next('?'(ET,T1,T2), E, '?'(ET,T3,T4), S) :- !,match(E,ET,S1) -> next(T1,E,T3,S2),T4=T2,merge(S1, S2, S);next(T2,E,T4,S),T3=T1.       
 
@@ -115,8 +118,22 @@ conj(1,T,T) :- !.
 conj((T1l/\T1r), T2, T1l/\(T1r/\T2)) :- !.
 conj(T1, T2, T1/\T2).
 
+%% optimization for filters
+%% to be done: optimizations with special predefined event types any and none
+
+%% conditional (strong) filter
+%% (ET>>T1;T2) = T1/\ET* | T2/\notET*
+
+filter(_,1,1,1) :- !.
+filter(ET,T,1,ET>>T) :- !.
+filter(ET,T1,T2,(ET>>T1;T2)).
+	
+%% (strong) filter
+%% (ET>>T1) = (ET>>T1;1) = T1/\ET* | 1/\notET* = T1/\ET* | notET* 
+
 filter(_,1,1) :- !.
 filter(ET,T,ET>>T).
+
 
 %%% to be done: optimizations for filter/3 corresponding to _>>_;_
 
