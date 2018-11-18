@@ -54,12 +54,12 @@ next(ET>>T, E, T2, S) :- !,(match(E, ET, S1) -> next(T, E, T1, S2),merge(S1, S2,
 
 
 %% weak filter
-%% ET>T = (eps\/notET*) * (eps\/ET:eps)/\T
+%% ET>T = (eps\/notET*) * (eps\/ET:1)/\T
 
 next((ET>T), E, T1, S) :- !,match(E, ET, S1) -> next(T, E, T1, S2),merge(S1, S2, S);S=[],weak_filter(ET,T,T1).
 
 %% weak conditional filter
-%% ET>T1;T2 = (eps\/notET*/\T2) * (eps\/ET:eps)/\T1
+%% ET>T1;T2 = (eps\/notET*/\T2) * (eps\/ET:1)/\T1
 %% warning: to be tested yet
 
 next((ET>T1;T2), E, T, S) :- !,match(E,ET,S1) -> next(T1,E,T,S2),merge(S1, S2, S);next(T2,E,T3,S),weak_filter(ET,T1,T3,T).   
@@ -73,11 +73,12 @@ next(app(gen(X,T1),Arg), E, T3, S) :- !,apply_sub_trace_exp([X=Arg], T1, T2),nex
 
 next(guarded(P,T1,T2),E,T,S) :- !,solve(P,S1) -> next(T1,E,T,S2), merge(S1, S2, S);next(T2,E,T,S).
 
-%% proposal for if-then-else
-next(ifelse(ET, T1, T2), E, T, S) :- !,
-	(match(E, ET, S1) ->
-		(S=S1, T=T1) ;
-		next(T2, E, T, S)).
+%% to be tested
+%% proposal for (_?_;_), similar to previous ifelse/3 (ifelse(ET,T1,T2)=(ET?ET:T1;T2))
+%% ET?T1;T2 = (eps\/ET:1)/\T1 \/ (eps\/notET:1) /\ T2
+
+next((ET?T1;T2), E, T, S) :- !,
+	match(E, ET, S1) -> next(T1, E, T, S2), merge(S1, S2, S) ; next(T2, E, T, S).
 
 %% match predicate
     
@@ -99,7 +100,7 @@ may_halt(T1/\T2) :- !, may_halt(T1), may_halt(T2).
 may_halt(var(_, T)) :- !, may_halt(T).
 may_halt((_>>T1;T2)) :- !, may_halt(T1), may_halt(T2).
 may_halt(_>>T) :- !, may_halt(T).
-%% ET>T1;T2 = (eps\/notET*/\T2) * (eps\/ET:eps)/\T1
+%% ET>T1;T2 = (eps\/notET*/\T2) * (eps\/ET:1)/\T1
 may_halt((_>T;_)) :- !, may_halt(T).
 %% ET>T = (eps\/notET*) * (eps\/ET:eps)/\T
 may_halt((_>T)) :- !, may_halt(T).
@@ -158,14 +159,14 @@ filter(_,1,1) :- !.
 filter(ET,T,ET>>T).
 
 %% conditional weak filter
-%% ET>T1;T2 = (eps\/notET*/\T2) * (eps\/ET:eps)/\T1
+%% ET>T1;T2 = (eps\/notET*/\T2) * (eps\/ET:1)/\T1
 
 weak_filter(_,1,1,1) :- !.
 weak_filter(ET,T,1,(ET>T)) :- !.
 weak_filter(ET,T1,T2,(ET>T1;T2)).
 
 %% weak filter
-%% ET>T = (eps\/notET*) * (eps\/ET:eps)/\T
+%% ET>T = (eps\/notET*) * (eps\/ET:1)/\T
 
 weak_filter(_,1,1) :- !.
 weak_filter(ET,T,(ET>T)).
@@ -205,7 +206,7 @@ apply_sub_trace_exp([Y=V],app(gen(X,T1),Arg1),app(gen(X,T2),Arg2)) :- !,apply_su
 apply_sub_trace_exp(S,guarded(P1,T1,T2),guarded(P2,T3,T4)) :- !,apply_sub_pred(S,P1,P2),apply_sub_trace_exp(S,T1,T3),apply_sub_trace_exp(S,T2,T4).
 
 %% proposal for if-then-else
-apply_sub_trace_exp(S, ifelse(ET, T1, T2), ifelse(ETs, T1s, T2s)) :-
+apply_sub_trace_exp(S, (ET? T1 ; T2), (ETs ? T1s ; T2s)) :-
 	!,
 	apply_sub_event_type(S, ET, ETs),
 	apply_sub_trace_exp(S, T1, T1s),
