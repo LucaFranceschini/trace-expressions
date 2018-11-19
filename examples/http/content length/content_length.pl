@@ -5,9 +5,10 @@
 :- use_module(node(func_match)).
 
 % top-level filter
-match( Json, filter) :- func_post(Json, 'http.request', _, _, _).
-match( Json, filter) :- func_pre(Json, 'write', _, _, _).
-match( Json, filter) :- func_pre(Json, 'end', _, _, _).
+match( Json, filter) :- func_post_name(Json, 'http.request').
+match( Json, filter) :- func_pre_names(Json, ['write','end']).
+%% match( Json, filter) :- func_pre(Json, 'write', _, _, _).
+%% match( Json, filter) :- func_pre(Json, 'end', _, _, _).
 
 % event types
 % ID: unique HTTP request identifier
