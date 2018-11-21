@@ -1,30 +1,12 @@
-package basic;
+package rml.basic;
 
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import basic.RMLParser.AndContext;
-import basic.RMLParser.ArgsPredContext;
-import basic.RMLParser.AtomContext;
-import basic.RMLParser.AtomsContext;
-import basic.RMLParser.CatContext;
-import basic.RMLParser.ConstContext;
-import basic.RMLParser.ConstPredContext;
-import basic.RMLParser.DecContext;
-import basic.RMLParser.EpsContext;
-import basic.RMLParser.EvtypeContext;
-import basic.RMLParser.ExpContext;
-import basic.RMLParser.FuncContext;
-import basic.RMLParser.MainContext;
-import basic.RMLParser.NumContext;
-import basic.RMLParser.OrContext;
-import basic.RMLParser.ParContext;
-import basic.RMLParser.ShufContext;
-import basic.RMLParser.VarContext;
-
-import static basic.ExpType.*;
+import static rml.basic.ExpType.*;
+import static rml.basic.RMLParser.*;
 
 public class Compile implements RMLVisitor<ExpType> {
 

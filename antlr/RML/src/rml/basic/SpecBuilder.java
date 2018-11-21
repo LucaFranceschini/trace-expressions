@@ -1,12 +1,12 @@
-package basic;
+package rml.basic;
 
-import ast.*;
+import rml.ast.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static basic.RMLParser.*;
+import static rml.basic.RMLParser.*;
 
 // translate parse tree to AST
 // different visitors/static methods are used to have more precise types and no casts
