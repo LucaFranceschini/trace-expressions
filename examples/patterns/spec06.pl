@@ -24,17 +24,6 @@ match(Json, deq) :- func_post_name(Json , 'deq').
 
 gt1(N) :- integer(N), N >1.
 
-
-trace_expression('test0', filter >> Queue) :-  %% simpler solution with shuffle
-    Queue = eps\/(enq:((deq:eps)|Queue)).
-
-trace_expression('test1', filter >>  app(Queue,0)) :- %% more advanced solution, adaptable to check also enqueued elements
-    Queue = gen(size,
-		eps\/
-		var(newSize,enq(var(size),var(newSize)):app(Queue,var(newSize)))\/
-		var(newSize,deq(var(size),var(newSize)):app(Queue,var(newSize)))
-	       ).
-
 %% full solution, traces also the enqueued elements
 %% uses a guarded expression, to avoid it a new event type must be defined to match dequeuing from queue of size>1
 trace_expression('test2', filter >>  app(Queue,0)) :- 
@@ -43,6 +32,16 @@ trace_expression('test2', filter >>  app(Queue,0)) :-
 		eps\/
 		var(el,var(newSize,enq(var(el),var(size),var(newSize)):
 				   ((deq >> app(Ndeq,var(newSize))) /\ app(Queue,var(newSize)))))\/
+		var(newSize,deq(var(size),var(newSize)):app(Queue,var(newSize)))
+	       ).
+
+trace_expression('test0', filter >> Queue) :-  %% simpler solution with shuffle
+    Queue = eps\/(enq:((deq:eps)|Queue)).
+
+trace_expression('test1', filter >>  app(Queue,0)) :- %% more advanced solution, adaptable to check also enqueued elements
+    Queue = gen(size,
+		eps\/
+		var(newSize,enq(var(size),var(newSize)):app(Queue,var(newSize)))\/
 		var(newSize,deq(var(size),var(newSize)):app(Queue,var(newSize)))
 	       ).
 
