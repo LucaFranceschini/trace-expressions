@@ -35,8 +35,9 @@ trace_expression('test1', filter >>  app(Queue,0)) :- %% more advanced solution,
 		var(newSize,deq(var(size),var(newSize)):app(Queue,var(newSize)))
 	       ).
 
-%% to avoid guarded expressions a new event type must be defined corresponding to dequeuing from queue of size>1
-trace_expression('test2', filter >>  app(Queue,0)) :- %% more advanced solution, adaptable to check also enqueued elements
+%% full solution, traces also the enqueued elements
+%% uses a guarded expression, to avoid it a new event type must be defined to match dequeuing from queue of size>1
+trace_expression('test2', filter >>  app(Queue,0)) :- 
     Ndeq = gen(n,guarded(gt1(var(n)),var(n2,deq(var(n),var(n2)):app(Ndeq,var(n2))),deq(var(el)):1)), 
     Queue = gen(size,
 		eps\/
