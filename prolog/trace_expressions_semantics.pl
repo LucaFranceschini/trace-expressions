@@ -66,7 +66,7 @@ next((ET>T1;T2), E, T, S) :- !,match(E,ET,S1) -> next(T1,E,T,S2),merge(S1, S2, S
 
 %% proposal for generics
 
-next(app(gen(X,T1),Arg), E, T3, S) :- !,apply_sub_trace_exp([X=Arg], T1, T2),next(T2, E, T3, S).    
+next(app(gen(X,T1),Arg), E, T3, S) :- !,apply_sub_trace_exp([X=Arg], T1, T2),!,next(T2, E, T3, S). %% agaian here the cut after apply_sub_trace_exp is essential to avoid divergence in case of failure due to coindcution
     
 
 %% proposal for guarded trace expressions
@@ -109,7 +109,7 @@ may_halt((_>T)) :- !, may_halt(T).
 
 %% proposal for generics
 
-may_halt(app(gen(X,T1),Arg)) :- !,apply_sub_trace_exp([X=Arg],T1,T2),may_halt(T2).    
+may_halt(app(gen(X,T1),Arg)) :- !,apply_sub_trace_exp([X=Arg],T1,T2),!,may_halt(T2). %% usual comment for the cut after apply_sub_trace_exp   
 
 %% proposal for guarded trace expressions
 
@@ -182,10 +182,10 @@ split(X,[Y=V|S],[Y=V],S) :- X==Y,!.
 split(X,[A|S],S1,[A|S2]) :- split(X,S,S1,S2).
 
 % substitution application (only singleton or empty substitutions) 
-apply_sub_trace_exp([],T,T).  %% optimization
-apply_sub_trace_exp(_,1,1).
-apply_sub_trace_exp(_,0,0).
-apply_sub_trace_exp(_,eps,eps).
+apply_sub_trace_exp([],T,T) :- !.  %% optimization
+apply_sub_trace_exp(_,1,1) :- !.
+apply_sub_trace_exp(_,0,0) :- !.
+apply_sub_trace_exp(_,eps,eps) :- !.
 apply_sub_trace_exp(S, ET1:T1, ET2:T2) :- !,apply_sub_event_type(S,ET1,ET2),apply_sub_trace_exp(S,T1,T2).
 apply_sub_trace_exp(S,T1\/T2,T3\/T4) :- !,apply_sub_trace_exp(S,T1,T3),apply_sub_trace_exp(S,T2,T4).
 apply_sub_trace_exp(S,T1|T2,T3|T4) :- !,apply_sub_trace_exp(S,T1,T3),apply_sub_trace_exp(S,T2,T4).
@@ -215,10 +215,10 @@ apply_sub_trace_exp(S, (ET? T1 ; T2), (ETs ? T1s ; T2s)) :-
 % substitution inside event types
 apply_sub_event_type([],ET,ET) :- !.
 apply_sub_event_type([X=V],var(Y),ET) :- !,(Y==X -> ET=V;ET=var(Y)).
-apply_sub_event_type(S,ET1,ET2) :- ET1=..[F|Args1],apply_sub_event_type_list(S,Args1,Args2),ET2=..[F|Args2].
+apply_sub_event_type(S,ET1,ET2) :- !,ET1=..[F|Args1],apply_sub_event_type_list(S,Args1,Args2),ET2=..[F|Args2].
 
-apply_sub_event_type_list(_,[],[]).
-apply_sub_event_type_list(S,[ET1|ETL1],[ET2|ETL2]) :- apply_sub_event_type(S,ET1,ET2),apply_sub_event_type_list(S,ETL1,ETL2).
+apply_sub_event_type_list(_,[],[]) :- !.
+apply_sub_event_type_list(S,[ET1|ETL1],[ET2|ETL2]) :- !,apply_sub_event_type(S,ET1,ET2),apply_sub_event_type_list(S,ETL1,ETL2).
 
 %% proposal for generics
 %% substitution inside generic arguments
