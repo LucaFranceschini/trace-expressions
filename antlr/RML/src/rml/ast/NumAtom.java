@@ -1,4 +1,4 @@
-package ast;
+package rml.ast;
 
 public final class NumAtom implements Atom {
     private final int number;

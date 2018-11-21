@@ -1,3 +1,3 @@
-package ast;
+package rml.ast;
 
 public interface Exp { }
