@@ -1,15 +1,9 @@
 package rml.ast;
 
-import java.util.Objects;
+import util.AbstractIdentifier;
 
-public final class Identifier implements Exp {
-    private final String name;
-
+public final class Identifier extends AbstractIdentifier implements Exp {
     public Identifier(String name) {
-        this.name = Objects.requireNonNull(name);
-    }
-
-    public String name() {
-        return name;
+        super(name);
     }
 }
