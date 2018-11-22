@@ -7,7 +7,7 @@ public abstract class AbstractIdentifier {
 
     public AbstractIdentifier(String name) {
         Objects.requireNonNull(name);
-        if (!name.matches("[A-Za-z][A-Za-z0-9_]*"))
+        if (!name.matches("[A-Za-z_][A-Za-z0-9_]*"))
             throw new IllegalArgumentException("invalid characters");
 
         this.name = name;
