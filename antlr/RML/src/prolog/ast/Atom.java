@@ -4,12 +4,12 @@ import util.AbstractFunctionTerm;
 
 import java.util.List;
 
-public final class Atom extends AbstractFunctionTerm<Identifier, FuncTerm> {
-    public Atom(Identifier id, List<FuncTerm> args) {
+public final class Atom extends AbstractFunctionTerm<Symbol, FuncTerm> {
+    public Atom(Symbol id, List<FuncTerm> args) {
         super(id, args);
     }
 
-    public Atom(Identifier id) {
+    public Atom(Symbol id) {
         super(id);
     }
 }
