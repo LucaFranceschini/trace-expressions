@@ -1,10 +1,10 @@
 package rml.ast;
 
-import util.FunctionTerm;
+import util.AbstractFunctionTerm;
 
 import java.util.List;
 
-public final class EventType extends FunctionTerm<Identifier, Atom> implements Exp {
+public final class EventType extends AbstractFunctionTerm<Identifier, Atom> implements Exp {
     public EventType(Identifier id, List<Atom> args) {
         super(id, args);
     }

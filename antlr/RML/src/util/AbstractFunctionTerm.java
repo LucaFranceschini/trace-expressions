@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Objects;
 
 // generic T(U1, ..., Un) term
-public abstract class FunctionTerm<T, U> {
+public abstract class AbstractFunctionTerm<T, U> {
     private final T id;
     private final List<U> args;
 
-    public FunctionTerm(T id, List<U> args) {
+    public AbstractFunctionTerm(T id, List<U> args) {
         this.id = Objects.requireNonNull(id);
         this.args = List.copyOf(args);
     }
 
-    public FunctionTerm(T id) {
+    public AbstractFunctionTerm(T id) {
         this(id, Collections.emptyList());
     }
 

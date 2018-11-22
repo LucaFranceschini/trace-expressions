@@ -1,10 +1,10 @@
 package rml.ast;
 
-import util.FunctionTerm;
+import util.AbstractFunctionTerm;
 
 import java.util.List;
 
-public final class FuncAtom extends FunctionTerm<Identifier, Atom> implements Atom {
+public final class FuncAtom extends AbstractFunctionTerm<Identifier, Atom> implements Atom {
     public FuncAtom(Identifier id, List<Atom> args) {
         super(id, args);
     }

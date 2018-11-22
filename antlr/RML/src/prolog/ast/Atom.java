@@ -1,11 +1,11 @@
 package prolog.ast;
 
-import util.FunctionTerm;
+import util.AbstractFunctionTerm;
 
 import java.util.List;
 
-public final class Atom extends FunctionTerm<Identifier, Term> {
-    public Atom(Identifier id, List<Term> args) {
+public final class Atom extends AbstractFunctionTerm<Identifier, FuncTerm> {
+    public Atom(Identifier id, List<FuncTerm> args) {
         super(id, args);
     }
 
