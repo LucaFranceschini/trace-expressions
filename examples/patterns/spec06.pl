@@ -1,6 +1,6 @@
 %%% Specification for queues  %%%
 
-:- module(spec,[trace_expression/2, match/2, gt1/1]).
+:- module(spec,[trace_expression/2, match/2]).
 
 :- use_module(node(func_match)).
 
@@ -8,13 +8,7 @@ match(Json, filter) :- match(Json, enq).
 
 match(Json, filter) :- match(Json, deq).
 
-match(Json, enq(Elem,Size,NewSize)) :- func_pre(Json, 'enq', _Id, [Elem], _TargetId),integer(Size),NewSize is Size+1.
-
-match(Json, deq(Elem,Size,NewSize)) :- func_post(Json, 'deq', _Args, Elem),integer(Size),Size>0,NewSize is Size-1.
-
-match(Json, enq(Size,NewSize)) :- match(Json, enq(_Elem,Size,NewSize)).
-
-match(Json, deq(Size,NewSize)) :- match(Json, deq(_Elem,Size,NewSize)).
+match(Json, enq(Elem)) :- func_pre(Json, 'enq', _Id, [Elem], _TargetId).
 
 match(Json, deq(Elem)) :- func_post(Json, 'deq', _Args, Elem).
      
@@ -22,17 +16,15 @@ match(Json, enq) :- func_pre_name(Json, 'enq').
 
 match(Json, deq) :- func_post_name(Json , 'deq').
 
-gt1(N) :- integer(N), N >1.
-
 %% full solution, traces also the enqueued elements
 %% uses a guarded expression, to avoid it a new event type must be defined to match dequeuing from queue of size>1
 trace_expression('test2', filter >>  app(Queue,0)) :- 
-    Ndeq = gen(n,guarded(gt1(var(n)),var(n2,deq(var(n),var(n2)):app(Ndeq,var(n2))),deq(var(el)):1)), 
+    Ndeq = gen(n,eps\/guarded((var(n)>1),deq:app(Ndeq,var(n)-1),deq(var(el)):1)), 
     Queue = gen(size,
 		eps\/
-		var(el,var(newSize,enq(var(el),var(size),var(newSize)):
-				   ((deq >> app(Ndeq,var(newSize))) /\ app(Queue,var(newSize)))))\/
-		var(newSize,deq(var(size),var(newSize)):app(Queue,var(newSize)))
+		var(el,enq(var(el)):
+				   ((deq >> app(Ndeq,var(size)+1)) /\ app(Queue,var(size)+1)))\/
+		guarded(var(size)>0,deq:app(Queue,var(size)-1),0)
 	       ).
 
 trace_expression('test0', filter >> Queue) :-  %% simpler solution with shuffle
@@ -41,8 +33,8 @@ trace_expression('test0', filter >> Queue) :-  %% simpler solution with shuffle
 trace_expression('test1', filter >>  app(Queue,0)) :- %% more advanced solution, adaptable to check also enqueued elements
     Queue = gen(size,
 		eps\/
-		var(newSize,enq(var(size),var(newSize)):app(Queue,var(newSize)))\/
-		var(newSize,deq(var(size),var(newSize)):app(Queue,var(newSize)))
+		(enq:app(Queue,var(size)+1))\/
+		guarded(var(size)>0,deq:app(Queue,var(size)-1),0)
 	       ).
 
 %% a simple test
