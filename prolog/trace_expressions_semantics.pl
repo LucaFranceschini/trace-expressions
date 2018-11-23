@@ -66,7 +66,7 @@ next((ET>T1;T2), E, T, S) :- !,match(E,ET,S1) -> next(T1,E,T,S2),merge(S1, S2, S
 
 %% proposal for generics
 
-next(app(gen(X,T1),Arg), E, T3, S) :- !,apply_sub_trace_exp([X=Arg], T1, T2),!,next(T2, E, T3, S). %% agaian here the cut after apply_sub_trace_exp is essential to avoid divergence in case of failure due to coindcution
+next(app(gen(X,T1),Arg), E, T3, S) :- !,Val is Arg, apply_sub_trace_exp([X=Val], T1, T2),!,next(T2, E, T3, S). %% agaian here the cut after apply_sub_trace_exp is essential to avoid divergence in case of failure due to coindcution
     
 
 %% proposal for guarded trace expressions
