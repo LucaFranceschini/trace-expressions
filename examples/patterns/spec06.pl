@@ -28,7 +28,7 @@ trace_expression('test2', filter >>  app(Queue,0)) :-
 	       ).
 
 trace_expression('test0', filter >> Queue) :-  %% simpler solution with shuffle
-    Queue = eps\/(enq:((deq:eps)|Queue)).
+    Queue = eps\/(enq:((eps\/(deq:eps))|Queue)).
 
 trace_expression('test1', filter >>  app(Queue,0)) :- %% more advanced solution, adaptable to check also enqueued elements
     Queue = gen(size,
