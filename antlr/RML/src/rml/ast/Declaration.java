@@ -1,5 +1,7 @@
 package rml.ast;
 
+import rml.ast.visitor.DeclVisitor;
+
 import java.util.Objects;
 
 public final class Declaration {
@@ -17,5 +19,9 @@ public final class Declaration {
 
     public Exp body() {
         return body;
+    }
+
+    public <T> T accept(DeclVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

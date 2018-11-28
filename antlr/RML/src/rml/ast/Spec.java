@@ -1,5 +1,7 @@
 package rml.ast;
 
+import rml.ast.visitor.SpecVisitor;
+
 import java.util.List;
 
 public final class Spec {
@@ -14,5 +16,9 @@ public final class Spec {
 
     public List<Declaration> declarations() {
         return declarations;
+    }
+
+    public <T> T accept(SpecVisitor<T> visitor) {
+        return visitor.visitSpec(this);
     }
 }

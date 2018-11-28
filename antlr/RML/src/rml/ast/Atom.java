@@ -1,3 +1,7 @@
 package rml.ast;
 
-public interface Atom { }
+import rml.ast.visitor.AtomVisitor;
+
+public interface Atom {
+    <T> T accept(AtomVisitor<T> visitor);
+}
