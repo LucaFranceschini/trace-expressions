@@ -9,7 +9,7 @@ public abstract class AbstractFunctionTerm<T, U> {
     private final T id;
     private final List<U> args;
 
-    protected AbstractFunctionTerm(T id, List<U> args) {
+    protected AbstractFunctionTerm(T id, List<? extends U> args) {
         this.id = Objects.requireNonNull(id);
         this.args = List.copyOf(args);
     }
