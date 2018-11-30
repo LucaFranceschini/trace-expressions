@@ -16,4 +16,16 @@ public abstract class AbstractIdentifier {
     public String name() {
         return name;
     }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractIdentifier that = (AbstractIdentifier) o;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(name);
+    }
 }
