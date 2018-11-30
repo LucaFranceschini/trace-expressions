@@ -1,7 +1,5 @@
 package rml.ast;
 
-import rml.ast.visitor.ExpVisitor;
-
 // enum for singleton pattern
 public enum EpsExp implements Exp {
     INSTANCE;

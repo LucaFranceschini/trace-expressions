@@ -1,6 +1,5 @@
 package rml.ast;
 
-import rml.ast.visitor.ExpVisitor;
 import util.AbstractIdentifier;
 
 public final class Identifier extends AbstractIdentifier implements Exp {

@@ -1,6 +1,5 @@
 package rml.ast;
 
-import rml.ast.visitor.ExpVisitor;
 import util.AbstractFunctionTerm;
 
 import java.util.List;

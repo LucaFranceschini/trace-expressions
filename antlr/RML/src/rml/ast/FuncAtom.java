@@ -1,6 +1,5 @@
 package rml.ast;
 
-import rml.ast.visitor.AtomVisitor;
 import util.AbstractFunctionTerm;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public final class FuncAtom extends AbstractFunctionTerm<Identifier, Atom> imple
     }
 
     @Override
-    public <T> T accept(AtomVisitor<T> visitor) {
+    public <T> T accept(ExpVisitor<T> visitor) {
         return visitor.visit(this);
     }
 }
