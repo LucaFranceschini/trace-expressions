@@ -95,7 +95,8 @@ public final class SpecBuilder {
 
     public static Spec build(MainContext main) {
         var decs = main.dec().stream().map(SpecBuilder::buildDec).collect(Collectors.toList());
-        return new Spec(decs);
+        assert decs.size() > 0;
+        return new Spec(decs, decs.get(0).identifier());
     }
 
     private static Declaration buildDec(DecContext dec) {
