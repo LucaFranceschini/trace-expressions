@@ -22,3 +22,23 @@ trace_expression('test', filter >> Main) :-
 %% a simple test    
 %% trace_expression(_,T0),next(T0,_{event:func_post,name:open,args:[],res:0,resultId:41},T1),next(T1,_{event:func_post,name:open,args:[],res:0,resultId:42},T2),next(T2,_{event:func_pre,name:close,args:[],argIds:[],id:0,targetId:41},T3).
     
+%% in RML
+%%
+%%   filter matches
+%%  {event:'func_pre',name:'open'},
+%%  {event:'func_pre',name:'consume'},
+%%  {event:'func_pre',name:'close'},
+%%  {event:'func_post',name:'open'}.
+
+%%  open(resultId) matches {event:'func_post',name:'open',resultId:resultId}.
+%%  consume(targetId) matches {event:'func_pre',name:'consume',targetId:targetId}.
+%%  close(targetId) matches {event:'func_pre',name:'close',targetId:targetId}.
+
+%%  target(id) matches
+%%  {event:'func_post',name:'open',resultId:id},
+%%  {event:'func_pre',name:'consume',targetId:id},
+%%  {event:'func_pre',name:'close',targetId:id}
+
+%% Spec = filter >> Main,
+%% Main = { id ; open(id) (Cons<id> | target(id) >> false;Main)},
+%% Cons<id> = close(id) \/ consume(id) Cons<id>. 
