@@ -39,6 +39,9 @@ trace_expression('test', filter >> Main) :-
 %%  {event:'func_pre',name:'consume',targetId:id},
 %%  {event:'func_pre',name:'close',targetId:id}
 
+%% possible more coincise syntax
+%% target(id) matches open(id),consume(id),close(id).
+%%
 %% Spec = filter >> Main,
 %% Main = { id ; open(id) (Cons<id> | target(id) >> false;Main)},
 %% Cons<id> = close(id) \/ consume(id) Cons<id>. 
