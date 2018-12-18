@@ -30,9 +30,9 @@ trace_expression('test', filter >> Main) :-
 %%  {event:'func_pre',name:'close'},
 %%  {event:'func_post',name:'open'};
 
-%%  open(resultId) matches {event:'func_post',name:'open',resultId:resultId}.
-%%  consume(targetId) matches {event:'func_pre',name:'consume',targetId:targetId}.
-%%  close(targetId) matches {event:'func_pre',name:'close',targetId:targetId}.
+%%  open(resultId) matches {event:'func_post',name:'open',resultId:resultId};
+%%  consume(targetId) matches {event:'func_pre',name:'consume',targetId:targetId};
+%%  close(targetId) matches {event:'func_pre',name:'close',targetId:targetId};
 
 %%  target(id) matches
 %%  {event:'func_post',name:'open',resultId:id},
@@ -40,7 +40,7 @@ trace_expression('test', filter >> Main) :-
 %%  {event:'func_pre',name:'close',targetId:id};
 
 %% possible more coincise syntax
-%% target(id) matches open(id),consume(id),close(id).
+%% target(id) matches open(id),consume(id),close(id);
 %%
 %% Spec = filter >> Main;
 %% Main = { var id ; open(id) (Cons<id> | target(id) >> none : Main)}; // Main is the entry point
